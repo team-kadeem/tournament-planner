@@ -75,13 +75,6 @@ export default class Registration extends React.Component {
         this.setState({fields:fields})
     }
 
-    // updateErrors = (targetName, value) => {
-    //     console.log('inside update errors')
-    //     let errors = Object.assign({}, this.state.errors)
-    //     errors[targetName] = value
-    //     this.setState({...this.state, errors:errors})
-    // }
-
     submitForm = (evt) => {
         evt.preventDefault()
         console.log('form submitted')
