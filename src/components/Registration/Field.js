@@ -5,17 +5,8 @@ import { FaAsterisk } from 'react-icons/fa'
 const Field = (props) => {
 
     const validateInput = (evt) => {
-        console.log('validating input')
-        props.onChange(evt)
-
-        if (props.validation(evt.target.value)) { //valid input, update fields in parent
-            console.log('inside first block')
-            return props.updateErrors(evt.target.name, false)
-        } else { //invalid input, update fields and errors in parent
-            console.log('inside second block')
-            return props.updateErrors(evt.target.name, true)
-
-        }
+        if (props.validation(evt.target.value)) props.onChange(evt, false) //valid input
+        if (!props.validation(evt.target.value)) props.onChange(evt, true) //invalid input
     }
 
 

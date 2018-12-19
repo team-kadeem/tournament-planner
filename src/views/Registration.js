@@ -60,11 +60,13 @@ export default class Registration extends React.Component {
             }
         }
     }
-    updateTextInputField = (evt) => {
+    updateTextInputField = (evt, errorPresent) => {
         console.log('updating input')
         let fields = Object.assign({}, this.state.fields)
+        let errors = Object.assign({}, this.state.errors)
         fields[evt.target.name] = evt.target.value
-        this.setState({fields:fields})
+        errors[evt.target.name] = errorPresent
+        this.setState({fields:fields, errors:errors})
     }
 
     updateCheckboxField = (evt) => {
@@ -73,11 +75,12 @@ export default class Registration extends React.Component {
         this.setState({fields:fields})
     }
 
-    updateErrors = (targetName, value) => {
-        let errors = Object.assign({}, this.state.errors)
-        errors[targetName] = value
-        this.setState({...this.state, errors:errors})
-    }
+    // updateErrors = (targetName, value) => {
+    //     console.log('inside update errors')
+    //     let errors = Object.assign({}, this.state.errors)
+    //     errors[targetName] = value
+    //     this.setState({...this.state, errors:errors})
+    // }
 
     submitForm = (evt) => {
         evt.preventDefault()
