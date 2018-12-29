@@ -11,6 +11,7 @@ export default class Registration extends React.Component {
     constructor(props){
         super(props)
         this.state = {
+            invalidSubmission:false,
             fields:{
                 firstName:'',
                 lastName:'',
@@ -35,30 +36,55 @@ export default class Registration extends React.Component {
                 waiver:'false'
             },
             errors:{
-                firstName:false,
-                lastName:false,
-                boxerEmail:false,
-                zipCode:false,
-                phoneNumber:false,
-                dateOfBirth:false,
-                usaBoxingId:false,
-                wins:false,
-                losses:false,
-                boxingClubAffiliation:false,
-                coachFirstName:false,
-                coachLastName:false,
-                coachUSABoxingId:false,
-                coachFirstName:false,
-                coachLastName:false,
-                coachUSABoxingId:false,
-                coachPhoneNumber:false,
-                coachEmail:false,
-                gender:false,
-                weight:false,
-                rules:false,
-                injury:false,
-                injuryWarning:false,
-                waiver:false
+                // firstName:false,
+                // lastName:false,
+                // boxerEmail:false,
+                // zipCode:false,
+                // phoneNumber:false,
+                // dateOfBirth:false,
+                // usaBoxingId:false,
+                // wins:false,
+                // losses:false,
+                // boxingClubAffiliation:false,
+                // coachFirstName:false,
+                // coachLastName:false,
+                // coachUSABoxingId:false,
+                // coachFirstName:false,
+                // coachLastName:false,
+                // coachUSABoxingId:false,
+                // coachPhoneNumber:false,
+                // coachEmail:false,
+                // gender:false,
+                // weight:false,
+                // rules:false,
+                // injury:false,
+                // injuryWarning:false,
+                // waiver:false
+                
+                firstName:true,
+                lastName:true,
+                boxerEmail:true,
+                zipCode:true,
+                phoneNumber:true,
+                dateOfBirth:true,
+                // usaBoxingId:true,
+                wins:true,
+                losses:true,
+                boxingClubAffiliation:true,
+                // coachFirstName:true,
+                // coachLastName:true,
+                // coachUSABoxingId:true,
+                // coachFirstName:true,
+                // coachLastName:true,
+                // coachUSABoxingId:false,
+                // coachPhoneNumber:false,
+                // coachEmail:false,
+                gender:true,
+                weight:true,
+                rules:true,
+                injury:true,
+                injuryWarning:true,
+                waiver:true
             }
         }
     }
@@ -68,32 +94,69 @@ export default class Registration extends React.Component {
         let errors = Object.assign({}, this.state.errors)
         fields[evt.target.name] = evt.target.value
         errors[evt.target.name] = errorPresent
-        this.setState({fields:fields, errors:errors})
+        this.setState({...this.state, fields:fields, errors:errors})
     }
 
     updateCheckboxField = (evt) => {
         let fields = Object.assign({}, this.state.fields)
+        let errors = Object.assign({}, this.state.errors)
         fields[evt.target.name] = evt.target.value
-        this.setState({fields:fields})
+        errors[evt.target.name] = false
+        this.setState({...this.state, fields:fields, errors:errors})
+    }
+
+    updateRadioButtons = (evt, errorPresent) => {
+        console.log('updating radio buttons')
+        let fields = Object.assign({}, this.state.fields)
+        let errors = Object.assign({}, this.state.errors)
+        console.log(evt.target.name)
+        console.log(typeof(evt.target.value))
+        fields[evt.target.name] = evt.target.value
+        if (evt.target.value === 'true') {
+            errors[evt.target.name] = false
+            this.setState({...this.state, fields:fields, errors:errors })
+        } else {
+            errors[evt.target.name] = true
+            this.setState({...this.state, fields:fields, errors:errors})
+        }
     }
 
     submitForm = (evt) => {
         evt.preventDefault()
         //make sure no errors
-        const errorFieldsList = Object.keys(this.state.errors)
-        const listOfErrors = errorFieldsList.filter(errorObjectKey => this.state.errors[errorFieldsList])
-        if (listOfErrors.length > 0) return
-        
-        console.log('form submitted')
-        const params = {
-            method:'POST',
-            body:JSON.stringify(this.state.fields)
+        const errorKeys = Object.keys(this.state.errors)
+        const listOfErrors = errorKeys.filter(key => this.state.errors[key])
+        console.log(listOfErrors)
+        if (listOfErrors.length > 0){
+            this.setState({...this.state, invalidSubmission:true})
+            return
+        } 
+        else {
+            this.setState({...this.state, invalidSubmission:false})
+            console.log('form submitted')
+            const params = {
+                method:'POST',
+                headers:{
+                    "content-type":"application/json"
+                },
+                body:JSON.stringify(this.state.fields)
+            }
+            console.log(params['body'])
+            fetch('/register', params)
         }
-        console.log(params['body'])
-        fetch('/register', params)
     }
 
     render(){
+        const submitButton = {
+            padding:'10px 20px',
+            border:'1px solid #007bff',
+            color:'white',
+            backgroundColor:'#007bff',
+            fontSize:'18px',
+            borderRadius:'4px',
+            marginLeft:'10px',
+            outline:'0'
+        }
 
         return(
             <div>
@@ -106,7 +169,7 @@ export default class Registration extends React.Component {
                         onChange={this.updateTextInputField}
                         required={true}
                         updateErrors={this.updateErrors}
-                        errorPresent={this.state.errors.firstName}
+                        errorPresent={this.state.errors.firstName && this.state.invalidSubmission}
                         validation={ val => val.length !== 0}
                     />
                     <Field
@@ -117,7 +180,7 @@ export default class Registration extends React.Component {
                         onChange={this.updateTextInputField}
                         required={true}
                         updateErrors={this.updateErrors}
-                        errorPresent={this.state.errors.lastName}
+                        errorPresent={this.state.errors.lastName && this.state.invalidSubmission}
                         validation={val => val.length !== 0}
                     />
                     <Field
@@ -128,7 +191,7 @@ export default class Registration extends React.Component {
                         onChange={this.updateTextInputField}
                         required={true}
                         updateErrors={this.updateErrors}
-                        errorPresent={this.state.errors.boxerEmail}
+                        errorPresent={this.state.errors.boxerEmail && this.state.invalidSubmission}
                         validation={data => validator.isEmail(data)}
                     />
                     <Field
@@ -139,7 +202,7 @@ export default class Registration extends React.Component {
                         onChange={this.updateTextInputField}
                         required={true}
                         updateErrors={this.updateErrors}
-                        errorPresent={this.state.errors.zipCode}
+                        errorPresent={this.state.errors.zipCode && this.state.invalidSubmission}
                         validation={data => isPostalCode(data, 'US')}
 
                     />
@@ -150,7 +213,7 @@ export default class Registration extends React.Component {
                         onChange={this.updateTextInputField}
                         label="Cell/Phone Number"
                         required={true}
-                        errorPresent={this.state.errors.phoneNumber}
+                        errorPresent={this.state.errors.phoneNumber && this.state.invalidSubmission}
                         updateErrors={this.updateErrors}
                         validation={data => isMobilePhone(data, 'en-US')}
 
@@ -163,7 +226,7 @@ export default class Registration extends React.Component {
                         onChange={this.updateTextInputField}
                         label="Boxer's Date of Birth"
                         required={true}
-                        errorPresent={this.state.errors.dateOfBirth}
+                        errorPresent={this.state.errors.dateOfBirth && this.state.invalidSubmission}
                         updateErrors={this.updateErrors}
                         validation={val => isBefore(val)}
 
@@ -185,7 +248,7 @@ export default class Registration extends React.Component {
                         onChange={this.updateTextInputField}
                         label="Wins"
                         required={true}
-                        errorPresent={this.state.errors.wins}
+                        errorPresent={this.state.errors.wins && this.state.invalidSubmission}
                         updateErrors={this.updateErrors}
                         validation={val => isInt(val)}
 
@@ -198,7 +261,7 @@ export default class Registration extends React.Component {
                         onChange={this.updateTextInputField}
                         label="Losses"
                         required={true}
-                        errorPresent={this.state.errors.losses}
+                        errorPresent={this.state.errors.losses && this.state.invalidSubmission}
                         updateErrors={this.updateErrors}
                         validation={val => isInt(val)}
                     />
@@ -210,7 +273,7 @@ export default class Registration extends React.Component {
                         onChange={this.updateTextInputField}
                         label="Boxing Club Affiliation"
                         required={true}
-                        errorPresent={this.state.errors.boxingClubAffiliation}
+                        errorPresent={this.state.errors.boxingClubAffiliation && this.state.invalidSubmission}
                         updateErrors={this.updateErrors}
                         validation={ val => val.length !== 0}
                     />
@@ -257,7 +320,7 @@ export default class Registration extends React.Component {
                         value={this.state.fields.weight}
                         label="Weight(lbs)"
                         required={true}
-                        errorPresent={this.state.errors.weight}
+                        errorPresent={this.state.errors.weight && this.state.invalidSubmission}
                         updateErrors={this.updateErrors}
                         validation={val => isInt(val)}
                     />
@@ -294,7 +357,7 @@ export default class Registration extends React.Component {
                             type="radio"
                             label="AGREE"
                             value={true}
-                            onChange={this.updateTextInputField}
+                            onChange={this.updateRadioButtons}
                         />
                         
                         <Field
@@ -302,7 +365,7 @@ export default class Registration extends React.Component {
                             type="radio"
                             label="DISAGREE"
                             value={false}
-                            onChange={this.updateTextInputField}
+                            onChange={this.updateRadioButtons}
                         />
                     </label>
 
@@ -317,7 +380,7 @@ export default class Registration extends React.Component {
                             type="radio"
                             label="AGREE"
                             value={true}
-                            onChange={this.updateTextInputField}
+                            onChange={this.updateRadioButtons}
                         />
 
                         <Field
@@ -325,7 +388,7 @@ export default class Registration extends React.Component {
                             type="radio"
                             label="DISAGREE"
                             value={false}
-                            onChange={this.updateTextInputField}
+                            onChange={this.updateRadioButtons}
                         />
                     </label>
 
@@ -343,7 +406,7 @@ export default class Registration extends React.Component {
                             type="radio"
                             label="AGREE"
                             value={true}
-                            onChange={this.updateTextInputField}
+                            onChange={this.updateRadioButtons}
                         />
 
                         <Field
@@ -351,7 +414,7 @@ export default class Registration extends React.Component {
                             type="radio"
                             label="DISAGREE"
                             value={false}
-                            onChange={this.updateTextInputField}
+                            onChange={this.updateRadioButtons}
                         />
                     </label>
 
@@ -373,7 +436,7 @@ export default class Registration extends React.Component {
                             type="radio"
                             label="AGREE"
                             value={true}
-                            onChange={this.updateTextInputField}
+                            onChange={this.updateRadioButtons}
                         />
 
                         <Field
@@ -381,12 +444,13 @@ export default class Registration extends React.Component {
                             type="radio"
                             label="DISAGREE"
                             value={false}
-                            onChange={this.updateTextInputField}
+                            onChange={this.updateRadioButtons}
                         /> 
                     </label>
 
 
                     <input
+                        style={submitButton}
                         type="submit"
                         value="Submit"
                     />

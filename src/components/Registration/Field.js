@@ -24,15 +24,19 @@ const Field = (props) => {
             display:'block',
             fontSize:'16px',
             paddingLeft:'10px',
+            paddingLeft:'10px',
+            marginLeft:'10px',
             ...props.customStyle
         }
     } else if (props.types === 'checkbox') {
         inputStyle = {
-            
+            marginLeft:'10px',
+
             // marginBottom:'10px'
         }
     } else {
         inputStyle = {
+            marginLeft:'10px',
             // marginBottom:'10px'
         }
     }
@@ -46,7 +50,7 @@ const Field = (props) => {
     }
 
     const labelStyle = {
-        paddingLeft:'10px'
+        paddingLeft:'20px'
     }
 
     return(
