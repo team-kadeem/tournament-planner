@@ -4,6 +4,8 @@ import validator from 'validator'
 import { FaAsterisk } from 'react-icons/fa'
 import isPostalCode from 'validator/lib/isPostalCode';
 import isMobilePhone from 'validator/lib/isMobilePhone';
+import isBefore from 'validator/lib/isBefore'
+import isInt from 'validator/lib/isInt'
 
 export default class Registration extends React.Component {
     constructor(props){
@@ -27,10 +29,10 @@ export default class Registration extends React.Component {
                 coachEmail:'',
                 gender:'',
                 weight:'',
-                rules:null,
-                injury:null,
-                injuryWarning:null,
-                waiver:null
+                rules:'false',
+                injury:'false',
+                injuryWarning:'false',
+                waiver:'false'
             },
             errors:{
                 firstName:false,
@@ -77,7 +79,18 @@ export default class Registration extends React.Component {
 
     submitForm = (evt) => {
         evt.preventDefault()
+        //make sure no errors
+        const errorFieldsList = Object.keys(this.state.errors)
+        const listOfErrors = errorFieldsList.filter(errorObjectKey => this.state.errors[errorFieldsList])
+        if (listOfErrors.length > 0) return
+        
         console.log('form submitted')
+        const params = {
+            method:'POST',
+            body:JSON.stringify(this.state.fields)
+        }
+        console.log(params['body'])
+        fetch('/register', params)
     }
 
     render(){
@@ -94,7 +107,7 @@ export default class Registration extends React.Component {
                         required={true}
                         updateErrors={this.updateErrors}
                         errorPresent={this.state.errors.firstName}
-                        validation={() => this.state.fields.firstName.length !== 0}
+                        validation={ val => val.length !== 0}
                     />
                     <Field
                         name="lastName"
@@ -105,7 +118,7 @@ export default class Registration extends React.Component {
                         required={true}
                         updateErrors={this.updateErrors}
                         errorPresent={this.state.errors.lastName}
-                        validation={data => !validator.isEmpty(data)}
+                        validation={val => val.length !== 0}
                     />
                     <Field
                         name='boxerEmail'
@@ -122,7 +135,7 @@ export default class Registration extends React.Component {
                         name="zipCode"
                         type="text"
                         value={this.state.fields.zipCode}
-                        label="Rsidence - Zip Code"
+                        label="Residence - Zip Code"
                         onChange={this.updateTextInputField}
                         required={true}
                         updateErrors={this.updateErrors}
@@ -152,6 +165,7 @@ export default class Registration extends React.Component {
                         required={true}
                         errorPresent={this.state.errors.dateOfBirth}
                         updateErrors={this.updateErrors}
+                        validation={val => isBefore(val)}
 
                     />
 
@@ -161,9 +175,7 @@ export default class Registration extends React.Component {
                         value={this.state.fields.usaBoxingId}
                         onChange={this.updateTextInputField}
                         label="USA Boxing Member ID Number"
-                        
                         updateErrors={this.updateErrors}
-
                     />
 
                     <Field
@@ -173,7 +185,9 @@ export default class Registration extends React.Component {
                         onChange={this.updateTextInputField}
                         label="Wins"
                         required={true}
+                        errorPresent={this.state.errors.wins}
                         updateErrors={this.updateErrors}
+                        validation={val => isInt(val)}
 
                     />
 
@@ -184,8 +198,9 @@ export default class Registration extends React.Component {
                         onChange={this.updateTextInputField}
                         label="Losses"
                         required={true}
+                        errorPresent={this.state.errors.losses}
                         updateErrors={this.updateErrors}
-
+                        validation={val => isInt(val)}
                     />
 
                     <Field
@@ -195,6 +210,9 @@ export default class Registration extends React.Component {
                         onChange={this.updateTextInputField}
                         label="Boxing Club Affiliation"
                         required={true}
+                        errorPresent={this.state.errors.boxingClubAffiliation}
+                        updateErrors={this.updateErrors}
+                        validation={ val => val.length !== 0}
                     />
 
                     <Field
@@ -237,13 +255,16 @@ export default class Registration extends React.Component {
                         type="text"
                         onChange={this.updateTextInputField}
                         value={this.state.fields.weight}
-                        label="Weight"
+                        label="Weight(lbs)"
                         required={true}
+                        errorPresent={this.state.errors.weight}
+                        updateErrors={this.updateErrors}
+                        validation={val => isInt(val)}
                     />
 
                     <label>
                         GENDER
-                        <FaAsterisk style={{color:'red', position:'relative', fontSize:'8px', bottom:'7px', left:'2px'}}/>
+                        {this.state.fields.gender === '' ? <span style={{color:'red'}}>Must Choose One</span> : null}
                         <Field
                             name="gender"
                             type="checkbox"
@@ -262,12 +283,12 @@ export default class Registration extends React.Component {
                             value='female'
                         />
                     </label>
-
+                    <br/>
                     <label>
                         I (We) agree to abide by the rules of USA Boxing, Inc. and will comply with the 
                         INT'L PARADE OF CHAMPIONS TOURNAMENT as detailed in the Fact Sheet 
                         (found on USABoxingMetro.com), and the Code of Conduct for Athlete/Non-Athlete.
-                        <FaAsterisk style={{color:'red', position:'relative', fontSize:'8px', bottom:'7px', left:'2px'}}/>
+                        {this.state.fields.rules === 'false' ? <span style={{color:'red'}}>Must Agree To Continue</span> : null}
                         <Field
                             name="rules"
                             type="radio"
@@ -290,7 +311,7 @@ export default class Registration extends React.Component {
                         in this boxing event(s). I (We) understand and agree that medical or other services rendered to Entrant 
                         by or at the instance of any of the named parties is not an admission of liability to provide or 
                         continue to provide any such services and is not a waiver by any of said parties of any right or rights hereunder.
-                        <FaAsterisk style={{color:'red', position:'relative', fontSize:'8px', bottom:'7px', left:'2px'}}/>
+                        {this.state.fields.injury === 'false' ? <span style={{color:'red'}}>Must Agree To Continue</span> : null}
                         <Field
                             name="injury"
                             type="radio"
@@ -316,7 +337,7 @@ export default class Registration extends React.Component {
                         reoccur in this boxing event. Furthermore, I (we) understand and appreciate that participation in sports carries 
                         a risk to the participant of serious injury, including permanent paralysis or death. I (we) voluntarily 
                         and knowingly recognize, accept, and assume this risk.
-                        <FaAsterisk style={{color:'red', position:'relative', fontSize:'8px', bottom:'7px', left:'2px'}}/>
+                        {this.state.fields.injuryWarning === 'false' ? <span style={{color:'red'}}>Must Agree To Continue</span> : null}
                         <Field
                             name="injuryWarning"
                             type="radio"
@@ -346,7 +367,7 @@ export default class Registration extends React.Component {
                         within three(3) months preceding the date of this consent form, that the entrant has been seen by 
                         his/her physician and deemed to be in good health, and I (we) know of no other injuries that has 
                         been sustained which may reoccur in this boxing event.
-                        <FaAsterisk style={{color:'red', position:'relative', fontSize:'8px', bottom:'7px', left:'2px'}}/>
+                        {this.state.fields.waiver === 'false' ? <span style={{color:'red'}}>Must Agree To Continue</span> : null}
                         <Field
                             name="waiver"
                             type="radio"
@@ -369,6 +390,7 @@ export default class Registration extends React.Component {
                         type="submit"
                         value="Submit"
                     />
+                    {this.state.invalidSubmission ? <span style={{color:'red'}}>Invalid Submission</span> : null}
                 </form>
 
 

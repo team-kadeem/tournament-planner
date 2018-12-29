@@ -5,8 +5,14 @@ import { FaAsterisk } from 'react-icons/fa'
 const Field = (props) => {
 
     const validateInput = (evt) => {
-        if (props.validation(evt.target.value)) props.onChange(evt, false) //valid input
-        if (!props.validation(evt.target.value)) props.onChange(evt, true) //invalid input
+        if (props.required) {
+            if (props.validation(evt.target.value)) props.onChange(evt, false) //valid input
+            if (!props.validation(evt.target.value)) props.onChange(evt, true) //invalid input  
+        }
+        else{
+            props.onChange(evt,false)
+        }
+
     }
 
 
@@ -46,7 +52,7 @@ const Field = (props) => {
     return(
         <div>
             <label style={labelStyle}>
-                {props.label} {props.required ? <FaAsterisk style={asteriskStyle} /> : null}
+                {props.label} {(props.required && props.type !== 'checkbox') ? <FaAsterisk style={asteriskStyle} /> : null}
                 {props.errorPresent ? <span style={{color:'red'}}>Invalid Input</span> : null}
                 <input
                     type={props.type}
