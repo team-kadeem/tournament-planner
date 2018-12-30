@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "body-parser": "^1.18.3",
+    "pg": "^7.7.1",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "react-icons": "^3.2.2",

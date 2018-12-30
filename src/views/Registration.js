@@ -36,49 +36,15 @@ export default class Registration extends React.Component {
                 waiver:'false'
             },
             errors:{
-                // firstName:false,
-                // lastName:false,
-                // boxerEmail:false,
-                // zipCode:false,
-                // phoneNumber:false,
-                // dateOfBirth:false,
-                // usaBoxingId:false,
-                // wins:false,
-                // losses:false,
-                // boxingClubAffiliation:false,
-                // coachFirstName:false,
-                // coachLastName:false,
-                // coachUSABoxingId:false,
-                // coachFirstName:false,
-                // coachLastName:false,
-                // coachUSABoxingId:false,
-                // coachPhoneNumber:false,
-                // coachEmail:false,
-                // gender:false,
-                // weight:false,
-                // rules:false,
-                // injury:false,
-                // injuryWarning:false,
-                // waiver:false
-                
                 firstName:true,
                 lastName:true,
                 boxerEmail:true,
                 zipCode:true,
                 phoneNumber:true,
                 dateOfBirth:true,
-                // usaBoxingId:true,
                 wins:true,
                 losses:true,
                 boxingClubAffiliation:true,
-                // coachFirstName:true,
-                // coachLastName:true,
-                // coachUSABoxingId:true,
-                // coachFirstName:true,
-                // coachLastName:true,
-                // coachUSABoxingId:false,
-                // coachPhoneNumber:false,
-                // coachEmail:false,
                 gender:true,
                 weight:true,
                 rules:true,
@@ -88,8 +54,11 @@ export default class Registration extends React.Component {
             }
         }
     }
+    componentWillMount(){
+
+    }
+    
     updateTextInputField = (evt, errorPresent) => {
-        console.log('updating input')
         let fields = Object.assign({}, this.state.fields)
         let errors = Object.assign({}, this.state.errors)
         fields[evt.target.name] = evt.target.value
@@ -106,7 +75,6 @@ export default class Registration extends React.Component {
     }
 
     updateRadioButtons = (evt, errorPresent) => {
-        console.log('updating radio buttons')
         let fields = Object.assign({}, this.state.fields)
         let errors = Object.assign({}, this.state.errors)
         console.log(evt.target.name)
@@ -156,6 +124,20 @@ export default class Registration extends React.Component {
             borderRadius:'4px',
             marginLeft:'10px',
             outline:'0'
+        }
+
+        const radioButtonTextStyle = {
+            lineHeight:'20px'
+        }
+
+        const radioTextMargins = {
+            margin:'0px 250px 40px 20px'
+        }
+
+        const radioWarnings = {
+            display:'inline-block',
+            color:'red',
+            marginLeft:'10px'
         }
 
         return(
@@ -224,7 +206,7 @@ export default class Registration extends React.Component {
                         type="text"
                         value={this.state.fields.dateOfBirth}
                         onChange={this.updateTextInputField}
-                        label="Boxer's Date of Birth"
+                        label="Boxer's Date of Birth (MM/DD/YYYY)"
                         required={true}
                         errorPresent={this.state.errors.dateOfBirth && this.state.invalidSubmission}
                         updateErrors={this.updateErrors}
@@ -325,9 +307,9 @@ export default class Registration extends React.Component {
                         validation={val => isInt(val)}
                     />
 
-                    <label>
+                    <label style={{marginLeft:'10px'}}>
                         GENDER
-                        {this.state.fields.gender === '' ? <span style={{color:'red'}}>Must Choose One</span> : null}
+                        {this.state.fields.rules === 'false' ? <span style={radioWarnings}>Must Agree To Continue</span> : null}
                         <Field
                             name="gender"
                             type="checkbox"
@@ -347,106 +329,119 @@ export default class Registration extends React.Component {
                         />
                     </label>
                     <br/>
-                    <label>
-                        I (We) agree to abide by the rules of USA Boxing, Inc. and will comply with the 
-                        INT'L PARADE OF CHAMPIONS TOURNAMENT as detailed in the Fact Sheet 
-                        (found on USABoxingMetro.com), and the Code of Conduct for Athlete/Non-Athlete.
-                        {this.state.fields.rules === 'false' ? <span style={{color:'red'}}>Must Agree To Continue</span> : null}
-                        <Field
-                            name="rules"
-                            type="radio"
-                            label="AGREE"
-                            value={true}
-                            onChange={this.updateRadioButtons}
-                        />
-                        
-                        <Field
-                            name="rules"
-                            type="radio"
-                            label="DISAGREE"
-                            value={false}
-                            onChange={this.updateRadioButtons}
-                        />
-                    </label>
+                    
+                    <div style={radioTextMargins}>
+                        <label style={radioButtonTextStyle}>
+                            I (We) agree to abide by the rules of USA Boxing, Inc. and will comply with the 
+                            INT'L PARADE OF CHAMPIONS TOURNAMENT as detailed in the Fact Sheet 
+                            (found on USABoxingMetro.com), and the Code of Conduct for Athlete/Non-Athlete.
+                            {this.state.fields.rules === 'false' ? <span style={radioWarnings}>Must Agree To Continue</span> : null}
+                            <Field
+                                name="rules"
+                                type="radio"
+                                label="AGREE"
+                                value={true}
+                                onChange={this.updateRadioButtons}
+                            />
+                            
+                            <Field
+                                name="rules"
+                                type="radio"
+                                label="DISAGREE"
+                                value={false}
+                                onChange={this.updateRadioButtons}
+                            />
+                        </label>
+                    </div>
 
-                    <label>
-                        I (We) fully understand that I (we) assume all responsibility for any injury that he/she may incur 
-                        in this boxing event(s). I (We) understand and agree that medical or other services rendered to Entrant 
-                        by or at the instance of any of the named parties is not an admission of liability to provide or 
-                        continue to provide any such services and is not a waiver by any of said parties of any right or rights hereunder.
-                        {this.state.fields.injury === 'false' ? <span style={{color:'red'}}>Must Agree To Continue</span> : null}
-                        <Field
-                            name="injury"
-                            type="radio"
-                            label="AGREE"
-                            value={true}
-                            onChange={this.updateRadioButtons}
-                        />
+                    <div style={radioTextMargins}>
+                        <label style={radioButtonTextStyle}>
+                            I (We) fully understand that I (we) assume all responsibility for any injury that he/she may incur 
+                            in this boxing event(s). I (We) understand and agree that medical or other services rendered to Entrant 
+                            by or at the instance of any of the named parties is not an admission of liability to provide or 
+                            continue to provide any such services and is not a waiver by any of said parties of any right or rights hereunder.
+                            {this.state.fields.rules === 'false' ? <span style={radioWarnings}>Must Agree To Continue</span> : null}
+                            <Field
+                                name="injury"
+                                type="radio"
+                                label="AGREE"
+                                value={true}
+                                onChange={this.updateRadioButtons}
+                            />
 
-                        <Field
-                            name="injury"
-                            type="radio"
-                            label="DISAGREE"
-                            value={false}
-                            onChange={this.updateRadioButtons}
-                        />
-                    </label>
+                            <Field
+                                name="injury"
+                                type="radio"
+                                label="DISAGREE"
+                                value={false}
+                                onChange={this.updateRadioButtons}
+                            />
+                        </label>                    
+                    </div>
 
-                    <label>
-                        I (We) certify the Entrant has not sustained any injury to his/her hands, consisting of fractures or 
-                        broken bones, or injuries to his/her head, including, but not limited to, concussions within three(3) 
-                        months preceding the date of this consent form, that the entrant has been seen by his/her physician 
-                        and deemed to be in good health, and I (we) know of no other injuries that has been sustained which may 
-                        reoccur in this boxing event. Furthermore, I (we) understand and appreciate that participation in sports carries 
-                        a risk to the participant of serious injury, including permanent paralysis or death. I (we) voluntarily 
-                        and knowingly recognize, accept, and assume this risk.
-                        {this.state.fields.injuryWarning === 'false' ? <span style={{color:'red'}}>Must Agree To Continue</span> : null}
-                        <Field
-                            name="injuryWarning"
-                            type="radio"
-                            label="AGREE"
-                            value={true}
-                            onChange={this.updateRadioButtons}
-                        />
+                    <div style={radioTextMargins}>
+                        <label style={radioButtonTextStyle}>
+                            I (We) certify the Entrant has not sustained any injury to his/her hands, consisting of fractures or 
+                            broken bones, or injuries to his/her head, including, but not limited to, concussions within three(3) 
+                            months preceding the date of this consent form, that the entrant has been seen by his/her physician 
+                            and deemed to be in good health, and I (we) know of no other injuries that has been sustained which may 
+                            reoccur in this boxing event. Furthermore, I (we) understand and appreciate that participation in sports carries 
+                            a risk to the participant of serious injury, including permanent paralysis or death. I (we) voluntarily 
+                            and knowingly recognize, accept, and assume this risk.
+                            {this.state.fields.rules === 'false' ? <span style={radioWarnings}>Must Agree To Continue</span> : null}
+                            <Field
+                                name="injuryWarning"
+                                type="radio"
+                                label="AGREE"
+                                value={true}
+                                onChange={this.updateRadioButtons}
+                            />
 
-                        <Field
-                            name="injuryWarning"
-                            type="radio"
-                            label="DISAGREE"
-                            value={false}
-                            onChange={this.updateRadioButtons}
-                        />
-                    </label>
+                            <Field
+                                name="injuryWarning"
+                                type="radio"
+                                label="DISAGREE"
+                                value={false}
+                                onChange={this.updateRadioButtons}
+                            />
+                        </label>                    
+                    </div>
 
-                    <label>
-                        I, the Parent/Guardian of Above Boxer, hereby consent to the entry of said applicant in the
-                        tournament and for myself (ourselves), my (our) heirs, executors, administrators, and assigns
-                        waive and release any and all right to claim for damages I (we) may or might have against USA 
-                        Boxing, Inc., USA Boxing Metropolitan Assoc, and New York Boxing Mgt Inc., or the officers, 
-                        subcommittees, agents, representatives and assigns of these entities, for any injuries suffered
-                        by boxer during his/her participation in the boxoffs, or arising from traveling to and returning
-                        from said event.certify the Entrant has not sustained any injury to his/her hands, consisting 
-                        of fractures or broken bones, or injuries to his/her head, including, but not limited to, concussions
-                        within three(3) months preceding the date of this consent form, that the entrant has been seen by 
-                        his/her physician and deemed to be in good health, and I (we) know of no other injuries that has 
-                        been sustained which may reoccur in this boxing event.
-                        {this.state.fields.waiver === 'false' ? <span style={{color:'red'}}>Must Agree To Continue</span> : null}
-                        <Field
-                            name="waiver"
-                            type="radio"
-                            label="AGREE"
-                            value={true}
-                            onChange={this.updateRadioButtons}
-                        />
 
-                        <Field
-                            name="waiver"
-                            type="radio"
-                            label="DISAGREE"
-                            value={false}
-                            onChange={this.updateRadioButtons}
-                        /> 
-                    </label>
+
+
+                    <div style={radioTextMargins}>
+                        <label style={radioButtonTextStyle}>
+                            I, the Parent/Guardian of Above Boxer, hereby consent to the entry of said applicant in the
+                            tournament and for myself (ourselves), my (our) heirs, executors, administrators, and assigns
+                            waive and release any and all right to claim for damages I (we) may or might have against USA 
+                            Boxing, Inc., USA Boxing Metropolitan Assoc, and New York Boxing Mgt Inc., or the officers, 
+                            subcommittees, agents, representatives and assigns of these entities, for any injuries suffered
+                            by boxer during his/her participation in the boxoffs, or arising from traveling to and returning
+                            from said event.certify the Entrant has not sustained any injury to his/her hands, consisting 
+                            of fractures or broken bones, or injuries to his/her head, including, but not limited to, concussions
+                            within three(3) months preceding the date of this consent form, that the entrant has been seen by 
+                            his/her physician and deemed to be in good health, and I (we) know of no other injuries that has 
+                            been sustained which may reoccur in this boxing event.
+                            {this.state.fields.rules === 'false' ? <span style={radioWarnings}>Must Agree To Continue</span> : null}
+                            <Field
+                                name="waiver"
+                                type="radio"
+                                label="AGREE"
+                                value={true}
+                                onChange={this.updateRadioButtons}
+                            />
+
+                            <Field
+                                name="waiver"
+                                type="radio"
+                                label="DISAGREE"
+                                value={false}
+                                onChange={this.updateRadioButtons}
+                            /> 
+                        </label>                    
+                    </div>
+
 
 
                     <input

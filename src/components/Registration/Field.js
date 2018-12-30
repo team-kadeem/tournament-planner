@@ -30,13 +30,10 @@ const Field = (props) => {
         }
     } else if (props.types === 'checkbox') {
         inputStyle = {
-            marginLeft:'10px',
 
-            // marginBottom:'10px'
         }
     } else {
         inputStyle = {
-            marginLeft:'10px',
             // marginBottom:'10px'
         }
     }
