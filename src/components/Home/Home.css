@@ -1,0 +1,5 @@
+.tournament-flex-container {
+    display:flex;
+    flex-direction: row;
+    border:1px solid #d8d8d8;
+}

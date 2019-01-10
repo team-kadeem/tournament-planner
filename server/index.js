@@ -17,12 +17,28 @@ const client = new Client({
     port:'5432'
 })
 client.connect()
-client.query('SELECT current_database()', (err, res) => {
-    if (err) {
-        console.log(err)
-    } else {
-        console.log(res)
-    }
+// client.query('SELECT current_database()', (err, res) => {
+//     if (err) {
+//         console.log(err)
+//     } else {
+//         console.log(res)
+//     }
+// })
+
+
+app.post('/tournaments', (Req, res) => {
+    console.log('getting tournaments')
+    const currentDate = new Date()
+    const query = `Select * from public.tournaments where close_date > NOW()`
+    client.query(query, (err, rows) => {
+        if (err) {
+            console.log('error getting open tournaments')
+        } else {
+            console.log('successful retrieve rows')
+            console.log(rows['rows'])
+            res.send(rows['rows'])
+        }
+    })
 })
 
 
