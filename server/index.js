@@ -94,11 +94,25 @@ app.post('/register', (req, res) => {
         console.log(`fighter date of birth is ${dateOfBirth} Older than 01/01/2002`)
         values.push('Youth + Senior')
     }
+
+    const tournament = req.body['tournament']
+    const fullName = `${req.body.firstName} ${req.body.lastName}`
+    console.log(tournament)
+    const tournamentInsertQuery = `UPDATE public.tournaments SET registrants = array_cat(registrants, '{${fullName}}') where id=${tournament}`
     client.query(insert, values, (err, res) => {
         if (err) {
             console.log(`Error: ${err}`)
         } else {
             console.log('successful insert query ' + res)
+            client.query(tournamentInsertQuery, (err, res) => {
+                if (err) {
+                    console.log('Error inserting new user into tournament')
+                    console.log(err)
+                } else {
+                    console.log(res)
+                    console.log('Successfully inserted new user into other tournament')
+                }
+            })
         }
     })
 

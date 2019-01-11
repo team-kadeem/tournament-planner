@@ -6,6 +6,7 @@ import isPostalCode from 'validator/lib/isPostalCode';
 import isMobilePhone from 'validator/lib/isMobilePhone';
 import isBefore from 'validator/lib/isBefore'
 import isInt from 'validator/lib/isInt'
+import { match } from 'minimatch';
 
 export default class Registration extends React.Component {
     constructor(props){
@@ -33,7 +34,8 @@ export default class Registration extends React.Component {
                 rules:'false',
                 injury:'false',
                 injuryWarning:'false',
-                waiver:'false'
+                waiver:'false',
+                tournament:this.props.match.params.tournamentId,
             },
             errors:{
                 firstName:true,
@@ -53,9 +55,6 @@ export default class Registration extends React.Component {
                 waiver:true
             }
         }
-    }
-    componentWillMount(){
-
     }
     
     updateTextInputField = (evt, errorPresent) => {
@@ -77,8 +76,6 @@ export default class Registration extends React.Component {
     updateRadioButtons = (evt, errorPresent) => {
         let fields = Object.assign({}, this.state.fields)
         let errors = Object.assign({}, this.state.errors)
-        console.log(evt.target.name)
-        console.log(typeof(evt.target.value))
         fields[evt.target.name] = evt.target.value
         if (evt.target.value === 'true') {
             errors[evt.target.name] = false
@@ -107,7 +104,7 @@ export default class Registration extends React.Component {
                 headers:{
                     "content-type":"application/json"
                 },
-                body:JSON.stringify(this.state.fields)
+                body:JSON.stringify(this.state.fields) 
             }
             console.log(params['body'])
             fetch('/register', params)

@@ -36,6 +36,7 @@ export default class Home extends React.Component {
                 <Tournament 
                     title={tournament.title}
                     closeDate={tournament.close_date}
+                    id={tournament.id}
                 />
             )
         })

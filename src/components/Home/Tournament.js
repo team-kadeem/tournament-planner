@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom'
 
 
 const Tournament = (props) => {
+    console.log(props)
     return(
         <div className="tournament-flex-container">
             <div>
-                <Link to="/register">{props.title}</Link>
+                <Link to={'/register/' + props.id}>{props.title}</Link>
             </div>
             <div>
                 Open Until: {props.closeDate}
