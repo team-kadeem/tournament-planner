@@ -17,6 +17,20 @@ const TournamentDetail = (props) => {
         top:'3px'
     }
 
+    const loadDetailCard = (fighter) => {
+        props.fighterDetailHandler(fighter)
+    }
+
+    const formattedRegistrants = props.registrants.map(fighter => 
+        <li 
+            onMouseEnter={() => loadDetailCard(fighter)}
+        >
+                {fighter}
+    </li>
+    )
+
+
+
     return(
         <div style={{marginTop:'15px'}}>
             {props.title}
@@ -30,27 +44,33 @@ const TournamentDetail = (props) => {
                 <div>
                     Tournament Details
                     <table>
-                        <tr>
-                            <th>
-                                Open Until:
-                            </th>
-                            <th>
-                                Entries:
-                            </th>
-                            <th>
-                                Action
-                            </th>
-                        </tr>
+                        <tbody>
+                            <tr>
+                                <th>
+                                    Open Until:
+                                </th>
+                                <th>
+                                    Entries:
+                                </th>
+                                <th>
+                                    Action
+                                </th>
+                            </tr>
 
-                        <tr>
-                            <td>{props.closeDate}</td>
-                            <td>{props.registrants}</td>
-                            <td>                    
-                                <button onClick={generateBracket}>
-                                    Generate Bracket
-                                </button>
-                            </td>
-                        </tr>
+                            <tr>
+                                <td>{props.closeDate}</td>
+                                <td>
+                                    <ul>
+                                        {formattedRegistrants}
+                                    </ul>
+                                </td>
+                                <td>                    
+                                    <button onClick={generateBracket}>
+                                        Generate Bracket
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
 
                 </div> 
