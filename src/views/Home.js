@@ -1,5 +1,7 @@
 import React from 'react'
 import Tournament from '../components/Home/Tournament'
+import Gloves from '../images/gloves.svg'
+import Styles from '../themes/Styles'
 
 export default class Home extends React.Component {
     constructor(props){
@@ -19,6 +21,7 @@ export default class Home extends React.Component {
         fetch('/tournaments', params)
             .then(res => res.json())
             .then(data => this.setAvailableTournaments(data))
+            .catch(error => console.log('Error fetching tournaments ' + error))
     }
 
     setAvailableTournaments = (tournamentObjects) => {
@@ -31,6 +34,7 @@ export default class Home extends React.Component {
     }
 
     render(){
+
         const availableTournaments = this.state.tournaments.map(tournament => {
             return(
                 <Tournament 
@@ -43,8 +47,17 @@ export default class Home extends React.Component {
 
         return(
             <div>
-                Available Tournaments
-                {availableTournaments}
+                <div style={Styles.imageContainer}>
+                    <img 
+                        src={Gloves} 
+                        style={Styles.primaryImageStyle}
+                    />
+                </div>
+                <div style={Styles.detailContainer}>
+                    Available Tournaments
+                    {availableTournaments}
+                </div>
+
             </div>
         )
     }

@@ -26,19 +26,48 @@ client.connect()
 // })
 
 
-app.post('/tournaments', (Req, res) => {
+app.post('/tournaments', (req, res) => {
     console.log('getting tournaments')
-    const currentDate = new Date()
-    const query = `Select * from public.tournaments where close_date > NOW()`
-    client.query(query, (err, rows) => {
-        if (err) {
-            console.log('error getting open tournaments')
-        } else {
-            console.log('successful retrieve rows')
-            console.log(rows['rows'])
-            res.send(rows['rows'])
-        }
-    })
+    if (req.body.key === 'admin') {
+      console.log('Admin')
+      const rowQuery = 'select * from public.tournaments'
+        client.query(rowQuery, (err, dbRes) => {
+            if (err) {
+                console.log(`error retrieving all rows ${err}`)
+                return res.send('')
+            } else {
+                return res.send(dbRes.rows)
+            }
+        })
+    }
+
+    else if (req.body.key === 'new') {
+        const values = [req.body.title, req.body.count, '{}', req.body.closeDate]
+        const insertQuery = 'INSERT INTO public.tournaments VALUES($1, $2, $3, $4)'
+        client.query(insertQuery, values, (err, dbRes) => {
+            if (err) {
+                console.log(`Error inserting new tournament as admin ${err}`)
+            } else {
+                console.log('Successful insertion of Query ' + dbRes)
+            }
+        })
+    }
+
+    else {
+        const query = `Select * from public.tournaments where close_date > NOW()`
+        client.query(query, (err, dbRes) => {
+            if (err) {
+                console.log('error getting open tournaments ' + err)
+                return res.send('')
+            } else {
+                res.send(dbRes['rows'])
+            }
+        })
+    }
+})
+
+app.post('/generate', (req, res) => {
+    
 })
 
 

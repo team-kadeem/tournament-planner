@@ -1,4 +1,5 @@
 import React from 'react'
+import Styles from '../../themes/Styles'
 
 export default class TournamentForm extends React.Component {
     constructor(props){
@@ -43,28 +44,28 @@ export default class TournamentForm extends React.Component {
             height:'30px',
             width:'280px',
             fontSize:'16px',
-            marginLeft:'10px'
+            marginLeft:'10px',
+            display:'block',
+            textAlign:'center',
+            margin:'15px auto'
         }
 
         const submitButton = {
-            padding:'10px 0 10px 0',
+            ...Styles.buttonStyle,
             backgroundColor:'#1659a1',
-            color:'white',
-            fontSize:'16px',
-            height:'50px',
-            cursor:'pointer'
+            display:'inline-block',
+            marginRight:'5px'
         }
 
         const closeButton = {
-            backgroundColor:'red',
-            fontSize:'16px',
-            outline:'0',
-            color:'white',
-            cursor:'pointer'
+            ...Styles.buttonStyle,
+            display:'inline-block',
+            backgroundColor:'red'
         }
 
+
         return(
-            <div>
+            <div style={{marginBottom:'40px'}}>
                 <form onSubmit={this.createNewTournament}>
                     <input
                         type="text"
@@ -84,16 +85,18 @@ export default class TournamentForm extends React.Component {
                     <input
                         type="submit"
                         onSubmit={this.createNewTournament}
-                        style={{...inputStyle, ...submitButton}}
+                        style={submitButton}
                         value="Create New Tournament"
                     />
+
+                    <button
+                        onClick={this.props.closeForm}
+                        style={closeButton}
+                    >
+                        Close Form
+                    </button>
                 </form>
-                <button
-                    onClick={this.props.closeForm}
-                    style={closeButton}
-                >
-                    Close Form
-                </button>
+
             </div>
         )
     }

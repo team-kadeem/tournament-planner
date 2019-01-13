@@ -91,7 +91,6 @@ export default class Registration extends React.Component {
         //make sure no errors
         const errorKeys = Object.keys(this.state.errors)
         const listOfErrors = errorKeys.filter(key => this.state.errors[key])
-        console.log(listOfErrors)
         if (listOfErrors.length > 0){
             this.setState({...this.state, invalidSubmission:true})
             return
@@ -306,7 +305,7 @@ export default class Registration extends React.Component {
 
                     <label style={{marginLeft:'10px'}}>
                         GENDER
-                        {this.state.fields.rules === 'false' ? <span style={radioWarnings}>Must Agree To Continue</span> : null}
+                        {this.state.fields.gender === '' ? <span style={radioWarnings}>Must Agree To Continue</span> : null}
                         <Field
                             name="gender"
                             type="checkbox"
@@ -357,7 +356,7 @@ export default class Registration extends React.Component {
                             in this boxing event(s). I (We) understand and agree that medical or other services rendered to Entrant 
                             by or at the instance of any of the named parties is not an admission of liability to provide or 
                             continue to provide any such services and is not a waiver by any of said parties of any right or rights hereunder.
-                            {this.state.fields.rules === 'false' ? <span style={radioWarnings}>Must Agree To Continue</span> : null}
+                            {this.state.fields.injury === 'false' ? <span style={radioWarnings}>Must Agree To Continue</span> : null}
                             <Field
                                 name="injury"
                                 type="radio"
@@ -385,7 +384,7 @@ export default class Registration extends React.Component {
                             reoccur in this boxing event. Furthermore, I (we) understand and appreciate that participation in sports carries 
                             a risk to the participant of serious injury, including permanent paralysis or death. I (we) voluntarily 
                             and knowingly recognize, accept, and assume this risk.
-                            {this.state.fields.rules === 'false' ? <span style={radioWarnings}>Must Agree To Continue</span> : null}
+                            {this.state.fields.injuryWarning === 'false' ? <span style={radioWarnings}>Must Agree To Continue</span> : null}
                             <Field
                                 name="injuryWarning"
                                 type="radio"
@@ -420,7 +419,7 @@ export default class Registration extends React.Component {
                             within three(3) months preceding the date of this consent form, that the entrant has been seen by 
                             his/her physician and deemed to be in good health, and I (we) know of no other injuries that has 
                             been sustained which may reoccur in this boxing event.
-                            {this.state.fields.rules === 'false' ? <span style={radioWarnings}>Must Agree To Continue</span> : null}
+                            {this.state.fields.waiver === 'false' ? <span style={radioWarnings}>Must Agree To Continue</span> : null}
                             <Field
                                 name="waiver"
                                 type="radio"
