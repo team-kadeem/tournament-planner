@@ -21,13 +21,7 @@ const TournamentDetail = (props) => {
         props.fighterDetailHandler(fighter)
     }
 
-    const formattedRegistrants = props.registrants.map(fighter => 
-        <li 
-            onMouseEnter={() => loadDetailCard(fighter)}
-        >
-                {fighter}
-    </li>
-    )
+    const formattedRegistrants = props.registrants.map(fighter => <li>{fighter}</li>)
 
 
 

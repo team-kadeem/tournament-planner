@@ -114,13 +114,18 @@ export default class Admin extends React.Component {
                                     </button>
                             </div> : 
                             <button 
-                                style={{...Styles.buttonStyle, backgroundColor:'blue'}}
+                                style={{...Styles.buttonStyle, backgroundColor:'blue', marginRight:'20px'}}
                                 onClick={this.viewTournaments}
                             >
                                 View All Tournaments
                             </button>
                         
                     } 
+                    <button
+                        style={{...Styles.buttonStyle, backgroundColor:'#669999', marginRight:'20px' }}
+                    >
+                        Search A Fighter
+                    </button>
                 </div>
 
             </div>
