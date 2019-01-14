@@ -67,7 +67,7 @@ app.post('/tournaments', (req, res) => {
 })
 
 app.post('/generate', (req, res) => {
-    
+
 })
 
 
@@ -92,9 +92,10 @@ app.post('/register', (req, res) => {
         'coachemail',  
         'gender', 
         'weight',
-        'agegroup'
+        'agegroup',
+        'winpercentage'
     ]
-    const insert = `INSERT INTO public.fighter(${tableColumns}) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18) RETURNING *`
+    const insert = `INSERT INTO public.fighter(${tableColumns}) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19) RETURNING *`
     const dateOfBirth = new Date(req.body.dateOfBirth)
     const jrOlympicDate = new Date('01/01/2002')
     const values = [
@@ -123,6 +124,8 @@ app.post('/register', (req, res) => {
         console.log(`fighter date of birth is ${dateOfBirth} Older than 01/01/2002`)
         values.push('Youth + Senior')
     }
+
+    values.push(parseFloat(req.body.wins) / (parseFloat(req.body.wins) + parseFloat(req.body.losses)))
 
     const tournament = req.body['tournament']
     const fullName = `${req.body.firstName} ${req.body.lastName}`
