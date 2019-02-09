@@ -1,7 +1,7 @@
 import React from 'react'
 import Field from '../components/Registration/Field'
-import validator from 'validator'
 import { FaAsterisk } from 'react-icons/fa'
+import isEmail from 'validator/lib/isEmail'
 import isPostalCode from 'validator/lib/isPostalCode';
 import isMobilePhone from 'validator/lib/isMobilePhone';
 import isBefore from 'validator/lib/isBefore'
@@ -35,7 +35,7 @@ export default class Registration extends React.Component {
                 injury:'false',
                 injuryWarning:'false',
                 waiver:'false',
-                tournament:this.props.match.params.tournamentId,
+                tournamentId:this.props.match.params.tournamentId,
             },
             errors:{
                 firstName:true,
@@ -44,9 +44,15 @@ export default class Registration extends React.Component {
                 zipCode:true,
                 phoneNumber:true,
                 dateOfBirth:true,
+                usaBoxingId:true,
                 wins:true,
                 losses:true,
                 boxingClubAffiliation:true,
+                coachFirstName:true,
+                coachLastName:true,
+                coachUSABoxingId:true,
+                coachPhoneNumber:true,
+                coachEmail:true,
                 gender:true,
                 weight:true,
                 rules:true,
@@ -170,7 +176,7 @@ export default class Registration extends React.Component {
                         required={true}
                         updateErrors={this.updateErrors}
                         errorPresent={this.state.errors.boxerEmail && this.state.invalidSubmission}
-                        validation={data => validator.isEmail(data)}
+                        validation={data => isEmail(data)}
                     />
                     <Field
                         name="zipCode"
@@ -217,6 +223,10 @@ export default class Registration extends React.Component {
                         onChange={this.updateTextInputField}
                         label="USA Boxing Member ID Number"
                         updateErrors={this.updateErrors}
+                        required={true}
+                        errorPresent={this.state.errors.usaBoxingId && this.state.invalidSubmission}
+                        updateErrors={this.updateErrors}
+                        validation={val => val.length !== 0}
                     />
 
                     <Field
@@ -262,6 +272,10 @@ export default class Registration extends React.Component {
                         value={this.state.fields.coachFirstName}
                         onChange={this.updateTextInputField}
                         label="Coach's First Name"
+                        required={true}
+                        errorPresent={this.state.errors.coachFirstName && this.state.invalidSubmission}
+                        updateErrors={this.updateErrors}
+                        validation={val => val.length !== 0}
                     />
                     <Field
                         name="coachLastName"
@@ -269,6 +283,10 @@ export default class Registration extends React.Component {
                         value={this.state.fields.coachLastName}
                         onChange={this.updateTextInputField}
                         label="Coach's Last Name"
+                        required={true}
+                        errorPresent={this.state.errors.coachLastName && this.state.invalidSubmission}
+                        updateErrors={this.updateErrors}
+                        validation={val => val.length !== 0}
                     />
                     <Field
                         name="coachUSABoxingId"
@@ -276,6 +294,10 @@ export default class Registration extends React.Component {
                         value={this.state.fields.coachUSABoxingId}
                         onChange={this.updateTextInputField}
                         label="Coach USA Boxing Memberr ID #"
+                        required={true}
+                        errorPresent={this.state.errors.coachUSABoxingId && this.state.invalidSubmission}
+                        updateErrors={this.updateErrors}
+                        validation={val => val.length !== 0}
                     />
                     <Field
                         name="coachPhoneNumber"
@@ -283,6 +305,10 @@ export default class Registration extends React.Component {
                         value={this.state.fields.coachPhoneNumber}
                         onChange={this.updateTextInputField}
                         label="Coach's Phone Number"
+                        required={true}
+                        errorPresent={this.state.errors.coachPhoneNumber && this.state.invalidSubmission}
+                        updateErrors={this.updateErrors}
+                        validation={val => isMobilePhone(val)}
                     />
                     <Field
                         name="coachEmail"
@@ -290,6 +316,10 @@ export default class Registration extends React.Component {
                         onChange={this.updateTextInputField}
                         value={this.state.fields.coachEmail}
                         label="Coach's Email Address"
+                        required={true}
+                        errorPresent={this.state.errors.coachEmail && this.state.invalidSubmission}
+                        updateErrors={this.updateErrors}
+                        validation={val => isEmail(val)}
                     />
                     <Field
                         name="weight"
@@ -305,7 +335,7 @@ export default class Registration extends React.Component {
 
                     <label style={{marginLeft:'10px'}}>
                         GENDER
-                        {this.state.fields.gender === '' ? <span style={radioWarnings}>Must Agree To Continue</span> : null}
+                        {this.state.fields.gender === '' ? <span style={radioWarnings}>Must Pick One To Continue</span> : null}
                         <Field
                             name="gender"
                             type="checkbox"

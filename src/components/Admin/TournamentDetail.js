@@ -1,5 +1,6 @@
 import React from 'react'
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import { Link } from 'react-router-dom'
 
 const TournamentDetail = (props) => {
 
@@ -21,7 +22,14 @@ const TournamentDetail = (props) => {
         props.fighterDetailHandler(fighter)
     }
 
-    const formattedRegistrants = props.registrants.map(fighter => <li>{fighter}</li>)
+    const formattedRegistrants = props.registrants.map(fighter => {
+        console.log(fighter)
+        if (fighter === "null" || fighter === "null null") {
+            return
+        } else {
+            return <li style={{marginBottom:'3px'}}>{fighter}</li>
+        }
+    })
 
 
 
@@ -62,6 +70,8 @@ const TournamentDetail = (props) => {
                                     <button onClick={generateBracket}>
                                         Generate Bracket
                                     </button>
+                                    <br/>
+                                    <Link to={'/bracket/' + props.id}>View Bracket</Link>
                                 </td>
                             </tr>
                         </tbody>

@@ -25,14 +25,41 @@ export default class Admin extends React.Component {
 
         fetch('/tournaments', params)
             .then(res => res.json())
-            .then(data => this.modifyTournamentData(data))
+            .then(data => this.modifyTournamentShowData(data))
+            .then(modifiedTournament => this.removeTournamentDuplicates(modifiedTournament))
             .then(tournaments => this.setState({...this.state, allTournaments:tournaments}))
             .catch(err => console.log(`Error fetching tournaments: ${err}`))
     }
 
-    modifyTournamentData = (tournamentData) => {
+    modifyTournamentShowData = (tournamentData) => {
         tournamentData.forEach(tournament => tournament['showDetail'] = false)
         return tournamentData
+    }
+
+    removeTournamentDuplicates = (tournamentData) => {
+        const tournamentNames = {}
+        const modifiedTournaments = []
+
+        tournamentData.forEach((tournament, i) => {
+            console.log(`${JSON.stringify(tournament)} \n\n`)
+            console.log(i)
+            if (Object.keys(tournamentNames).indexOf(tournament.title) === -1) {
+                tournamentNames[tournament.title] = i
+                tournament['registrants'] = [`${tournament.firstname} ${tournament.lastname}`]
+                modifiedTournaments.push(tournament)
+            } 
+            
+            else {
+                console.log('found a tournament duplicate')
+                console.log(tournament)
+                const location = tournamentNames[tournament.title]
+                console.log(location)
+                modifiedTournaments[location]['registrants'].push(`${tournament.firstname} ${tournament.lastname}`)
+            }
+            // tournamentNames.push(tournament.title)
+        })
+        console.log(modifiedTournaments)
+        return modifiedTournaments
     }
 
     createNewTournament = () => {
@@ -65,6 +92,18 @@ export default class Admin extends React.Component {
 
     generateBracket = (tournamentId) => {
         console.log('Generating bracket for tournament: ' + tournamentId)
+
+        const bracketParams = {
+            method:'POST',
+            body:JSON.stringify({tournamentid:tournamentId}),
+            headers:{
+                "content-type":"application/json"
+            }
+        }
+        fetch ('/generate', bracketParams)
+            .then(res => res.text())
+            .then(data => console.log(data))
+            .catch(err => console.log(err))
     }
 
     render(){
