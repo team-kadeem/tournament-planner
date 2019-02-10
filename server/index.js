@@ -196,8 +196,9 @@ app.post('/tournaments', (req, res) => {
     }
 //ADMIN CREATE NEW TOURNAMENT
     else if (req.body.key === 'new') {
-        const values = [req.body.title, req.body.closeDate]
-        const insertQuery = 'INSERT INTO public.tournaments(title, close_date) VALUES($1, $2)'
+        console.log(req.body)
+        const values = [req.body.title, req.body.eventDate, req.body.closeDate, req.body.address]
+        const insertQuery = 'INSERT INTO public.tournament(title, date, registration_close, address) VALUES($1, $2, $3, $4)'
         client.query(insertQuery, values, (err, dbRes) => {
             if (err) {
                 console.log(`Error inserting new tournament as admin ${err}`)
