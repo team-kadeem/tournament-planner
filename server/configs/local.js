@@ -5,7 +5,7 @@ let config = {
 config.postgres = {
     user:'local',
     host:'Local',
-    database:'boxingLocal',
+    database:'boxing_local',
     password:'local',
     port:'5432'
 }

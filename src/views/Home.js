@@ -26,9 +26,7 @@ export default class Home extends React.Component {
 
     setAvailableTournaments = (tournamentObjects) => {
         let tournaments = []
-        console.log(tournamentObjects)
         const keys = Object.keys(tournamentObjects)
-        console.log(keys)
         keys.forEach(key => tournaments.push(tournamentObjects[key]))
         this.setState({tournaments})
     }
@@ -39,7 +37,7 @@ export default class Home extends React.Component {
             return(
                 <Tournament 
                     title={tournament.title}
-                    closeDate={tournament.close_date}
+                    closeDate={tournament.registration_close}
                     id={tournament.id}
                 />
             )

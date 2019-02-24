@@ -56,6 +56,7 @@ const Field = (props) => {
                 {props.label} {(props.required && props.type !== 'checkbox') ? <FaAsterisk style={asteriskStyle} /> : null}
                 {props.errorPresent ? <span style={{color:'red'}}>Invalid Input</span> : null}
                 <input
+                    disabled={props.disabled}
                     type={props.type}
                     value={props.value}
                     name={props.name}

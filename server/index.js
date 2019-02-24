@@ -7,12 +7,13 @@ const config = require('./configs/local')
 const app = express()
 app.use(bodyParser.urlencoded({ extended:true }))
 app.use(bodyParser.json())
+app.use(bodyParser.text())
 
 //POSTGRES
 const client = new Client({
     user:'local',
     host:'localhost',
-    database:'boxingLocal',
+    database:'boxing_local',
     password:'local',
     port:'5432'
 })
@@ -171,6 +172,48 @@ getWeightClass = (gender, agegroup, weight) => {
     }
     return weightClass
 }
+
+addFighterToTournament = (usaBoxingId, tournamentId) => {
+    const values = [usaBoxingId, tournamentId]
+    const query = `INSERT INTO public.fights_in(fighter_usa_boxing_id, tournament_id) VALUES($1, $2)`
+
+    client.query(query, values, (err, dbRes) => {
+        if (err) console.log(err)
+        else {
+            console.log(`Added ${usaBoxingId} to tournament number ${tournamentId}`)
+        }
+    })
+}
+
+checkFighterRegistration = usaBoxingId => {
+    const checkQuery = `SELECT fights_in.tournament_id, fighter_usa_boxing_id from public.fighter 
+                        inner join fights_in on fights_in.fighter_usa_boxing_id = fighter.usa_boxing_id
+                        `
+    client.query(checkQuery, (err, dbRes) => {
+        if (err) console.log('Error checking fighter ' + err)
+        else{
+            console.log('check query results:')
+            console.log(dbRes)
+        }
+
+    })
+}
+
+app.post('/search_user', (req, res) => {
+    console.log('searching for user')
+    let searchID = req.body.slice(1, req.body.length - 1)
+    const searchQuery = `Select * from public.fighter where usa_boxing_id = '${searchID}'`
+    console.log(searchQuery)
+    client.query(searchQuery, (err, dbRes) => {
+        if (err) console.log(err)
+        else{
+            console.log(dbRes.rows)
+            return res.send(dbRes.rows)
+        }
+    })
+})
+
+
 app.post('/tournaments', (req, res) => {
 //ADMIN VIEW ALL TOURNAMENTS
     console.log('getting tournaments')
@@ -182,7 +225,7 @@ app.post('/tournaments', (req, res) => {
                                fighterid,
                                firstname,
                                lastname
-                        FROM public.tournaments
+                        FROM public.tournament
                         LEFT JOIN fighter ON fighter.tournamentid = tournaments.id`
         client.query(rowQuery, (err, dbRes) => {
             if (err) {
@@ -196,20 +239,19 @@ app.post('/tournaments', (req, res) => {
     }
 //ADMIN CREATE NEW TOURNAMENT
     else if (req.body.key === 'new') {
-        console.log(req.body)
         const values = [req.body.title, req.body.eventDate, req.body.closeDate, req.body.address]
-        const insertQuery = 'INSERT INTO public.tournament(title, date, registration_close, address) VALUES($1, $2, $3, $4)'
+        const insertQuery = 'INSERT INTO public.tournament(title, event_datetime, registration_close, location) VALUES($1, $2, $3, $4)'
         client.query(insertQuery, values, (err, dbRes) => {
             if (err) {
                 console.log(`Error inserting new tournament as admin ${err}`)
             } else {
-                console.log('Successful insertion of Query ' + dbRes)
+                console.log('Successfully created new tournament ' + dbRes)
             }
         })
     }
 //FIGHTER VIEW OPEN TOURNAMENTS
     else {
-        const query = `Select * from public.tournaments where close_date > NOW()`
+        const query = `Select * from public.tournament where registration_close > NOW()`
         client.query(query, (err, dbRes) => {
             if (err) {
                 console.log('error getting open tournaments ' + err)
@@ -241,32 +283,30 @@ app.post('/generate', (req, res) => {
 
 
 app.post('/register', (req, res) => {
-    console.log('registering fighter')
-    console.log(req.body)
+    let existingFighter = false
+    checkFighterRegistration()
     const tableColumns = [
-        'firstname', 
-        'lastname', 
-        'boxeremail', 
+        'first_name', 
+        'last_name', 
+        'boxer_email', 
         'zipcode', 
-        'phonenumber', 
-        'dateofbirth', 
-        'usaboxingid', 
+        'phone', 
+        'date_of_birth', 
+        'usa_boxing_id', 
         'wins', 
         'losses', 
-        'boxingclubaffiliation', 
-        'coachfirstname', 
-        'coachlastname', 
-        'coachusaboxingid', 
-        'coachphonenumber', 
-        'coachemail',  
+        'boxing_club_affiliation', 
+        'coach_first_name', 
+        'coach_last_name', 
+        'coach_usa_boxing_id', 
+        'coach_phone', 
+        'coach_email',  
         'gender', 
         'weight',
-        'agegroup',
-        'winpercentage',
-        'tournamentId',
+        'age_group',
         'weight_class'
     ]
-    const insert = `INSERT INTO public.fighter(${tableColumns}) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21)`
+    const insert = `INSERT INTO public.fighter(${tableColumns}) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)`
     const dateOfBirth = new Date(req.body.dateOfBirth)
     const jrOlympicDate = new Date('01/01/2002')
     const values = [
@@ -288,8 +328,6 @@ app.post('/register', (req, res) => {
         req.body.gender,
         parseInt(req.body.weight),
         //AGE GROUP HERE
-        parseFloat(req.body.wins) / (parseFloat(req.body.wins) + parseFloat(req.body.losses)),
-        req.body.tournamentId,
     ]
     if (dateOfBirth.getFullYear() >= jrOlympicDate.getFullYear()) {
         console.log(`fighter date of birth is ${dateOfBirth} Younger than 01/01/2002`)
@@ -308,6 +346,9 @@ app.post('/register', (req, res) => {
             console.log(`Error: ${err}`)
         } else {
             console.log('successful insert query ' + res)
+            addFighterToTournament(req.body.usaBoxingId, req.body.tournamentId)
+            //After successful query
+
         }
     })
 
@@ -317,4 +358,4 @@ app.get('/create_brackets', (req, res) => {
     
 })
 
-app.listen(8000, () => console.log('App running on port 8000'))
+app.listen(8000, () => console.log('Tournament running on port 8000'))

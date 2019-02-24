@@ -23,19 +23,7 @@ export default class TournamentForm extends React.Component {
         }
     }
 
-    checkErrorStatus = () => {
-        const errors = Object.keys(this.state.errors).filter(objectKey =>{
-            // console.log(this.state.errors[objectKey] === true)
-            // this.state.errors[objectKey]
-            return this.state.errors[objectKey] === true
-        })
-        return errors
-        // if (errors.length > 0)
-        //     return this.setState({...this.state, errorPresent:true})
-        // else {
-        //     return this.setState({...this.state, errorPresent:false})
-        // }
-    }
+
 
 
     createNewTournament = (evt) => {
@@ -54,15 +42,12 @@ export default class TournamentForm extends React.Component {
             .catch(err => console.log(`Error creating new tournament ${err}`))
     }
 
-    validateInput = (evt) => {
-        if (evt.target.name === 'title' || evt.target.name === 'address'){
-            return !(evt.target.value.length === 0)
+    validInput = (evt) => {
+        if (evt.target.name === 'title' || evt.target.name === 'address')
+            return evt.target.value.length > 0
 
-        }
-
-        if (evt.target.name === 'eventDate' || evt.target.name === 'closeDate') {
+        if (evt.target.name === 'eventDate' || evt.target.name === 'closeDate')
             return validator.isAfter(evt.target.value)
-        }
 
     }
 
@@ -71,26 +56,29 @@ export default class TournamentForm extends React.Component {
         let errors = Object.assign({}, this.state.errors)
         fields[evt.target.name] = evt.target.value
 
-        //FALSE = ERROR PRESENT
-        if (this.validateInput(evt)){
+        if (this.validInput(evt))
             errors[evt.target.name] = false
-        }
-            
-
-        else {
+        
+        else 
             errors[evt.target.name] = true
-        }
-
-        this.setState({...this.state, fields:fields, errors:errors}, this.toggleErrorPresent())
+        
+        this.setState({...this.state, fields:fields, errors:errors}, () => this.toggleErrorPresent())
 
 
     }
 
+    checkErrorStatus = () => {
+        const errors = Object.keys(this.state.errors).filter(objectKey => this.state.errors[objectKey] === true)
+        console.log(errors)
+        return errors
+    }
+
     toggleErrorPresent = () => {
-        if (this.checkErrorStatus().length > 0)
-            return this.setState({errorPresent:true, ...this.state}, () => console.log('AFTER SETTING TATE'))
+        if (this.checkErrorStatus().length > 0){
+            return this.setState({...this.state, errorPresent:true})
+        }
         else
-            return this.setState({errorPresent:false, ...this.state}, () => console.log('AFTER SETTING STATE'))
+            return this.setState({...this.state, errorPresent:false })
         
     }
 
