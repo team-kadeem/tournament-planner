@@ -1,16 +1,14 @@
 import React from 'react'
-import Field from '../components/Registration/Field'
 import UserType from '../components/Registration/UserType'
 import SearchUser from '../components/Registration/SearchUser'
 import RegistrationForm from '../components/Registration/RegistrationForm'
-import { FaAsterisk } from 'react-icons/fa'
-import { stat } from 'fs';
 
 
 export default class Registration extends React.Component {
     constructor(props){
         super(props)
         this.state = {
+            formStatus:null,
             fighterNotFound:false,
             userType:undefined,
             dataLoaded:null,
@@ -127,7 +125,15 @@ export default class Registration extends React.Component {
 
         } else {
             let stateObject = Object.assign({}, this.state.fields)
-            console.log(stateObject)
+            let errors = Object.assign({}, this.state.errors)
+            Object.keys(errors).forEach(key => {
+                if (key !== 'rules' && 
+                    key !== 'injury' && 
+                    key !== 'injuryWarning' &&
+                    key !== 'waiver') {
+                        errors[key] = false
+                }
+            })
     
             stateObject['firstName'] = dbResponse['first_name']
             stateObject['lastName'] = dbResponse['last_name']
@@ -151,7 +157,7 @@ export default class Registration extends React.Component {
             stateObject['wins'] = dbResponse['wins']
             stateObject['losses'] = dbResponse['losses']
     
-            return this.setState({...this.state, fields:stateObject}) 
+            return this.setState({...this.state, fields:stateObject, errors: errors}) 
         }
     }
 
@@ -166,7 +172,6 @@ export default class Registration extends React.Component {
         } 
         else {
             this.setState({...this.state, invalidSubmission:false})
-            console.log('form submitted')
             const params = {
                 method:'POST',
                 headers:{
@@ -175,7 +180,33 @@ export default class Registration extends React.Component {
                 body:JSON.stringify(this.state.fields) 
             }
             fetch('/register', params)
+                .then(res => res.text())
+                .then(data => this.setState({...this.state, formStatus:data}))
         }
+    }
+
+    updateFighter = (evt) => {
+        evt.preventDefault()
+        const errorKeys = Object.keys(this.state.errors)
+        const listOfErrors = errorKeys.filter(key => this.state.errors[key])
+        if (listOfErrors.length > 0){
+            this.setState({...this.state, invalidSubmission:true})
+            return
+        } 
+        else {
+            this.setState({...this.state, invalidSubmission:false})
+            const params = {
+                method:'POST',
+                headers:{
+                    "content-type":"application/json"
+                },
+                body:JSON.stringify(this.state.fields) 
+            }
+            fetch('/update_fighter', params)
+                .then(res => res.text())
+                .then(data => this.setState({...this.state, formStatus:data}))
+        }
+
     }
 
     render(){
@@ -193,10 +224,10 @@ export default class Registration extends React.Component {
                     this.state.userType === 'new' ? 
                     <RegistrationForm
                         submitHandler={this.submitForm}
+                        formStatus={this.state.formStatus}
                         textInputHandler={this.updateTextInputField}
                         checkboxHandler={this.updateCheckboxField}
                         radioHandler={this.updateRadioButtons}
-                        updateErrorHandler={this.updateErrors}
                         errorPresent={this.state.invalidSubmission}
                         firstNameVal={this.state.fields.firstName}
                         firstNameErr={this.state.errors.firstName}
@@ -236,6 +267,8 @@ export default class Registration extends React.Component {
                         rulesErr={this.state.errors.rules}
                         injuryVal={this.state.fields.injury}
                         injuryErr={this.state.errors.injury}
+                        injuryWarningVal={this.state.fields.injuryWarning}
+                        injuryWarningErr={this.state.errors.injuryWarning}
                         waiverVal={this.state.fields.waiver}
                         waiverErr={this.state.errors.waiver}
                     /> : this.state.dataLoaded ? 
@@ -243,11 +276,11 @@ export default class Registration extends React.Component {
                         disableGender={true}
                         disableId={true}
                         disableBirthday={true}
-                        submitHandler={this.submitForm}
+                        formStatus={this.state.formStatus}
+                        submitHandler={this.updateFighter}
                         textInputHandler={this.updateTextInputField}
                         checkboxHandler={this.updateCheckboxField}
                         radioHandler={this.updateRadioButtons}
-                        updateErrorHandler={this.updateErrors}
                         errorPresent={this.state.invalidSubmission}
                         firstNameVal={this.state.fields.firstName}
                         firstNameErr={this.state.errors.firstName}
@@ -287,6 +320,8 @@ export default class Registration extends React.Component {
                         rulesErr={this.state.errors.rules}
                         injuryVal={this.state.fields.injury}
                         injuryErr={this.state.errors.injury}
+                        injuryWarningVal={this.state.fields.injuryWarning}
+                        injuryWarningErr={this.state.errors.injuryWarning}
                         waiverVal={this.state.fields.waiver}
                         waiverErr={this.state.errors.waiver}
                     /> :

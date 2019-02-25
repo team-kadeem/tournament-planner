@@ -18,23 +18,13 @@ const client = new Client({
     port:'5432'
 })
 client.connect()
-// client.query('SELECT current_database()', (err, res) => {
-//     if (err) {
-//         console.log(err)
-//     } else {
-//         console.log(res)
-//     }
-// })
 
 
 
 getWeightClass = (gender, agegroup, weight) => {
-    console.log(gender)
-    console.log(agegroup)
-    console.log(weight)
+
     let weightClass
     if (agegroup === 'Jr. Olympic') {
-        console.log('wtf')
         switch(true){
             case weight <= 50:
                 weightClass = 50
@@ -341,17 +331,64 @@ app.post('/register', (req, res) => {
     values.push(getWeightClass(req.body.gender, values[17], parseInt(req.body.weight)))
 
 
-    client.query(insert, values, (err, res) => {
+    client.query(insert, values, (err, dbRes) => {
         if (err) {
             console.log(`Error: ${err}`)
         } else {
-            console.log('successful insert query ' + res)
+            console.log('successful insert query ' + dbRes)
             addFighterToTournament(req.body.usaBoxingId, req.body.tournamentId)
             //After successful query
+            return res.send('Registered successfully!')
 
         }
     })
 
+})
+
+app.post('/update_fighter', (req, res) => {
+    console.log('update fighter')
+    console.log(req.body)
+    const updateValues = [
+        req.body.firstName,
+        req.body.lastName,
+        req.body.boxerEmail,
+        req.body.zipCode,
+        req.body.phoneNumber,
+        req.body.wins,
+        req.body.losses,
+        req.body.boxingClubAffiliation,
+        req.body.coachFirstName,
+        req.body.coachLastName,
+        req.body.coachUSABoxingId,
+        req.body.coachPhoneNumber,
+        req.body.coachEmail,
+        req.body.weight
+    ]
+    //need to update age group and weight class
+    const updateQuery = `update public.fighter set first_name = ($1), 
+    last_name = ($2), 
+    boxer_email = ($3),
+    zipcode = ($4),
+    phone = ($5),
+    wins = ($6),
+    losses = ($7),
+    boxing_club_affiliation = ($8),
+    coach_first_name = ($9),
+    coach_last_name = ($10),
+    coach_usa_boxing_id = ($11),
+    coach_phone = ($12),
+    coach_email = ($13),
+    weight = ($14)
+    where usa_boxing_id = '${req.body.usaBoxingId}'`
+
+
+    client.query(updateQuery, updateValues, (err, dbRes) => {
+        if (err) console.log(err)
+        else {
+            console.log('successful update')
+            return res.send('Updated and Registered!')
+        }
+    })
 })
 
 app.get('/create_brackets', (req, res) => {

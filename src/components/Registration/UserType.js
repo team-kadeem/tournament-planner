@@ -8,6 +8,7 @@ const firstTimeButton = {
     color:'white',
     cursor:'pointer',
     outline:'0',
+    boxShadow: '2px 2px grey'
 }
 
 const returningButton = {
@@ -26,7 +27,8 @@ const UserType = (props) => {
                     style={firstTimeButton}
                     onClick={props.updateButtonHandler}
                 >
-                    First Time Registrant
+                    First Time Registrant:<br/>
+                    You have never registered for a tournament via this platform 
                 </button>
 
                 <button 
@@ -34,7 +36,8 @@ const UserType = (props) => {
                     style={returningButton}
                     onClick={props.updateButtonHandler}
                 >
-                    Returning User
+                    Returning User:<br/>
+                    You have registered for a tournament via this platform
                 </button>
             </div>
 

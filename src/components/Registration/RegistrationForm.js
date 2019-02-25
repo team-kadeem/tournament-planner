@@ -43,7 +43,6 @@ const RegistrationForm = (props) => {
                     label="First Name"
                     onChange={props.textInputHandler}
                     required={true}
-                    updateErrors={props.updateErrorHandler}
                     errorPresent={props.firstNameErr && props.errorPresent}
                     validation={ val => val.length !== 0}
                 />
@@ -54,7 +53,6 @@ const RegistrationForm = (props) => {
                     label="Last Name"
                     onChange={props.textInputHandler}
                     required={true}
-                    updateErrors={props.updateErrorHandler}
                     errorPresent={props.lastNameErr && props.errorPresent}
                     validation={val => val.length !== 0}
                 />
@@ -65,7 +63,6 @@ const RegistrationForm = (props) => {
                     label="Boxer's Email Address"
                     onChange={props.textInputHandler}
                     required={true}
-                    updateErrors={props.updateErrorHandler}
                     errorPresent={props.boxerEmailVal && props.errorPresent}
                     validation={data => isEmail(data)}
                 />
@@ -76,7 +73,6 @@ const RegistrationForm = (props) => {
                     label="Residence - Zip Code"
                     onChange={props.textInputHandler}
                     required={true}
-                    updateErrors={props.updateErrorHandler}
                     errorPresent={props.zipCodeErr && props.errorPresent}
                     validation={data => isPostalCode(data, 'US')}
 
@@ -89,7 +85,6 @@ const RegistrationForm = (props) => {
                     label="Cell/Phone Number"
                     required={true}
                     errorPresent={props.phoneNumberErr && props.errorPresent}
-                    updateErrors={props.updateErrorHandler}
                     validation={data => isMobilePhone(data, 'en-US')}
 
                 />
@@ -103,7 +98,6 @@ const RegistrationForm = (props) => {
                     label="Boxer's Date of Birth (MM/DD/YYYY)"
                     required={true}
                     errorPresent={props.dateOfBirthErr && props.errorPresent}
-                    updateErrors={props.updateErrorHandler}
                     validation={val => isBefore(val)}
 
                 />
@@ -115,10 +109,8 @@ const RegistrationForm = (props) => {
                     value={props.usaBoxingVal}
                     onChange={props.textInputHandler}
                     label="USA Boxing Member ID Number"
-                    updateErrors={props.updateErrorHandler}
                     required={true}
                     errorPresent={props.usaBoxingErr && props.errorPresent}
-                    updateErrors={props.updateErrorHandler}
                     validation={val => val.length !== 0}
                 />
 
@@ -130,7 +122,6 @@ const RegistrationForm = (props) => {
                     label="Wins"
                     required={true}
                     errorPresent={props.winsErr && props.errorPresent}
-                    updateErrors={props.updateErrorHandler}
                     validation={val => isInt(val)}
 
                 />
@@ -143,7 +134,6 @@ const RegistrationForm = (props) => {
                     label="Losses"
                     required={true}
                     errorPresent={props.lossErr && props.errorPresent}
-                    updateErrors={props.updateErrorHandler}
                     validation={val => isInt(val)}
                 />
 
@@ -155,7 +145,6 @@ const RegistrationForm = (props) => {
                     label="Boxing Club Affiliation"
                     required={true}
                     errorPresent={props.clubErr && props.errorPresent}
-                    updateErrors={props.updateErrorHandler}
                     validation={ val => val.length !== 0}
                 />
 
@@ -167,7 +156,6 @@ const RegistrationForm = (props) => {
                     label="Coach's First Name"
                     required={true}
                     errorPresent={props.coachFirstVal && props.errorPresent}
-                    updateErrors={props.updateErrorHandler}
                     validation={val => val.length !== 0}
                 />
                 <Field
@@ -178,7 +166,6 @@ const RegistrationForm = (props) => {
                     label="Coach's Last Name"
                     required={true}
                     errorPresent={props.coachLastErr && props.errorPresent}
-                    updateErrors={props.updateErrorHandler}
                     validation={val => val.length !== 0}
                 />
                 <Field
@@ -189,7 +176,6 @@ const RegistrationForm = (props) => {
                     label="Coach USA Boxing Memberr ID #"
                     required={true}
                     errorPresent={props.coachUSABoxingErr && props.errorPresent}
-                    updateErrors={props.updateErrorHandler}
                     validation={val => val.length !== 0}
                 />
                 <Field
@@ -200,7 +186,6 @@ const RegistrationForm = (props) => {
                     label="Coach's Phone Number"
                     required={true}
                     errorPresent={props.coachPhoneErr && props.errorPresent}
-                    updateErrors={props.updateErrorHandler}
                     validation={val => isMobilePhone(val)}
                 />
                 <Field
@@ -211,7 +196,6 @@ const RegistrationForm = (props) => {
                     label="Coach's Email Address"
                     required={true}
                     errorPresent={props.coachEmailErr && props.errorPresent}
-                    updateErrors={props.updateErrorHandler}
                     validation={val => isEmail(val)}
                 />
                 <Field
@@ -222,7 +206,6 @@ const RegistrationForm = (props) => {
                     label="Weight(lbs)"
                     required={true}
                     errorPresent={props.weightErr && props.errorPresent}
-                    updateErrors={props.updateErrorHandler}
                     validation={val => isInt(val)}
                 />
 
@@ -281,7 +264,7 @@ const RegistrationForm = (props) => {
                         in this boxing event(s). I (We) understand and agree that medical or other services rendered to Entrant 
                         by or at the instance of any of the named parties is not an admission of liability to provide or 
                         continue to provide any such services and is not a waiver by any of said parties of any right or rights hereunder.
-                        {props.injuryVl === 'false' ? <span style={radioWarnings}>Must Agree To Continue</span> : null}
+                        {props.injuryVal === 'false' ? <span style={radioWarnings}>Must Agree To Continue</span> : null}
                         <Field
                             name="injury"
                             type="radio"
@@ -309,7 +292,7 @@ const RegistrationForm = (props) => {
                         reoccur in this boxing event. Furthermore, I (we) understand and appreciate that participation in sports carries 
                         a risk to the participant of serious injury, including permanent paralysis or death. I (we) voluntarily 
                         and knowingly recognize, accept, and assume this risk.
-                        {props.injuryVL === 'false' ? <span style={radioWarnings}>Must Agree To Continue</span> : null}
+                        {props.injuryWarningVal === 'false' ? <span style={radioWarnings}>Must Agree To Continue</span> : null}
                         <Field
                             name="injuryWarning"
                             type="radio"
@@ -369,7 +352,8 @@ const RegistrationForm = (props) => {
                     style={submitButton}
                     type="submit"
                     value="Submit"
-                />
+                /> 
+                <span style={{color:'green'}}>{props.formStatus}</span>
                 {props.errorPresent ? <span style={{color:'red'}}>Invalid Submission</span> : null}
             </form> 
         </div>
