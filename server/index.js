@@ -395,4 +395,23 @@ app.get('/create_brackets', (req, res) => {
     
 })
 
-app.listen(8000, () => console.log('Tournament running on port 8000'))
+app.get('/*', (req, res) => {
+    res.send('Random Route Handler')
+})
+
+
+const boot = () => {
+    const server = app.listen(8000, () => console.log('Tournament running on port 8000'))
+    return server
+}
+
+const shutdown = (server) => {
+    server.close()
+}
+
+if (require.main === module) {
+    boot()
+} else {
+    exports.boot = boot
+    exports.shutdown = shutdown
+}
