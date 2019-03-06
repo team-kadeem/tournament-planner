@@ -13,12 +13,12 @@ export default class Home extends React.Component {
 
     componentWillMount(){
         const params = {
-            method:'POST',
+            method:'GET',
             headers:{
                 'content-type':'application/json'
             }
         }
-        fetch('/tournaments', params)
+        fetch('/home', params)
             .then(res => res.json())
             .then(data => this.setAvailableTournaments(data))
             .catch(error => console.log('Error fetching tournaments ' + error))

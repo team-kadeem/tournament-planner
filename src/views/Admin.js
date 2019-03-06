@@ -25,45 +25,52 @@ export default class Admin extends React.Component {
 
         fetch('/tournaments', params)
             .then(res => res.json())
-            .then(data => this.modifyTournamentShowData(data))
-            .then(modifiedTournament => this.removeTournamentDuplicates(modifiedTournament))
-            .then(tournaments => this.setState({...this.state, allTournaments:tournaments}))
+            .then(data => this.createTournamentObject(data))
+            .then(tournamentObject => this.populateAllTournaments(tournamentObject))
+            .then(tournamentList => this.setState({...this.state, allTournaments:tournamentList}))
             .catch(err => console.log(`Error fetching tournaments: ${err}`))
     }
+
+    createTournamentObject = (tournamentData) => {
+        let tournamentObject = {}
+
+        tournamentData.forEach(row => {
+            if (row.title in tournamentObject ) {
+                const name = row.first_name + ' ' + row.last_name
+                tournamentObject[row.title] = {
+                    ...tournamentObject[row.title],
+                }
+                tournamentObject[row.title][name] = row.usa_boxing_id
+            }
+            else{
+                const name = row.first_name + row.last_name
+                tournamentObject[row.title] = {}
+                tournamentObject[row.title]['id'] = row.id
+                tournamentObject[row.title][name] = row.usa_boxing_id
+            }
+                
+        })
+        return tournamentObject
+    }
+
+    populateAllTournaments = (tournamentObject) => {
+        let allTournaments = []
+        Object.keys(tournamentObject).forEach(tournamentName => {
+            let tournament = {}
+            tournament[tournamentName] = tournamentObject[tournamentName]
+            allTournaments.push(tournament)
+        })
+        return allTournaments
+    }
+
 
     modifyTournamentShowData = (tournamentData) => {
         tournamentData.forEach(tournament => tournament['showDetail'] = false)
         return tournamentData
     }
 
-    removeTournamentDuplicates = (tournamentData) => {
-        const tournamentNames = {}
-        const modifiedTournaments = []
-
-        tournamentData.forEach((tournament, i) => {
-            console.log(`${JSON.stringify(tournament)} \n\n`)
-            console.log(i)
-            if (Object.keys(tournamentNames).indexOf(tournament.title) === -1) {
-                tournamentNames[tournament.title] = i
-                tournament['registrants'] = [`${tournament.firstname} ${tournament.lastname}`]
-                modifiedTournaments.push(tournament)
-            } 
-            
-            else {
-                console.log('found a tournament duplicate')
-                console.log(tournament)
-                const location = tournamentNames[tournament.title]
-                console.log(location)
-                modifiedTournaments[location]['registrants'].push(`${tournament.firstname} ${tournament.lastname}`)
-            }
-            // tournamentNames.push(tournament.title)
-        })
-        console.log(modifiedTournaments)
-        return modifiedTournaments
-    }
 
     createNewTournament = () => {
-        console.log('creating new tournament')
         this.setState(previousState => {
             return {
                 ...this.state, showTournamentForm:!this.state.showTournamentForm
@@ -109,8 +116,11 @@ export default class Admin extends React.Component {
     render(){
 
         const allTournaments = this.state.allTournaments.map( tournament => {
-            return <TournamentDetail 
-                        {...tournament} 
+            let title = Object.keys(tournament)[0]
+            return <TournamentDetail
+                        id={tournament[title]['id']}
+                        title={title}
+                        registrants={tournament[title]}
                         toggleHandler={this.toggleTournamentDetail} 
                         generateHandler={this.generateBracket}
                     />
@@ -159,7 +169,8 @@ export default class Admin extends React.Component {
                                 View All Tournaments
                             </button>
                         
-                    } 
+                    }
+
                     <button
                         style={{...Styles.buttonStyle, backgroundColor:'#669999', marginRight:'20px' }}
                     >
