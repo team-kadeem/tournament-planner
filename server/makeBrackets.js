@@ -30,10 +30,6 @@ const determineChildNodes = (parentNodeNumber, numOfFighters, byeRounds) => {
         let nodeNumberShouldBe = parentNodeNumber + (numOfFighters - eliminations * 2)
         rightNode = nodeNumberShouldBe - (numOfFighters - parentNodeNumber)
         leftNode = rightNode - 1
-        // console.log('should be ' + nodeNumberShouldBe)
-        // console.log('parent is ' + parentNodeNumber)
-        // console.log(rightNode)
-        // console.log(leftNode)
     } else {
         leftNode = parentNodeNumber - (numOfFighters - parentNodeNumber + 1)
         rightNode = parentNodeNumber - (numOfFighters - parentNodeNumber) 
@@ -65,6 +61,8 @@ const makeBracketsForDivision = (numOfFighters, fighterObjects) => {
 
 
     let nodesInRound = peopleToEliminate(numOfFighters ,1) || numOfFighters / 2
+    console.log('top')
+    console.log(nodesInRound)
     const numOfRounds = numberOfRounds(numOfFighters)
 
 
@@ -99,6 +97,9 @@ const makeBracketsForDivision = (numOfFighters, fighterObjects) => {
                     nodes.length + 1 //so the count is not 0 based
                 )
                 //determine the node numbers of the children for this parent node
+                if (i > 1)
+                    byes = false
+
                 let children = determineChildNodes(node.nodeNumber, numOfFighters, byes)
                 // console.log(children)
                 node.leftChild = nodes[findChildNode(nodes, children['leftNode'])],
@@ -113,18 +114,16 @@ const makeBracketsForDivision = (numOfFighters, fighterObjects) => {
 
         if (byes)
             nodesInRound = (numOfFighters - peopleToEliminate(numOfFighters, 1)) / 2
-
-        if (byes && i > 1)
-            nodesInRound /= 2
         
+        console.log('nodes in round number ' + i)
         console.log(nodesInRound)
 
 
     }
-    nodes.forEach(node => {
-        console.log(node); 
-        console.log('\n\n');
-    })
+    // nodes.forEach(node => {
+    //     console.log(node); 
+    //     console.log('\n\n');
+    // })
 
 
 
@@ -134,5 +133,5 @@ const makeBracketsForDivision = (numOfFighters, fighterObjects) => {
 // makeBracketsForDivision(8)
 makeBracketsForDivision(7)
 
-// console.log(peopleToEliminate(14, 1))
+console.log(peopleToEliminate(7, 1))
 // console.log(peopleToEliminate(8, 1))
