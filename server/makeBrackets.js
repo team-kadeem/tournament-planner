@@ -5,6 +5,24 @@ const { Bracket } = require('./bracket')
 //The base of the tree is the number of people to eliminate
 //If that's zero, then the total number is a power of 2 and the base is that divided by 2
 
+const fighters = [
+    'fighter1',
+    'fighter2',
+    'fighter3',
+    'fighter4',
+    'fighter5',
+    'fighter6',
+    'fighter7',
+    'fighter8',
+    'fighter9',
+    // 'fighter10',
+    // 'fighter11',
+    // 'fighter12',
+    // 'fighter13',
+    // 'fighter14',
+    // 'fighter15',
+    // 'fighter16'
+]
 const peopleToEliminate = (num, iteration) => {
     if (2**iteration === num) {
         return 0
@@ -23,24 +41,14 @@ const numberOfRounds = (numOfFighters) => {
     }
 }
 
-const determineChildNodes = (parentNodeNumber, numOfFighters, byeRounds) => {
-    let eliminations = peopleToEliminate(numOfFighters, 1)
-    let leftNode, rightNode
-    if (byeRounds) {
-        let nodeNumberShouldBe = parentNodeNumber + (numOfFighters - eliminations * 2)
-        rightNode = nodeNumberShouldBe - (numOfFighters - parentNodeNumber)
-        leftNode = rightNode - 1
-    } else {
-        leftNode = parentNodeNumber - (numOfFighters - parentNodeNumber + 1)
-        rightNode = parentNodeNumber - (numOfFighters - parentNodeNumber) 
-    }
-
-    let nodeLocations = {
+const determineChildNodes = (parentNodeNumber, comepleteBracket) => {
+    const leftNode = parentNodeNumber - (comepleteBracket - parentNodeNumber + 1)
+    const rightNode = parentNodeNumber - (comepleteBracket - parentNodeNumber) 
+    const nodeLocations = {
         leftNode,
         rightNode
     }
     return nodeLocations
-
 }
 
 const findChildNode = (nodeList, nodeNumber) => {
@@ -54,17 +62,35 @@ const findChildNode = (nodeList, nodeNumber) => {
     return foundAt
 }
 
-const makeBracketsForDivision = (numOfFighters, fighterObjects) => {
-    let byes
-    if (peopleToEliminate(numOfFighters, 1)) 
-        byes = true
+const mapFightersToBrackets = (fighters, nodeList) => {
+    // const numOfFighters = nodeList + 1
+    // const totalFighters = nodeList.length + 1
+    // const treeBase = fighters.length / 2
+    const treeBase = (nodeList.length + 1) / 2
+    
+    for (let i = 0; i < 2; i++) {
+       for (let j = 0; j < treeBase; j++) {
+           if (i == 0) {
+            console.log(`mapping fighter ${fighters[0]} to node ${nodeList[j].nodeNumber}`)
+            nodeList[j].fighter1 = fighters.shift()
+           } else {
+               if (fighters.length === 0) {
+                   nodeList[j].fighter2 = 'Bye'
+               } else {
+                   nodeList[j].fighter2 = fighters.shift()
+               }
+           }
+       }
+    }
 
+    return nodeList
 
-    let nodesInRound = peopleToEliminate(numOfFighters ,1) || numOfFighters / 2
-    console.log('top')
-    console.log(nodesInRound)
+}
+
+const makeBracketsForDivision = (numOfFighters, fighters) => {
     const numOfRounds = numberOfRounds(numOfFighters)
-
+    const completeBracket = 2**numOfRounds
+    let nodesInRound = 2**numOfRounds / 2
 
     let nodes = []
 
@@ -97,10 +123,8 @@ const makeBracketsForDivision = (numOfFighters, fighterObjects) => {
                     nodes.length + 1 //so the count is not 0 based
                 )
                 //determine the node numbers of the children for this parent node
-                if (i > 1)
-                    byes = false
 
-                let children = determineChildNodes(node.nodeNumber, numOfFighters, byes)
+                let children = determineChildNodes(node.nodeNumber, completeBracket)
                 // console.log(children)
                 node.leftChild = nodes[findChildNode(nodes, children['leftNode'])],
                 node.rightChild = nodes[findChildNode(nodes, children['rightNode'])],
@@ -108,30 +132,22 @@ const makeBracketsForDivision = (numOfFighters, fighterObjects) => {
             }
             
         }
-
-        if (!byes)
-            nodesInRound /= 2
-
-        if (byes)
-            nodesInRound = (numOfFighters - peopleToEliminate(numOfFighters, 1)) / 2
-        
-        console.log('nodes in round number ' + i)
-        console.log(nodesInRound)
-
-
+        nodesInRound /= 2
     }
     // nodes.forEach(node => {
     //     console.log(node); 
     //     console.log('\n\n');
     // })
 
-
+    nodes = mapFightersToBrackets(fighters, nodes)
+    console.log(nodes)
+    
 
     
 }
 
 // makeBracketsForDivision(8)
-makeBracketsForDivision(7)
+makeBracketsForDivision(9, fighters)
 
-console.log(peopleToEliminate(7, 1))
+// console.log(peopleToEliminate(7, 1))
 // console.log(peopleToEliminate(8, 1))
