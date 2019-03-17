@@ -1,7 +1,6 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const { Client } = require('pg')
-const { generateDivisons } = require('./divisionData')
 const config = require('./configs/local')
 
 
@@ -21,11 +20,27 @@ const client = new Client({
 client.connect()
 
 
-determineDivision = (gender, agegroup, weight) => {
+determineDivision = (gender, agegroup, weightClass, usaBoxingId, tournamentId) => {
+    gender = gender[0].toUpperCase() + gender.substring(1,)
+    const divisionTitle = `${gender} ${agegroup}  ${weightClass} Group`
+    console.log(divisionTitle)
+    const query = `SELECT * FROM public.division where title = '${divisionTitle}'`
+    client.query(query, (err, dbRes) => {
+        if (err) {
+            console.log('Err getting divisions for new registrant ' + err)
+        } else {
+            console.log('WTFF')
+            console.log(query)
+            // console.log(dbRes)
+            // console.log(dbRes.rows[0].id)
+            addFighterToTournament(usaBoxingId, tournamentId, dbRes.rows[0].id)
+        }
+    })
 
 }
-getWeightClass = (gender, agegroup, weight) => {
 
+getWeightClass = (gender, agegroup, weight, usaBoxingId, tournamentId) => {
+    console.log(`get weight input ${gender} ${agegroup} ${weight}`)
     let weightClass
     if (agegroup === 'Jr. Olympic') {
         switch(true){
@@ -163,12 +178,13 @@ getWeightClass = (gender, agegroup, weight) => {
         }
 
     }
+    determineDivision(gender, agegroup, weightClass, usaBoxingId, tournamentId)
     return weightClass
 }
 
-addFighterToTournament = (usaBoxingId, tournamentId) => {
-    const values = [usaBoxingId, tournamentId]
-    const query = `INSERT INTO public.fights_in(fighter_usa_boxing_id, tournament_id) VALUES($1, $2)`
+addFighterToTournament = (usaBoxingId, tournamentId, divisionId) => {
+    const values = [usaBoxingId, tournamentId, divisionId]
+    const query = `INSERT INTO public.fights_in(fighter_usa_boxing_id, tournament_id, division_id) VALUES($1, $2, $3)`
 
     client.query(query, values, (err, dbRes) => {
         if (err) console.log(err)
@@ -328,7 +344,8 @@ app.post('/generate', (req, res) => {
 
 
 app.post('/register', (req, res) => {
-    let existingFighter = false
+    console.log(req.body)
+    console.log('\n\n')
     checkFighterRegistration()
     const tableColumns = [
         'first_name', 
@@ -349,9 +366,9 @@ app.post('/register', (req, res) => {
         'gender', 
         'weight',
         'age_group',
-        'weight_class'
     ]
-    const insert = `INSERT INTO public.fighter(${tableColumns}) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)`
+
+    const insert = `INSERT INTO public.fighter(${tableColumns}) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)`
     const dateOfBirth = new Date(req.body.dateOfBirth)
     const jrOlympicDate = new Date('01/01/2002')
     const values = [
@@ -382,17 +399,12 @@ app.post('/register', (req, res) => {
         values.splice(17, 0, 'Youth + Senior')
     }
 
-    console.log(getWeightClass(req.body.gender, values[17], parseInt(req.body.weight)))
-    values.push(getWeightClass(req.body.gender, values[17], parseInt(req.body.weight)))
-
-
     client.query(insert, values, (err, dbRes) => {
         if (err) {
             console.log(`Error: ${err}`)
         } else {
             console.log('successful insert query ' + dbRes)
-            addFighterToTournament(req.body.usaBoxingId, req.body.tournamentId)
-            //After successful query
+            getWeightClass(req.body.gender, values[17], parseInt(req.body.weight), req.body.usaBoxingId, req.body.tournamentId)
             return res.send('Registered successfully!')
 
         }
@@ -458,9 +470,6 @@ app.post('/update_fighter', (req, res) => {
 app.get('/create_brackets', (req, res) => {
     
 })
-
-
-
 
 
 if (require.main === module) {
