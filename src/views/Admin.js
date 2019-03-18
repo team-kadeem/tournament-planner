@@ -102,7 +102,7 @@ export default class Admin extends React.Component {
 
         const bracketParams = {
             method:'POST',
-            body:JSON.stringify({tournamentid:tournamentId}),
+            body:JSON.stringify({tournamentId:tournamentId}),
             headers:{
                 "content-type":"application/json"
             }

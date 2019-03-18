@@ -5,7 +5,7 @@ request.post('http://localhost:3000/register', {form:{
 }})
 
 
-for (let i = 0; i < 50; i++) {
+for (let i = 0; i < 100; i++) {
     let month = Math.floor(Math.random() * 12 + 1)
     let date = Math.floor(Math.random() * 30 + 1)
     let year = Math.floor(Math.random() * 100 + 1910)
@@ -14,8 +14,8 @@ for (let i = 0; i < 50; i++) {
         gender = 'Male'
     else
         gender = 'Female'
-        
-    request.post('http://localhost:3000/register', {form:{
+    
+    let body = {
         firstName:`test ${i}`,
         lastName:`test ${i}`,
         boxerEmail:`test ${i}`,
@@ -34,7 +34,11 @@ for (let i = 0; i < 50; i++) {
         gender:gender,
         weight: Math.floor((Math.random() * 100) + 100),
         tournamentId:1
-    }}, function(err, httpResponse, body){ 
+    }
+
+    console.log(body)
+    console.log('\n\n')
+    request.post('http://localhost:3000/register', {form:body}, function(err, httpResponse, body){ 
         if (err) {
             console.log(`ERR ${err}`)
         } else {

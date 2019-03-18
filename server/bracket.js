@@ -8,7 +8,9 @@ class Bracket {
         loser,
         description,
         root,
-        nodeNumber
+        nodeNumber,
+        roundNumber,
+        division
     ) {
         this.leftChild = leftChild;
         this.rightChild = rightChild;
@@ -19,6 +21,8 @@ class Bracket {
         this.description = description;
         this.root = root
         this.nodeNumber = nodeNumber
+        this.roundNumber = roundNumber
+        this.division = division
     }
 
     updateWinner(winner) {

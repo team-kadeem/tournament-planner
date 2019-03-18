@@ -13,15 +13,7 @@ const fighters = [
     'fighter5',
     'fighter6',
     'fighter7',
-    'fighter8',
-    'fighter9',
-    // 'fighter10',
-    // 'fighter11',
-    // 'fighter12',
-    // 'fighter13',
-    // 'fighter14',
-    // 'fighter15',
-    // 'fighter16'
+    'fighter8'
 ]
 const peopleToEliminate = (num, iteration) => {
     if (2**iteration === num) {
@@ -69,11 +61,13 @@ const mapFightersToBrackets = (fighters, nodeList) => {
            if (i == 0) {
             console.log(`mapping fighter ${fighters[0]} to node ${nodeList[j].nodeNumber}`)
             nodeList[j].fighter1 = fighters.shift()
+            // nodeList[j].fighter1 = JSON.stringify(fighters.shift())
            } else {
                if (fighters.length === 0) {
                    nodeList[j].fighter2 = 'Bye'
                } else {
                    nodeList[j].fighter2 = fighters.shift()
+                // nodeList[j].fighter2 = JSON.stringify(fighters.shift())
                }
            }
        }
@@ -103,7 +97,8 @@ const makeBracketsForDivision = (numOfFighters, fighters) => {
                     undefined,
                     undefined,
                     false,
-                    nodes.length + 1 //so the count is not 0 based
+                    nodes.length + 1, //so the count is not 0 based
+                    i + 1
                 )
                 nodes.push(node)
             } else {
@@ -120,9 +115,9 @@ const makeBracketsForDivision = (numOfFighters, fighters) => {
                     undefined,
                     undefined,
                     root,
-                    nodes.length + 1 //so the count is not 0 based
+                    nodes.length + 1, //so the count is not 0 based
+                    i + 1
                 )
-                //determine the node numbers of the children for this parent node
 
                 let children = determineChildNodes(node.nodeNumber, completeBracket)
                 node.leftChild = nodes[findChildNode(nodes, children['leftNode'])],
@@ -136,8 +131,10 @@ const makeBracketsForDivision = (numOfFighters, fighters) => {
 
     nodes = mapFightersToBrackets(fighters, nodes)
     console.log(nodes)
+    return nodes
     
 }
 
 // makeBracketsForDivision(8)
-makeBracketsForDivision(9, fighters)
+// makeBracketsForDivision(8, fighters)
+module.exports.makeBrackets = makeBracketsForDivision

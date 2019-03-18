@@ -1,6 +1,8 @@
 const express = require('express')
 const bodyParser = require('body-parser')
-const { Client } = require('pg')
+// const { Client } = require('pg')
+const { Pool } = require('pg') 
+const { makeBrackets } = require('./makeBrackets')
 const config = require('./configs/local')
 
 
@@ -10,7 +12,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.text())
 
 //POSTGRES
-const client = new Client({
+const client = new Pool({
     user:'local',
     host:'localhost',
     database:'boxing_local',
@@ -31,8 +33,6 @@ determineDivision = (gender, agegroup, weightClass, usaBoxingId, tournamentId) =
         } else {
             console.log('WTFF')
             console.log(query)
-            // console.log(dbRes)
-            // console.log(dbRes.rows[0].id)
             addFighterToTournament(usaBoxingId, tournamentId, dbRes.rows[0].id)
         }
     })
@@ -115,7 +115,7 @@ getWeightClass = (gender, agegroup, weight, usaBoxingId, tournamentId) => {
                 break
         }
 
-    } else if (gender === 'female' && agegroup === 'Youth + Senior') {
+    } else if (gender === 'Female' && agegroup === 'Youth + Senior') {
         switch(true){
             case weight <= 112:
                 weightClass = 112
@@ -202,7 +202,6 @@ checkFighterRegistration = usaBoxingId => {
         if (err) console.log('Error checking fighter ' + err)
         else{
             console.log('check query results:')
-            console.log(dbRes)
         }
 
     })
@@ -235,8 +234,88 @@ prepareDivisionInserts = (rows, tournamentId) => {
     
 }
 
-prepareBrackets = (rows) => {
-    let current
+organizeByDivisions = (rows) => {
+    let currentDivision = rows[0].division_id
+    let container = []
+    let fightersInDivision = []
+    rows.forEach(row => {
+        if (row.division_id !== currentDivision){
+            currentDivision = row.division_id
+            container.push(fightersInDivision)
+            fightersInDivision = []
+        }
+        fightersInDivision.push(row)  
+    })
+    // console.log(container)
+    return container
+
+}
+
+makeBracketsWrapper = (organizedFighters, tournamentId) => {
+    organizedFighters.forEach(fightersByDivision => {
+        console.log(fightersByDivision)
+        if (fightersByDivision.length === 1) {
+            console.log('SkIPPING DIVISION WITH ONLY ONE FIGHTER')
+        } else {
+            console.log('\n\n')
+            console.log('making bracket')
+            // makeBrackets(fightersByDivision.length, fightersByDivision)
+            insertBrackets(makeBrackets(fightersByDivision.length, fightersByDivision), tournamentId)
+        }
+    })
+}
+
+insertBrackets = (brackets, tournamentId) => {
+    let bracketColumns = [
+        'fighter1',
+        'fighter2',
+        'winner',
+        'loser',
+        'node_number',
+        'description',
+        'root',
+        'tournament_id',
+        'round_number',
+        'division'
+    ]
+
+    let division
+    brackets.forEach(bracket => {
+        console.log('BRACKETXX')
+        console.log(bracket)
+        let fighter1, fighter2
+
+        if (bracket.roundNumber === 1) {
+            fighter1 = `${bracket.fighter1.first_name || 'Bye'} ${bracket.fighter1.last_name || ''}`
+            fighter2 = `${bracket.fighter2.first_name || 'Bye'} ${bracket.fighter2.last_name || ''}`
+            division = `${bracket.fighter1.division_id || bracket.fighter2.division_id}`
+        } else {
+            fighter1 = bracket.fighter1
+            fighter2 = bracket.fighter2
+        }
+        const query = `insert into public.brackets(${bracketColumns}) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`
+        const values = [
+            fighter1,
+            fighter2,
+            bracket.winner,
+            bracket.loser,
+            bracket.nodeNumber,
+            bracket.description,
+            bracket.root,
+            tournamentId,
+            bracket.roundNumber,
+            parseInt(division)
+        ]
+
+        client.query(query, values, (err, dbRes) => {
+            if (err) {
+                console.log('Error inserting bracket ' + err)
+            } else {
+                console.log(dbRes)
+            }
+        })
+
+    })
 }
 
 //////////////////
@@ -254,21 +333,6 @@ app.get('/home', (req, res) => {
     })
     }
 )
-
-
-app.post('/search_user', (req, res) => {
-    console.log('searching for user')
-    let searchID = req.body.slice(1, req.body.length - 1)
-    const searchQuery = `Select * from public.fighter where usa_boxing_id = '${searchID}'`
-    console.log(searchQuery)
-    client.query(searchQuery, (err, dbRes) => {
-        if (err) console.log(err)
-        else{
-            console.log(dbRes.rows)
-            return res.send(dbRes.rows)
-        }
-    })
-})
 
 
 app.post('/tournaments', (req, res) => {
@@ -294,7 +358,6 @@ app.post('/tournaments', (req, res) => {
                 console.log(`error retrieving all rows ${err}`)
                 return res.send('')
             } else {
-                console.log(dbRes.rows)
                 return res.send(dbRes.rows)
             }
         })
@@ -316,31 +379,6 @@ app.post('/tournaments', (req, res) => {
     }
 })
 
-
-
-app.post('/generate', (req, res) => {
-    const query = `Select fighter_usa_boxing_id,
-        fighter.first_name,
-        fighter.last_name,
-        fighter.gender,
-        fighter.age_group,
-        fighter.weight_class
-        from public.fights_in
-        inner join fighter on fighter_usa_boxing_id = fighter.usa_boxing_id
-        and tournament_id = ${req.body.tournamentid}
-        order by gender, age_group, weight_class`
-    client.query(query, (err, dbRes) => {
-        if (err) {
-            console.log('error with query ' + err)
-        } else {
-            console.log('successful query')
-            console.log(dbRes.rows)
-            // prepareDivisionInserts(generateDivisons(), req.body.tournamentid)
-            res.send(dbRes.rows)
-        }
-    })
-    return
-})
 
 
 app.post('/register', (req, res) => {
@@ -412,6 +450,20 @@ app.post('/register', (req, res) => {
 
 })
 
+app.post('/search_user', (req, res) => {
+    console.log('searching for user')
+    let searchID = req.body.slice(1, req.body.length - 1)
+    const searchQuery = `Select * from public.fighter where usa_boxing_id = '${searchID}'`
+    console.log(searchQuery)
+    client.query(searchQuery, (err, dbRes) => {
+        if (err) console.log(err)
+        else{
+            console.log(dbRes.rows)
+            return res.send(dbRes.rows)
+        }
+    })
+})
+
 app.post('/update_fighter', (req, res) => {
     console.log('update fighter')
     console.log(req.body)
@@ -467,9 +519,24 @@ app.post('/update_fighter', (req, res) => {
     })
 })
 
-app.get('/create_brackets', (req, res) => {
-    
+app.post('/generate', (req, res) => {
+    const query = `Select tournament_id, fighter_usa_boxing_id, division_id, first_name, last_name
+                    from public.fights_in inner join public.fighter on
+                    public.fights_in.fighter_usa_boxing_id = public.fighter.usa_boxing_id
+                    where tournament_id = ${req.body.tournamentId} order by division_id`
+    client.query(query, (err, dbRes) => {
+        if (err) {
+            console.log('error with query ' + err)
+        } else {
+            console.log('successful generate query')
+            const organizedByDvisions = organizeByDivisions(dbRes.rows)
+            makeBracketsWrapper(organizedByDvisions, req.body.tournamentId)
+            // res.send(dbRes.rows)
+            // return
+        }
+    })
 })
+
 
 
 if (require.main === module) {
