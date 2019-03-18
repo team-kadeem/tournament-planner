@@ -334,6 +334,19 @@ app.get('/home', (req, res) => {
     }
 )
 
+app.post('/brackets', (req, res) => {
+    console.log(req.body)
+    console.log('fjsdhj')
+    const query = `Select * from public.brackets where tournament_id = ${req.body.tournamentId} order by division`
+    client.query(query, (err, dbRes) => {
+        if (err) {
+            console.log('err getting brackets for tree ' + err )
+        } else {
+            res.send(dbRes.rows)
+        }
+    })
+})
+
 
 app.post('/tournaments', (req, res) => {
 //ADMIN VIEW ALL TOURNAMENTS

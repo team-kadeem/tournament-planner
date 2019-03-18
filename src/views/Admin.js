@@ -1,6 +1,7 @@
 import React from 'react'
 import TournamentDetail from '../components/Admin/TournamentDetail'
 import TournamentForm from '../components/Admin/TournamentForm'
+import Tree from '../components/Admin/Tree'
 import Belt from '../images/championbelt.svg'
 import Styles from '../themes/Styles'
 
@@ -177,6 +178,7 @@ export default class Admin extends React.Component {
                         Search A Fighter
                     </button>
                 </div>
+                <Tree/>
 
             </div>
         )
