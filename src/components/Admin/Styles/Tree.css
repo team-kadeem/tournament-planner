@@ -1,9 +1,16 @@
-.tree-container {
+.round {
     display: flex;
     flex-direction: row;
 }
 
-.round {
+.round-brackets {
     display: flex;
     flex-direction: column;
+    margin: 0 0px 0px 20px;
+    justify-content: space-evenly;
+}
+
+.next-round {
+    display: flex;
+    flex-direction: row;
 }

@@ -1,5 +1,6 @@
 import React from 'react'
 import Bracket from './Bracket'
+import Division from './Division'
 import Round from './Round'
 import './Styles/Tree.css'
 
@@ -8,58 +9,42 @@ export default class Tree extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-            trees:null
+            rounds:undefined,
+            brackets:undefined
         }
     }
 
     mapToBrackets = (brackets) => {
-        // console.log(brackets)
+        console.log(brackets)
         let currentDivision = brackets[0].division
-        let bracketsByDivision = []
+        let bracketsByDivision = {}
         let currentDivisionFighters = []
 
         brackets.map(bracket => {
             if (bracket.division !== currentDivision ) {
-                // console.log('new division ' + bracket.division)
-                // console.log('current division fighters')
-                // console.log(currentDivisionFighters)
-                bracketsByDivision.push(currentDivisionFighters)
+                bracketsByDivision[currentDivision] = currentDivisionFighters
                 currentDivisionFighters = []
                 currentDivision = bracket.division
-                // console.log('new division is')
-                // console.log(currentDivision)
             }
             currentDivisionFighters.push(bracket)
         })
-
-        // console.log(bracketsByDivision)
-
-
-        const trees = bracketsByDivision.map(divisionBrackets => {
-            return(
-                <div>
-                    {
-                        divisionBrackets.map(bracket => {
-                            console.log(bracket)
-                            return (
-                                <Round>
-                                    <Bracket
-                                        fighter1={bracket.fighter1}
-                                        fighter2={bracket.fighter2}
-                                        division={bracket.division}
-                                    />
-                                </Round>
-                            )
-                        })
-                    }
-                </div>
-            )
-        })
-        this.setState({...this.state, trees})
+        console.log(bracketsByDivision)
+        const rounds = this.determineDivisionRounds(bracketsByDivision)
+        
+        return this.setState({...this.state, brackets:bracketsByDivision, rounds})
     }
 
-    componentWillMount(){
-        //fetch brackets
+    determineDivisionRounds = (bracketsByDivision) => {
+        let rounds = {}
+        const divisions = Object.keys(bracketsByDivision)
+        divisions.forEach(division => {
+            rounds[division] = Math.floor(Math.log2(bracketsByDivision[division].length)) + 1
+        })
+        return rounds
+    }
+
+
+    componentDidMount(){
         fetch('/brackets', {
             method:'POST',
             headers: {
@@ -68,19 +53,33 @@ export default class Tree extends React.Component {
             body: JSON.stringify({tournamentId:'1'})
         })
         .then(res => res.json())
-        // .then(data => console.log(data))
         .then(data => this.mapToBrackets(data))
         .catch(err => console.log('ERROR FETCHING ' + err))
     }
 
 
     render(){
-        
-        return(
-            <div>
-                TREE<br/>
-                {this.state.trees}
-            </div>
-        )
+        if (!this.state.brackets) {
+            return(
+                <div/>
+            )
+        } else{
+            const divisions = Object.keys(this.state.rounds)
+            const wholeBrackets = divisions.map(division => {
+                return (
+                    <Division
+                        division={division} 
+                        numRounds={this.state.rounds[division]}
+                        brackets={this.state.brackets[division]}
+                    />
+                )
+            })
+            
+            return(
+                <div>
+                    {wholeBrackets}
+                </div>
+            )
+        }
     }
 }

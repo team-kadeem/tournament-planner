@@ -23,7 +23,12 @@ const bracketStyle = {
     borderBottom:'1px solid black',
     width:'120px',
     height:'40px',
+    // marginBottom:'10px'
     // display:'inline-block'
+}
+
+const containerStyle = {
+    margin:'10px 0'
 }
 
 const bracketStyleRound = {
@@ -32,10 +37,11 @@ const bracketStyleRound = {
 
 const Bracket = (props) => {
     return(
-            <div style={bracketStyle}>
-                {props.division}
-            </div>
-
+        <div style={containerStyle}>
+            {props.fighter1}
+            <div style={bracketStyle}/>
+            {props.fighter2}
+        </div>
     )
 }
 
