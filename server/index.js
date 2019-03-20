@@ -25,14 +25,11 @@ client.connect()
 determineDivision = (gender, agegroup, weightClass, usaBoxingId, tournamentId) => {
     gender = gender[0].toUpperCase() + gender.substring(1,)
     const divisionTitle = `${gender} ${agegroup}  ${weightClass} Group`
-    console.log(divisionTitle)
     const query = `SELECT * FROM public.division where title = '${divisionTitle}'`
     client.query(query, (err, dbRes) => {
         if (err) {
             console.log('Err getting divisions for new registrant ' + err)
         } else {
-            console.log('WTFF')
-            console.log(query)
             addFighterToTournament(usaBoxingId, tournamentId, dbRes.rows[0].id)
         }
     })
@@ -246,7 +243,6 @@ organizeByDivisions = (rows) => {
         }
         fightersInDivision.push(row)  
     })
-    // console.log(container)
     return container
 
 }
@@ -257,8 +253,6 @@ makeBracketsWrapper = (organizedFighters, tournamentId) => {
         if (fightersByDivision.length === 1) {
             console.log('SkIPPING DIVISION WITH ONLY ONE FIGHTER')
         } else {
-            console.log('\n\n')
-            console.log('making bracket')
             // makeBrackets(fightersByDivision.length, fightersByDivision)
             insertBrackets(makeBrackets(fightersByDivision.length, fightersByDivision), tournamentId)
         }
@@ -335,9 +329,8 @@ app.get('/home', (req, res) => {
 )
 
 app.post('/brackets', (req, res) => {
-    console.log(req.body)
-    console.log('fjsdhj')
-    const query = `Select * from public.brackets where tournament_id = ${req.body.tournamentId} order by division`
+    const query = `Select * from public.brackets where tournament_id = ${req.body.tournamentId} 
+                   order by division, round_number asc`
     client.query(query, (err, dbRes) => {
         if (err) {
             console.log('err getting brackets for tree ' + err )

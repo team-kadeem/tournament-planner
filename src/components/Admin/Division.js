@@ -4,19 +4,30 @@ import './Styles/Tree.css'
 
 
 const Division = (props) => {
-    console.log(props)
     let rounds = []
     for (let round = 1; round < props.numRounds + 1; round++) {
         rounds.push(
             <Round 
                 roundNum={round}
-                brackets={props.brackets} 
+                brackets={props.brackets}
+                updateOpen={props.updateOpen}
+                x={props.x}
+                y={props.y} 
             />
         )
     }
+
+    const divisionHeader = {
+        width:'100%',
+        textAlign:'center',
+        fontWeight:'700'
+    }
     return(
-        <div>
-            {props.division} Division
+        <div style={{marginTop:'50px'}}>
+            <div style={divisionHeader}>
+                {props.division} Division
+            </div>
+            <br/>
             <div className="round">
                 {rounds}
             </div>

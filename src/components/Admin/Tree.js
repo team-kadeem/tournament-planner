@@ -1,6 +1,7 @@
 import React from 'react'
 import Bracket from './Bracket'
 import Division from './Division'
+import Update from './Brackets/Update'
 import Round from './Round'
 import './Styles/Tree.css'
 
@@ -10,7 +11,9 @@ export default class Tree extends React.Component {
         super(props)
         this.state = {
             rounds:undefined,
-            brackets:undefined
+            brackets:undefined,
+            x:undefined,
+            y:undefined
         }
     }
 
@@ -43,6 +46,15 @@ export default class Tree extends React.Component {
         return rounds
     }
 
+    updateBracket = event => {
+        console.log(event.target.name)
+        let updateName = event.target.innerHTML
+        console.log(updateName)
+        const x = event.pageX
+        const y = event.pageY
+        this.setState({...this.state, x, y})
+    }
+
 
     componentDidMount(){
         fetch('/brackets', {
@@ -71,12 +83,16 @@ export default class Tree extends React.Component {
                         division={division} 
                         numRounds={this.state.rounds[division]}
                         brackets={this.state.brackets[division]}
+                        updateOpen={this.updateBracket}
+                        x={this.state.x}
+                        y={this.state.y}
                     />
                 )
             })
             
             return(
                 <div>
+                    {this.state.x && this.state.y ? <Update x={this.state.x} y={this.state.y}/> : null}
                     {wholeBrackets}
                 </div>
             )
