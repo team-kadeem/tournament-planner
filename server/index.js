@@ -249,11 +249,9 @@ organizeByDivisions = (rows) => {
 
 makeBracketsWrapper = (organizedFighters, tournamentId) => {
     organizedFighters.forEach(fightersByDivision => {
-        console.log(fightersByDivision)
         if (fightersByDivision.length === 1) {
             console.log('SkIPPING DIVISION WITH ONLY ONE FIGHTER')
         } else {
-            // makeBrackets(fightersByDivision.length, fightersByDivision)
             insertBrackets(makeBrackets(fightersByDivision.length, fightersByDivision), tournamentId)
         }
     })
@@ -270,7 +268,9 @@ insertBrackets = (brackets, tournamentId) => {
         'root',
         'tournament_id',
         'round_number',
-        'division'
+        'division',
+        'left_child',
+        'right_child'
     ]
 
     let division
@@ -278,16 +278,21 @@ insertBrackets = (brackets, tournamentId) => {
         console.log('BRACKETXX')
         console.log(bracket)
         let fighter1, fighter2
+        let leftChild, rightChild
 
         if (bracket.roundNumber === 1) {
             fighter1 = `${bracket.fighter1.first_name || 'Bye'} ${bracket.fighter1.last_name || ''}`
             fighter2 = `${bracket.fighter2.first_name || 'Bye'} ${bracket.fighter2.last_name || ''}`
+            leftChild = null
+            rightChild = null
             division = `${bracket.fighter1.division_id || bracket.fighter2.division_id}`
         } else {
             fighter1 = bracket.fighter1
             fighter2 = bracket.fighter2
+            leftChild = bracket.leftChild.nodeNumber,
+            rightChild = bracket.rightChild.nodeNumber
         }
-        const query = `insert into public.brackets(${bracketColumns}) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`
+        const query = `insert into public.brackets(${bracketColumns}) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`
         const values = [
             fighter1,
             fighter2,
@@ -298,7 +303,9 @@ insertBrackets = (brackets, tournamentId) => {
             bracket.root,
             tournamentId,
             bracket.roundNumber,
-            parseInt(division)
+            parseInt(division),
+            leftChild,
+            rightChild
         ]
 
         client.query(query, values, (err, dbRes) => {
@@ -471,7 +478,6 @@ app.post('/search_user', (req, res) => {
 })
 
 app.post('/update_fighter', (req, res) => {
-    console.log(req.body)
     const updateValues = [
         req.body.firstName,
         req.body.lastName,
@@ -523,18 +529,6 @@ app.post('/update_fighter', (req, res) => {
     })
 })
 
-app.post('/update_bracket', (req, res) => {
-    //////TO BE COMPLETED
-    console.log('update brackets')
-    console.log(req.body)
-    // const query = `INSERT INTO public.fights_in(fighter_usa_boxing_id, tournament_id, division_id) VALUES($1, $2, $3)`
-    const values = [req.body.fighterName, req.body.loser]
-    const updateOldBracket = `UPDATE public.bracket SET (winner, loser) = VALUES($1, $2, $3) WHERE
-                              tournament_id = ${req.body.tournament}, `
-    const updateNewBracket
-
-})
-
 app.post('/generate', (req, res) => {
     const query = `Select tournament_id, fighter_usa_boxing_id, division_id, first_name, last_name
                     from public.fights_in inner join public.fighter on
@@ -547,11 +541,50 @@ app.post('/generate', (req, res) => {
             console.log('successful generate query')
             const organizedByDvisions = organizeByDivisions(dbRes.rows)
             makeBracketsWrapper(organizedByDvisions, req.body.tournamentId)
-            // res.send(dbRes.rows)
-            // return
         }
     })
 })
+
+app.post('/update_bracket', (req, res) => {
+    console.log(req.body)
+    let fighterNumber;
+    req.body.nodeNum % 2 === 0 ? fighterNumber = 'fighter2' : fighterNumber = 'fighter1'
+
+    const values = [req.body.fighterName, req.body.loser]
+    const updateOldBracket = `UPDATE public.brackets SET winner  = ($1), loser = ($2) WHERE
+                              tournament_id = ${req.body.tournamentNum} AND
+                              division = ${req.body.division} AND
+                              round_number = ${req.body.roundNumber} AND
+                              node_number = ${req.body.nodeNum}
+                              `
+
+    const updateNewBracket = `UPDATE public.brackets SET ${fighterNumber} = '${req.body.fighterName}' WHERE 
+                              tournament_id = ${req.body.tournamentNum} AND
+                              division = ${req.body.division} AND
+                              round_number = ${req.body.nextRound} AND
+                              left_child = ${req.body.nodeNum} OR
+                              right_child = ${req.body.nodeNum}
+                             `
+    client.query(updateOldBracket, values, (err, dbRes) => {
+        if (err) {
+            console.log('Error updating winner: ' + err)
+        } else {
+            console.log('updating winner of old bracket')
+            console.log(dbRes)
+            console.log('adding winner to next round')
+            client.query(updateNewBracket, (err, dbRes) => {
+                if (err) {
+                    console.log('Error adding winner to next round ' + err)
+                } else {
+                    console.log(dbRes)
+                }
+            })
+        }
+    })
+})
+
+
+
 
 
 
