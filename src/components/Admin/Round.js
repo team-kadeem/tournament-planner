@@ -13,6 +13,10 @@ const Round = (props) => {
                     fighter2={bracket.fighter2}
                     bracketNumber={bracket.node_number}
                     updateOpen={props.updateOpen}
+                    roundNumber={bracket.round_number}
+                    division={props.division}
+                    winner={bracket.winner}
+                    loser={bracket.loser}
                 />
             )
         }

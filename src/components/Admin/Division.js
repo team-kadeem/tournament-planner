@@ -7,7 +7,8 @@ const Division = (props) => {
     let rounds = []
     for (let round = 1; round < props.numRounds + 1; round++) {
         rounds.push(
-            <Round 
+            <Round
+                division={props.division} 
                 roundNum={round}
                 brackets={props.brackets}
                 updateOpen={props.updateOpen}
@@ -23,7 +24,7 @@ const Division = (props) => {
     return(
         <div style={{marginTop:'50px'}}>
             <div style={divisionHeader}>
-                {props.division} Division
+                {props.division} Division - Fix: These are IDs and not weights
             </div>
             <br/>
             <div className="round">

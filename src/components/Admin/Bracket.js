@@ -8,7 +8,8 @@ export default class Bracket extends React.Component {
         this.state = {
             updateFighter1:false,
             updateFighter2:false,
-            highlightUpdate:false
+            highlightUpdate:false,
+            refresh:false
         }
     }
 
@@ -38,14 +39,16 @@ export default class Bracket extends React.Component {
         return this.setState({...this.state, highlightUpdate:!currentHighlight })
     }
 
-    updateWinner = (fighterName, nodeNum, tournamentNum) => {
+    updateWinner = (fighterName, nodeNum, tournamentNum, roundNumber, division) => {
        const loser = fighterName === this.props.fighter1 ? this.props.fighter2 : this.props.fighter1
         const body = {
             fighterName,
             nodeNum,
-            nextNode:nodeNum+1,
+            nextRound:roundNumber+1,
             tournamentNum,
-            loser
+            loser,
+            roundNumber,
+            division
         }
 
 
@@ -56,6 +59,8 @@ export default class Bracket extends React.Component {
             },
             body:JSON.stringify(body)
         })
+        .then(res => console.log(res))
+        .then(this.setState({...this.state, refresh:!this.state.refresh}, () => console.log('done setting st8'))) 
     }
 
     render(){
@@ -75,26 +80,45 @@ export default class Bracket extends React.Component {
         const fighterNames = {
             cursor:'pointer'
         }
+
+        const loserStyle = {
+            ...fighterNames,
+            textDecoration:'line-through',
+            color:'grey'
+        }
+        //TOURNAMENT ID IS HARDCODED
         return(
             <div style={containerStyle}>
             <div style={bracketStyle} onClick={this.showUpdateBox}>
-                <span id="fighter1" style={fighterNames}>{this.props.fighter1}</span>
+                <span id="fighter1" 
+                      style={this.props.loser === this.props.fighter1 ? loserStyle : fighterNames}>
+                        {this.props.fighter1}
+                </span>
                 {this.state.updateFighter1 ? 
                     <Update highlighted={this.state.highlightUpdate}
                             highlight={this.highlightUpdateBox}
                             declareWinner={this.updateWinner}
                             fighter={this.props.fighter1} 
-                            bracketNumber={this.props.bracketNumber} 
+                            bracketNumber={this.props.bracketNumber}
+                            tournamentId={1}
+                            roundNumber={this.props.roundNumber}
+                            division={this.props.division} 
                     /> : null}
             </div>
-            <div style={bracketStyle} onClick={this.showUpdateBox}>>
-                <span id="fighter2" style={fighterNames}>{this.props.fighter2}</span>
+            <div style={bracketStyle} onClick={this.showUpdateBox}>
+                <span id="fighter2" 
+                      style={this.props.loser === this.props.fighter2 ? loserStyle : fighterNames}>
+                      {this.props.fighter2}
+                </span>
                 {this.state.updateFighter2 ? 
                     <Update highlighted={this.state.highlightUpdate}
                             highlight={this.highlightUpdateBox}
                             declareWinner={this.updateWinner}
                             fighter={this.props.fighter2}
-                            bracketNumber={this.props.bracketNumber} 
+                            bracketNumber={this.props.bracketNumber}
+                            tournamentId={1}
+                            roundNumber={this.props.roundNumber}
+                            division={this.props.division}    
                     />: null}
             </div>
         </div>

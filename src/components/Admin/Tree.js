@@ -1,8 +1,6 @@
 import React from 'react'
-import Bracket from './Bracket'
 import Division from './Division'
 import Update from './Brackets/Update'
-import Round from './Round'
 import './Styles/Tree.css'
 
 

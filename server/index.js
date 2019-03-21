@@ -562,9 +562,9 @@ app.post('/update_bracket', (req, res) => {
                               tournament_id = ${req.body.tournamentNum} AND
                               division = ${req.body.division} AND
                               round_number = ${req.body.nextRound} AND
-                              left_child = ${req.body.nodeNum} OR
-                              right_child = ${req.body.nodeNum}
+                              ( left_child = ${req.body.nodeNum} OR right_child = ${req.body.nodeNum} )
                              `
+    console.log(updateNewBracket)
     client.query(updateOldBracket, values, (err, dbRes) => {
         if (err) {
             console.log('Error updating winner: ' + err)
@@ -577,6 +577,7 @@ app.post('/update_bracket', (req, res) => {
                     console.log('Error adding winner to next round ' + err)
                 } else {
                     console.log(dbRes)
+                    return res.send('Done')
                 }
             })
         }
