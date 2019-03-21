@@ -7,22 +7,35 @@ export default class Update extends React.Component {
             highlighted:false
         }
     }
+
+    declareWinner = (e) => {
+        //REPLACE 1 WITH THE ACTUAL TOURNAMENT NUMBER
+        this.props.declareWinner(this.props.fighter, this.props.bracketNumber, 1)
+    }
     render(){
-        console.log(this.props)
         const updateBox = {
             border:'1px solid grey',
-            // position:'absolute',
-            // left:`${this.props.x}px`,
-            // top:`${this.props.y}px`
+            position:'absolute',
+            left:'185px',
+            bottom:'2px',
+            width:'120px',
+            height:'25px',
+            cursor:'pointer',
         }
 
         const highlightedUpdateBox = {
             ...updateBox,
-            backgroundColor:'blue'
+            backgroundColor:'#3345FF',
+            color:'white'
         }
 
         return (
-            <div style={this.state.highlighted ? highlightedUpdateBox : updateBox}>
+            <div 
+                style={this.props.highlighted ? highlightedUpdateBox : updateBox}
+                onMouseEnter={this.props.highlight}
+                onMouseLeave={this.props.highlight}
+                onClick={this.declareWinner}
+            >
                 Declare Winner
             </div>
         )

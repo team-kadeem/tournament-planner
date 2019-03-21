@@ -12,8 +12,6 @@ export default class Tree extends React.Component {
         this.state = {
             rounds:undefined,
             brackets:undefined,
-            x:undefined,
-            y:undefined
         }
     }
 
@@ -84,8 +82,6 @@ export default class Tree extends React.Component {
                         numRounds={this.state.rounds[division]}
                         brackets={this.state.brackets[division]}
                         updateOpen={this.updateBracket}
-                        x={this.state.x}
-                        y={this.state.y}
                     />
                 )
             })

@@ -11,8 +11,6 @@ const Division = (props) => {
                 roundNum={round}
                 brackets={props.brackets}
                 updateOpen={props.updateOpen}
-                x={props.x}
-                y={props.y} 
             />
         )
     }

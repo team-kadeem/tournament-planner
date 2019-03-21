@@ -6,7 +6,7 @@
 .round-brackets {
     display: flex;
     flex-direction: column;
-    margin: 0 50px 0px 20px;
+    margin: 0 120px 0px 20px;
     justify-content: space-around;
 }
 

@@ -11,9 +11,8 @@ const Round = (props) => {
                 <Bracket 
                     fighter1={bracket.fighter1}
                     fighter2={bracket.fighter2}
+                    bracketNumber={bracket.node_number}
                     updateOpen={props.updateOpen}
-                    x={props.x}
-                    y={props.y}
                 />
             )
         }

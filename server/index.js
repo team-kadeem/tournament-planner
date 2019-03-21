@@ -471,7 +471,6 @@ app.post('/search_user', (req, res) => {
 })
 
 app.post('/update_fighter', (req, res) => {
-    console.log('update fighter')
     console.log(req.body)
     const updateValues = [
         req.body.firstName,
@@ -510,7 +509,6 @@ app.post('/update_fighter', (req, res) => {
     client.query(updateQuery, updateValues, (err, dbRes) => {
         if (err) console.log(err)
         else {
-            console.log('successful update')
             const values = [req.body.tournamentId, req.body.usaBoxingId]
             const insertQuery = `INSERT INTO public.fights_in(tournament_id, fighter_usa_boxing_id) VALUES($1, $2)`
             client.query(insertQuery, values, (err, dbUpdateRes) => {
@@ -523,6 +521,18 @@ app.post('/update_fighter', (req, res) => {
             return res.send('Updated and Registered!')
         }
     })
+})
+
+app.post('/update_bracket', (req, res) => {
+    //////TO BE COMPLETED
+    console.log('update brackets')
+    console.log(req.body)
+    // const query = `INSERT INTO public.fights_in(fighter_usa_boxing_id, tournament_id, division_id) VALUES($1, $2, $3)`
+    const values = [req.body.fighterName, req.body.loser]
+    const updateOldBracket = `UPDATE public.bracket SET (winner, loser) = VALUES($1, $2, $3) WHERE
+                              tournament_id = ${req.body.tournament}, `
+    const updateNewBracket
+
 })
 
 app.post('/generate', (req, res) => {
