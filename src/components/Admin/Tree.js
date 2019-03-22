@@ -30,7 +30,7 @@ export default class Tree extends React.Component {
         console.log(bracketsByDivision)
         const rounds = this.determineDivisionRounds(bracketsByDivision)
         
-        return this.setState({...this.state, brackets:bracketsByDivision, rounds})
+        this.setState({...this.state, brackets:bracketsByDivision, rounds}, () => console.log('STATE SET'))
     }
 
     determineDivisionRounds = (bracketsByDivision) => {
@@ -42,17 +42,22 @@ export default class Tree extends React.Component {
         return rounds
     }
 
-    updateBracket = event => {
-        console.log(event.target.name)
-        let updateName = event.target.innerHTML
-        console.log(updateName)
-        const x = event.pageX
-        const y = event.pageY
-        this.setState({...this.state, x, y})
+    refresh = () => {
+        console.log('refreshing')
+        fetch('/brackets', {
+            method:'POST',
+            headers: {
+                "Content-type": "application/json"
+            },
+            body: JSON.stringify({tournamentId:'1'})
+        })
+        .then(res => res.json())
+        .then(data => this.mapToBrackets(data))
+        .catch(err => console.log('ERROR FETCHING ' + err))
     }
 
 
-    componentDidMount(){
+    componentWillMount(){
         fetch('/brackets', {
             method:'POST',
             headers: {
@@ -76,17 +81,18 @@ export default class Tree extends React.Component {
             const wholeBrackets = divisions.map(division => {
                 return (
                     <Division
+                        key={`${division} division`}
                         division={division} 
                         numRounds={this.state.rounds[division]}
                         brackets={this.state.brackets[division]}
                         updateOpen={this.updateBracket}
+                        refresh={this.refresh}
                     />
                 )
             })
             
             return(
                 <div>
-                    {this.state.x && this.state.y ? <Update x={this.state.x} y={this.state.y}/> : null}
                     {wholeBrackets}
                 </div>
             )

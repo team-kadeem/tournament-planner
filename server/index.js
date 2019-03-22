@@ -336,6 +336,7 @@ app.get('/home', (req, res) => {
 )
 
 app.post('/brackets', (req, res) => {
+    console.log('uhgjugugyuiguyg')
     const query = `Select * from public.brackets where tournament_id = ${req.body.tournamentId} 
                    order by division, round_number asc`
     client.query(query, (err, dbRes) => {

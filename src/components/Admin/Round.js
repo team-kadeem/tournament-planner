@@ -17,6 +17,8 @@ const Round = (props) => {
                     division={props.division}
                     winner={bracket.winner}
                     loser={bracket.loser}
+                    declareWinner={props.declareWinner}
+
                 />
             )
         }

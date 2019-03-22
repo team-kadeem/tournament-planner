@@ -39,29 +39,29 @@ export default class Bracket extends React.Component {
         return this.setState({...this.state, highlightUpdate:!currentHighlight })
     }
 
-    updateWinner = (fighterName, nodeNum, tournamentNum, roundNumber, division) => {
-       const loser = fighterName === this.props.fighter1 ? this.props.fighter2 : this.props.fighter1
-        const body = {
-            fighterName,
-            nodeNum,
-            nextRound:roundNumber+1,
-            tournamentNum,
-            loser,
-            roundNumber,
-            division
-        }
+    // updateWinner = (fighterName, nodeNum, tournamentNum, roundNumber, division) => {
+    //    const loser = fighterName === this.props.fighter1 ? this.props.fighter2 : this.props.fighter1
+    //     const body = {
+    //         fighterName,
+    //         nodeNum,
+    //         nextRound:roundNumber+1,
+    //         tournamentNum,
+    //         loser,
+    //         roundNumber,
+    //         division
+    //     }
 
 
-        fetch('/update_bracket', {
-            method:'POST',
-            headers:{
-                "content-type":"application/json"
-            },
-            body:JSON.stringify(body)
-        })
-        .then(res => console.log(res))
-        .then(this.setState({...this.state, refresh:!this.state.refresh}, () => console.log('done setting st8'))) 
-    }
+    //     fetch('/update_bracket', {
+    //         method:'POST',
+    //         headers:{
+    //             "content-type":"application/json"
+    //         },
+    //         body:JSON.stringify(body)
+    //     })
+    //     .then(res => console.log(res))
+    //     .then(this.setState({...this.state, refresh:!this.state.refresh}, () => console.log('done setting st8'))) 
+    // }
 
     render(){
         const bracketStyle = {
@@ -97,7 +97,7 @@ export default class Bracket extends React.Component {
                 {this.state.updateFighter1 ? 
                     <Update highlighted={this.state.highlightUpdate}
                             highlight={this.highlightUpdateBox}
-                            declareWinner={this.updateWinner}
+                            declareWinner={this.props.declareWinner}
                             fighter={this.props.fighter1} 
                             bracketNumber={this.props.bracketNumber}
                             tournamentId={1}
@@ -113,7 +113,7 @@ export default class Bracket extends React.Component {
                 {this.state.updateFighter2 ? 
                     <Update highlighted={this.state.highlightUpdate}
                             highlight={this.highlightUpdateBox}
-                            declareWinner={this.updateWinner}
+                            declareWinner={this.props.declareWinner}
                             fighter={this.props.fighter2}
                             bracketNumber={this.props.bracketNumber}
                             tournamentId={1}
