@@ -275,8 +275,6 @@ insertBrackets = (brackets, tournamentId) => {
 
     let division
     brackets.forEach(bracket => {
-        console.log('BRACKETXX')
-        console.log(bracket)
         let fighter1, fighter2
         let leftChild, rightChild
 
@@ -336,9 +334,24 @@ app.get('/home', (req, res) => {
 )
 
 app.post('/brackets', (req, res) => {
-    console.log('uhgjugugyuiguyg')
-    const query = `Select * from public.brackets where tournament_id = ${req.body.tournamentId} 
-                   order by division, round_number asc`
+    // const query = `Select * from public.brackets where tournament_id = ${req.body.tournamentId} 
+    //                order by division, round_number, node_number asc`
+    const query = `select brackets.fighter1,
+                    brackets.fighter2,
+                    brackets.winner,
+                    brackets.loser,
+                    brackets.node_number,
+                    brackets.description,
+                    brackets.root,
+                    brackets.division,
+                    brackets.tournament_id,
+                    brackets.round_number,
+                    brackets.left_child,
+                    brackets.right_child,
+                    division.title as division_title
+                from public.brackets
+                inner join division on brackets.division = division.id
+                order by division, round_number, node_number asc`
     client.query(query, (err, dbRes) => {
         if (err) {
             console.log('err getting brackets for tree ' + err )
@@ -547,38 +560,56 @@ app.post('/generate', (req, res) => {
 })
 
 app.post('/update_bracket', (req, res) => {
-    console.log(req.body)
     let fighterNumber;
     req.body.nodeNum % 2 === 0 ? fighterNumber = 'fighter2' : fighterNumber = 'fighter1'
 
-    const values = [req.body.fighterName, req.body.loser]
-    const updateOldBracket = `UPDATE public.brackets SET winner  = ($1), loser = ($2) WHERE
+    const values = [req.body.winner, req.body.loser]
+    const updateOldBracket = `UPDATE public.brackets SET winner = ($1), loser = ($2) WHERE
                               tournament_id = ${req.body.tournamentNum} AND
                               division = ${req.body.division} AND
                               round_number = ${req.body.roundNumber} AND
                               node_number = ${req.body.nodeNum}
                               `
 
-    const updateNewBracket = `UPDATE public.brackets SET ${fighterNumber} = '${req.body.fighterName}' WHERE 
+    const updateNewBracket = `UPDATE public.brackets SET ${fighterNumber} = '${req.body.winner}' WHERE 
                               tournament_id = ${req.body.tournamentNum} AND
                               division = ${req.body.division} AND
                               round_number = ${req.body.nextRound} AND
                               ( left_child = ${req.body.nodeNum} OR right_child = ${req.body.nodeNum} )
                              `
-    console.log(updateNewBracket)
     client.query(updateOldBracket, values, (err, dbRes) => {
         if (err) {
             console.log('Error updating winner: ' + err)
         } else {
-            console.log('updating winner of old bracket')
-            console.log(dbRes)
-            console.log('adding winner to next round')
             client.query(updateNewBracket, (err, dbRes) => {
                 if (err) {
                     console.log('Error adding winner to next round ' + err)
                 } else {
-                    console.log(dbRes)
-                    return res.send('Done')
+                    const returnUpdatedBracketsQuery = `select brackets.fighter1,
+                            brackets.fighter2,
+                            brackets.winner,
+                            brackets.loser,
+                            brackets.node_number,
+                            brackets.description,
+                            brackets.root,
+                            brackets.division,
+                            brackets.tournament_id,
+                            brackets.round_number,
+                            brackets.left_child,
+                            brackets.right_child,
+                            division.title as division_title
+                        from public.brackets
+                        inner join division on brackets.division = division.id
+                        order by division, round_number, node_number asc`
+
+                    client.query(returnUpdatedBracketsQuery, (err, dbRes) => {
+                        if (err) {
+                            console.log(err)
+                        }
+                        else {
+                            return res.send(dbRes.rows)
+                        }
+                    } )
                 }
             })
         }
