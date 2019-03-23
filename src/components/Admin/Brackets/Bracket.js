@@ -63,7 +63,6 @@ export default class Bracket extends React.Component {
             textDecoration:'line-through',
             color:'grey'
         }
-        //TOURNAMENT ID IS HARDCODED
         return(
             <div style={containerStyle}>
             <div style={bracketStyle} onClick={this.showUpdateBox}>

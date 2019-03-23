@@ -1,7 +1,6 @@
 import React from 'react'
 import TournamentDetail from '../components/Admin/TournamentDetail'
 import TournamentForm from '../components/Admin/TournamentForm'
-import Tree from '../components/Admin/Brackets/Tree'
 import Belt from '../images/championbelt.svg'
 import Styles from '../themes/Styles'
 

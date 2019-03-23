@@ -9,15 +9,18 @@ const TournamentDetail = (props) => {
     }
 
    const participants = Object.keys(props.registrants).map(name => {
+       const listStyling = {
+        listStyleType:'none'
+       }
+
        const listItemStyling = {
-           marginBottom:'4px',
-           fontSize:'14px'
+           fontSize:'14px',
        }
             if (name === 'id' || name === 'bracket_made') {
                return 
             }
             return(
-                <ul key={props.title + ' participants'}>
+                <ul style={listStyling} key={props.title + ' participants'}>
                     <li style={listItemStyling}>
                         {name}: {props.registrants[name]}
                     </li>
@@ -40,10 +43,14 @@ const TournamentDetail = (props) => {
             </Link>
         )
     }
+
+    const tableStyle = {
+        width:'80%'
+    }
    
     return(
         <div style={{marginBottom:'10px'}}>
-            <table>
+            <table style={tableStyle}>
                 <tbody>
                     <tr>
                         <th>
