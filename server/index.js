@@ -309,12 +309,18 @@ insertBrackets = (brackets, tournamentId) => {
             if (err) {
                 console.log('Error inserting bracket ' + err)
             } else {
-                console.log(dbRes)
+                const updateTournament = `Update public.tournament set bracket_made = ($1) where id = ${tournamentId}`
+                const values = [true]
+                client.query(updateTournament, values, (err, dbRes) => {
+                    if (err) {
+                        console.log('ERR CHANGING BRACKET MADE FROM FALSE TO TRUE ' + err)
+                    } else {
+                        console.log('UPDATED BRACKET')
             }
         })
-
+    }
     })
-}
+})}
 
 //////////////////
 //ROUTES       ///
@@ -333,6 +339,7 @@ app.get('/home', (req, res) => {
 )
 
 app.post('/brackets', (req, res) => {
+    console.log(req.body)
     const query = `select brackets.fighter1,
                     brackets.fighter2,
                     brackets.winner,
@@ -347,7 +354,7 @@ app.post('/brackets', (req, res) => {
                     brackets.right_child,
                     division.title as division_title
                 from public.brackets
-                inner join division on brackets.division = division.id
+                inner join division on brackets.division = division.id where tournament_id = ${req.body.tournamentId}
                 order by division, round_number, node_number asc`
     client.query(query, (err, dbRes) => {
         if (err) {
@@ -548,14 +555,15 @@ app.post('/generate', (req, res) => {
                     where tournament_id = ${req.body.tournamentId} order by division_id`
     client.query(query, (err, dbRes) => {
         if (err) {
-            console.log('error with query ' + err)
+            console.log('ERR GENERATING BRACKETS ' + err)
         } else {
-            console.log('successful generate query')
-            const organizedByDvisions = organizeByDivisions(dbRes.rows)
-            makeBracketsWrapper(organizedByDvisions, req.body.tournamentId)
+                    const organizedByDvisions = organizeByDivisions(dbRes.rows)
+                    makeBracketsWrapper(organizedByDvisions, req.body.tournamentId)
         }
+            })
+        
     })
-})
+
 
 app.post('/update_bracket', (req, res) => {
     let fighterNumber;

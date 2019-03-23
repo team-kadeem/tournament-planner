@@ -1,11 +1,12 @@
 const request = require('request')
+const randomstring = require('randomstring')
 
 request.post('http://localhost:3000/register', {form:{
     firstName:''
 }})
 
 
-for (let i = 0; i < 100; i++) {
+for (let i = 181; i < 300; i++) {
     let month = Math.floor(Math.random() * 12 + 1)
     let date = Math.floor(Math.random() * 30 + 1)
     let year = Math.floor(Math.random() * 100 + 1910)
@@ -22,7 +23,7 @@ for (let i = 0; i < 100; i++) {
         zipCode: `test ${i}`,
         phoneNumber: `test ${i}`,
         dateOfBirth: `${month}/${date}/${year}`,
-        usaBoxingId: `testID${i}`,
+        usaBoxingId: randomstring.generate(9),
         wins: Math.floor(Math.random() * 20),
         losses: Math.floor(Math.random() * 20),
         boxingClubAffiliation:'Test club',
@@ -33,7 +34,7 @@ for (let i = 0; i < 100; i++) {
         coachEmail:`test coach email ${i}`,
         gender:gender,
         weight: Math.floor((Math.random() * 100) + 100),
-        tournamentId:1
+        tournamentId:3
     }
 
     console.log(body)

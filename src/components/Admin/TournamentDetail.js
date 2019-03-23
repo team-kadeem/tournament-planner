@@ -44,14 +44,22 @@ const TournamentDetail = (props) => {
         )
     }
 
+    const hideTournament = () => {
+        const tableId = props.title + " " + props.id
+        props.hideTournament(tableId)
+    }
+
     const tableStyle = {
         width:'80%'
     }
    
     return(
-        <div style={{marginBottom:'10px'}}>
+        <div style={{margin:'10px 0'}}>
             <table style={tableStyle}>
-                <tbody>
+                <button onClick={hideTournament}>
+                    {props.buttonText ? <span>Show This Tournament</span> : <span>Hide This Tournament</span>}
+                </button>
+                <tbody id={props.title + " " + props.id}>
                     <tr>
                         <th>
                             Open Until
@@ -69,6 +77,9 @@ const TournamentDetail = (props) => {
                         </th>
                         <th>
                             {participants}
+                            <button>
+                                See More...
+                            </button>
                         </th>
                         <th>
                             {props.bracketMade ? <BracketLink/> : <Generate />}

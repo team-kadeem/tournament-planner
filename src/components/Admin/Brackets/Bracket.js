@@ -53,13 +53,27 @@ export default class Bracket extends React.Component {
         const containerStyle = {
             margin:'10px 0'
         }
-        
-        const fighterNames = {
-            cursor:'pointer'
+
+        const fighter1Style = {
+            cursor:'pointer',
+            fontWeight:'600',
+            color:'red'
         }
 
-        const loserStyle = {
-            ...fighterNames,
+        const fighter2Style = {
+            cursor:'pointer',
+            fontWeight:'600',
+            color:'blue'
+        }
+
+        const loser1Style = {
+            ...fighter1Style,
+            textDecoration:'line-through',
+            color:'grey'
+        }
+
+        const loser2Style = {
+            ...fighter2Style,
             textDecoration:'line-through',
             color:'grey'
         }
@@ -67,7 +81,7 @@ export default class Bracket extends React.Component {
             <div style={containerStyle}>
             <div style={bracketStyle} onClick={this.showUpdateBox}>
                 <span id="fighter1" 
-                      style={this.props.loser === this.props.fighter1 ? loserStyle : fighterNames}>
+                      style={this.props.loser === this.props.fighter1 ? loser1Style : fighter1Style}>
                         {this.props.fighter1}
                 </span>
                 {this.state.updateFighter1 ? 
@@ -84,7 +98,7 @@ export default class Bracket extends React.Component {
             </div>
             <div style={bracketStyle} onClick={this.showUpdateBox}>
                 <span id="fighter2" 
-                      style={this.props.loser === this.props.fighter2 ? loserStyle : fighterNames}>
+                      style={this.props.loser === this.props.fighter2 ? loser2Style : fighter2Style}>
                       {this.props.fighter2}
                 </span>
                 {this.state.updateFighter2 ? 

@@ -98,9 +98,12 @@ export default class Admin extends React.Component {
         })
     }
 
-    generateBracket = (tournamentId) => {
-        console.log('Generating bracket for tournament: ' + tournamentId)
+    hideTournament = tableId => {
+        const table = document.getElementById(tableId)
+        table.style="display:none"
+    }
 
+    generateBracket = (tournamentId) => {
         const bracketParams = {
             method:'POST',
             body:JSON.stringify({tournamentId:tournamentId}),
@@ -125,6 +128,7 @@ export default class Admin extends React.Component {
                         registrants={tournament[title]}
                         toggleHandler={this.toggleTournamentDetail} 
                         generateHandler={this.generateBracket}
+                        hideTournament={this.hideTournament}
                     />
         })
 
@@ -171,12 +175,6 @@ export default class Admin extends React.Component {
                                 View All Tournaments
                             </button>
                     }
-
-                    <button
-                        style={{...Styles.buttonStyle, backgroundColor:'#669999', marginRight:'20px' }}
-                    >
-                        Search A Fighter
-                    </button>
                 </div>
             </div>
         )
