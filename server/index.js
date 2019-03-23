@@ -369,6 +369,7 @@ app.post('/tournaments', (req, res) => {
                                 tournament.event_datetime,
                                 tournament.registration_close,
                                 tournament.location,
+                                tournament.bracket_made,
                                 fights_in.fighter_usa_boxing_id,
                                 fighter.first_name,
                                 fighter.last_name,

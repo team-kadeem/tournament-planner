@@ -1,8 +1,6 @@
 import React from 'react'
 import Division from './Division'
-import Update from './Brackets/Update'
-import './Styles/Tree.css'
-
+import '../Styles/Tree.css'
 
 export default class Tree extends React.Component {
     constructor(props){
@@ -14,7 +12,6 @@ export default class Tree extends React.Component {
     }
 
     mapToBrackets = (brackets) => {
-        // console.log(brackets)
         let currentDivision = brackets[0].division
         let bracketsByDivision = {}
         let currentDivisionFighters = []
@@ -27,7 +24,6 @@ export default class Tree extends React.Component {
             }
             currentDivisionFighters.push(bracket)
         })
-        console.log(bracketsByDivision)
         const rounds = this.determineDivisionRounds(bracketsByDivision)
         
         this.setState({...this.state, brackets:bracketsByDivision, rounds})
@@ -51,7 +47,7 @@ export default class Tree extends React.Component {
             headers: {
                 "Content-type": "application/json"
             },
-            body: JSON.stringify({tournamentId:'1'})
+            body: JSON.stringify({tournamentId:this.props.tournamentId})
         })
         .then(res => res.json())
         .then(data => this.mapToBrackets(data))
@@ -76,6 +72,7 @@ export default class Tree extends React.Component {
                         brackets={this.state.brackets[division]}
                         updateOpen={this.updateBracket}
                         refresh={this.refresh}
+                        tournamentId={this.props.tournamentId}
                     />
                 )
             })

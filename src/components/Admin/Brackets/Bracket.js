@@ -1,6 +1,6 @@
 import React from 'react'
-import Update from './Brackets/Update'
-import './Styles/Tree.css'
+import Update from './Update'
+import '../Styles/Tree.css'
 
 export default class Bracket extends React.Component {
     constructor(props){
@@ -78,7 +78,7 @@ export default class Bracket extends React.Component {
                             fighter={this.props.fighter1}
                             otherFighter={this.props.fighter2} 
                             bracketNumber={this.props.bracketNumber}
-                            tournamentId={1}
+                            tournamentId={this.props.tournamentId}
                             roundNumber={this.props.roundNumber}
                             division={this.props.division} 
                     /> : null}
@@ -95,7 +95,7 @@ export default class Bracket extends React.Component {
                             fighter={this.props.fighter2}
                             otherFighter={this.props.fighter1}
                             bracketNumber={this.props.bracketNumber}
-                            tournamentId={1}
+                            tournamentId={this.props.tournamentId}
                             roundNumber={this.props.roundNumber}
                             division={this.props.division}    
                     />: null}

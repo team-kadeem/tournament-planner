@@ -1,6 +1,6 @@
 import React from 'react'
 import Round from './Round'
-import './Styles/Tree.css'
+import '../Styles/Tree.css'
 
 export default class Division extends React.Component {
     constructor(props){
@@ -11,7 +11,6 @@ export default class Division extends React.Component {
     }
 
     updateWinner = (winner, loser, nodeNum, tournamentNum, roundNumber, division) => {
-        // const loser = fighterName === this.props.fighter1 ? this.props.fighter2 : this.props.fighter1
          const body = {
              winner,
              nodeNum,
@@ -21,7 +20,6 @@ export default class Division extends React.Component {
              roundNumber,
              division
          }
- 
  
          fetch('/update_bracket', {
              method:'POST',
@@ -45,6 +43,7 @@ export default class Division extends React.Component {
                     brackets={this.props.brackets}
                     updateOpen={this.props.updateOpen}
                     declareWinner={this.updateWinner}
+                    tournamentId={this.props.tournamentId}
                 />
             )
         }
@@ -57,7 +56,7 @@ export default class Division extends React.Component {
         return(
             <div style={{marginTop:'50px'}}>
                 <div style={divisionHeader}>
-                    {this.props.divisionTitle} Division - Fix: These are IDs and not weights
+                    {this.props.divisionTitle}
                 </div>
                 <br/>
                 <div className="round">

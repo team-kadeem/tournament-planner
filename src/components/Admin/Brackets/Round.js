@@ -1,6 +1,6 @@
 import React from 'react'
 import Bracket from './Bracket'
-import './Styles/Tree.css'
+import '../Styles/Tree.css'
 
 
 const Round = (props) => {
@@ -18,7 +18,7 @@ const Round = (props) => {
                     winner={bracket.winner}
                     loser={bracket.loser}
                     declareWinner={props.declareWinner}
-
+                    tournamentId={props.tournamentId}
                 />
             )
         }

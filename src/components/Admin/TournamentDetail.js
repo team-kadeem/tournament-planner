@@ -1,5 +1,5 @@
 import React from 'react'
-
+import { Link } from 'react-router-dom'
 
 const TournamentDetail = (props) => {
     console.log(props)
@@ -8,13 +8,12 @@ const TournamentDetail = (props) => {
         props.generateHandler(props.id)
     }
 
-   const participants = Object.keys(props.registrants).map((name, i) => {
+   const participants = Object.keys(props.registrants).map(name => {
        const listItemStyling = {
            marginBottom:'4px',
            fontSize:'14px'
        }
-            if (name === 'id' || i > [props.showCount]) {
-                console.log(i)
+            if (name === 'id' || name === 'bracket_made') {
                return 
             }
             return(
@@ -34,8 +33,12 @@ const TournamentDetail = (props) => {
         )
     }
 
-    const showMore = () => {
-        props.showMore(Object.keys(props.egistrants).length - 1)
+    const BracketLink = () => {
+        return(
+            <Link to={'/bracket/' + props.id}>
+                See Bracket
+            </Link>
+        )
     }
    
     return(
@@ -59,12 +62,9 @@ const TournamentDetail = (props) => {
                         </th>
                         <th>
                             {participants}
-                            <button onClick={showMore}>
-                                View More
-                            </button>
                         </th>
                         <th>
-                            <Generate/>
+                            {props.bracketMade ? <BracketLink/> : <Generate />}
                         </th>
                     </tr>
                 </tbody>

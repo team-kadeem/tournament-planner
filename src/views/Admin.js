@@ -1,7 +1,7 @@
 import React from 'react'
 import TournamentDetail from '../components/Admin/TournamentDetail'
 import TournamentForm from '../components/Admin/TournamentForm'
-import Tree from '../components/Admin/Tree'
+import Tree from '../components/Admin/Brackets/Tree'
 import Belt from '../images/championbelt.svg'
 import Styles from '../themes/Styles'
 
@@ -11,7 +11,6 @@ export default class Admin extends React.Component {
         this.state = {
             showTournamentForm:false,
             showAllTournaments:false,
-            numRegistrants:5,
             allTournaments:[],
         }
     }
@@ -48,6 +47,7 @@ export default class Admin extends React.Component {
                 const name = row.first_name + row.last_name
                 tournamentObject[row.title] = {}
                 tournamentObject[row.title]['id'] = row.id
+                tournamentObject[row.title]['bracket_made'] = row.bracket_made
                 tournamentObject[row.title][name] = row.usa_boxing_id
             }
                 
@@ -65,7 +65,7 @@ export default class Admin extends React.Component {
         return allTournaments
     }
 
-0
+
     modifyTournamentShowData = (tournamentData) => {
         tournamentData.forEach(tournament => tournament['showDetail'] = false)
         return tournamentData
@@ -89,12 +89,6 @@ export default class Admin extends React.Component {
         this.setState({...this.state, allTournaments:allTournaments})
     }
 
-    showMore = totalNumRegistrants => {
-        let newShowCount = this.state.numRegistrants + 10
-        if (newShowCount >= totalNumRegistrants)
-            newShowCount = totalNumRegistrants
-        return this.setState({...this.state, numRegistrants: newShowCount})
-    }
 
     viewTournaments = () => {
         console.log('getting all tournaments')
@@ -123,16 +117,15 @@ export default class Admin extends React.Component {
 
     render(){
 
-        const allTournaments = this.state.allTournaments.map( tournament => {
+        const allTournaments = this.state.allTournaments.map( (tournament, i) => {
             let title = Object.keys(tournament)[0]
             return <TournamentDetail
                         id={tournament[title]['id']}
+                        bracketMade={tournament[title]['bracket_made']}
                         title={title}
                         registrants={tournament[title]}
                         toggleHandler={this.toggleTournamentDetail} 
                         generateHandler={this.generateBracket}
-                        showCount={this.state.numRegistrants}
-                        showMore={this.showMore}
                     />
         })
 
@@ -178,7 +171,6 @@ export default class Admin extends React.Component {
                             >
                                 View All Tournaments
                             </button>
-                        
                     }
 
                     <button
@@ -187,8 +179,6 @@ export default class Admin extends React.Component {
                         Search A Fighter
                     </button>
                 </div>
-                <Tree/>
-
             </div>
         )
     }
