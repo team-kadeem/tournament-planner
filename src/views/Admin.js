@@ -15,6 +15,10 @@ export default class Admin extends React.Component {
     }
 
     componentDidMount(){
+        this.getAllTournaments()
+    }
+
+    getAllTournaments = () => {
         const params = {
             method:'POST',
             body:JSON.stringify({key:'admin'}),
@@ -46,7 +50,8 @@ export default class Admin extends React.Component {
                 const name = row.first_name + row.last_name
                 tournamentObject[row.title] = {}
                 tournamentObject[row.title]['id'] = row.id
-                tournamentObject[row.title]['bracket_made'] = row.bracket_made
+                tournamentObject[row.title]['bracketMade'] = row.bracket_made
+                tournamentObject[row.title]['closeDate'] = row.registration_close
                 tournamentObject[row.title][name] = row.usa_boxing_id
             }
                 
@@ -117,13 +122,18 @@ export default class Admin extends React.Component {
             .catch(err => console.log(err))
     }
 
-    render(){
+    refresh = () => {
+        this.getAllTournaments()
+    }
 
+    render(){
         const allTournaments = this.state.allTournaments.map( (tournament, i) => {
             let title = Object.keys(tournament)[0]
+            console.log(tournament)
             return <TournamentDetail
+                        key={tournament[title] + i}
                         id={tournament[title]['id']}
-                        bracketMade={tournament[title]['bracket_made']}
+                        bracketMade={tournament[title]['bracketMade']}
                         title={title}
                         registrants={tournament[title]}
                         toggleHandler={this.toggleTournamentDetail} 
@@ -148,6 +158,7 @@ export default class Admin extends React.Component {
                         <TournamentForm 
                             newId={this.state.allTournaments.length + 1}
                             closeForm={this.createNewTournament}
+                            refresh={this.refresh}
                         /> :
                         <button 
                             style={{...Styles.buttonStyle, marginRight:'20px', backgroundColor:'red'}}

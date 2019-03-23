@@ -39,6 +39,7 @@ export default class TournamentForm extends React.Component {
             .then(res => res.json())
             .then(data => console.log(data))
             .then(this.props.closeForm())
+            .then(this.props.refresh())
             .catch(err => console.log(`Error creating new tournament ${err}`))
     }
 

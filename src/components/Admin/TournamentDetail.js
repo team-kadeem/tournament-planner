@@ -16,7 +16,7 @@ const TournamentDetail = (props) => {
        const listItemStyling = {
            fontSize:'14px',
        }
-            if (name === 'id' || name === 'bracket_made') {
+            if (name === 'id' || name === 'bracketMade' || name === 'closeDate') {
                return 
             }
             return(
@@ -49,6 +49,8 @@ const TournamentDetail = (props) => {
         props.hideTournament(tableId)
     }
 
+    const closeDate = new Date(props.closeDate).toDateString()
+
     const tableStyle = {
         width:'80%'
     }
@@ -73,7 +75,7 @@ const TournamentDetail = (props) => {
                     </tr>
                     <tr>
                         <th>
-
+                            <span>{closeDate}</span>
                         </th>
                         <th>
                             {participants}
