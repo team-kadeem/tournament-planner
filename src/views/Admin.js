@@ -11,6 +11,7 @@ export default class Admin extends React.Component {
         this.state = {
             showTournamentForm:false,
             showAllTournaments:false,
+            numRegistrants:5,
             allTournaments:[],
         }
     }
@@ -64,7 +65,7 @@ export default class Admin extends React.Component {
         return allTournaments
     }
 
-
+0
     modifyTournamentShowData = (tournamentData) => {
         tournamentData.forEach(tournament => tournament['showDetail'] = false)
         return tournamentData
@@ -86,7 +87,13 @@ export default class Admin extends React.Component {
         })
 
         this.setState({...this.state, allTournaments:allTournaments})
+    }
 
+    showMore = totalNumRegistrants => {
+        let newShowCount = this.state.numRegistrants + 10
+        if (newShowCount >= totalNumRegistrants)
+            newShowCount = totalNumRegistrants
+        return this.setState({...this.state, numRegistrants: newShowCount})
     }
 
     viewTournaments = () => {
@@ -124,6 +131,8 @@ export default class Admin extends React.Component {
                         registrants={tournament[title]}
                         toggleHandler={this.toggleTournamentDetail} 
                         generateHandler={this.generateBracket}
+                        showCount={this.state.numRegistrants}
+                        showMore={this.showMore}
                     />
         })
 

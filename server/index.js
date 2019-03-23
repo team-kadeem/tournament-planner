@@ -1,6 +1,5 @@
 const express = require('express')
 const bodyParser = require('body-parser')
-// const { Client } = require('pg')
 const { Pool } = require('pg') 
 const { makeBrackets } = require('./makeBrackets')
 const config = require('./configs/local')
@@ -334,8 +333,6 @@ app.get('/home', (req, res) => {
 )
 
 app.post('/brackets', (req, res) => {
-    // const query = `Select * from public.brackets where tournament_id = ${req.body.tournamentId} 
-    //                order by division, round_number, node_number asc`
     const query = `select brackets.fighter1,
                     brackets.fighter2,
                     brackets.winner,

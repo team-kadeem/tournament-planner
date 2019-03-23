@@ -14,7 +14,7 @@ export default class Tree extends React.Component {
     }
 
     mapToBrackets = (brackets) => {
-        console.log(brackets)
+        // console.log(brackets)
         let currentDivision = brackets[0].division
         let bracketsByDivision = {}
         let currentDivisionFighters = []
@@ -30,7 +30,7 @@ export default class Tree extends React.Component {
         console.log(bracketsByDivision)
         const rounds = this.determineDivisionRounds(bracketsByDivision)
         
-        this.setState({...this.state, brackets:bracketsByDivision, rounds}, () => console.log('STATE SET'))
+        this.setState({...this.state, brackets:bracketsByDivision, rounds})
     }
 
     determineDivisionRounds = (bracketsByDivision) => {
@@ -42,20 +42,8 @@ export default class Tree extends React.Component {
         return rounds
     }
 
-    refresh = () => {
-        console.log('refreshing')
-        fetch('/brackets', {
-            method:'POST',
-            headers: {
-                "Content-type": "application/json"
-            },
-            body: JSON.stringify({tournamentId:'1'})
-        })
-        .then(res => res.json())
-        .then(data => this.mapToBrackets(data))
-        .catch(err => console.log('ERROR FETCHING ' + err))
-    }
-
+    refresh = (updatedBrackets) => this.mapToBrackets(updatedBrackets)
+    
 
     componentWillMount(){
         fetch('/brackets', {
@@ -82,7 +70,8 @@ export default class Tree extends React.Component {
                 return (
                     <Division
                         key={`${division} division`}
-                        division={division} 
+                        division={division}
+                        divisionTitle={this.state.brackets[division][0]['division_title']} 
                         numRounds={this.state.rounds[division]}
                         brackets={this.state.brackets[division]}
                         updateOpen={this.updateBracket}

@@ -11,7 +11,8 @@ export default class Update extends React.Component {
     declareWinner = (e) => {
         //REPLACE 1 WITH THE ACTUAL TOURNAMENT NUMBER
         this.props.declareWinner(
-            this.props.fighter, 
+            this.props.fighter,
+            this.props.otherFighter, 
             this.props.bracketNumber, 
             this.props.tournamentId, 
             this.props.roundNumber,

@@ -10,10 +10,10 @@ export default class Division extends React.Component {
         }
     }
 
-    updateWinner = (fighterName, nodeNum, tournamentNum, roundNumber, division) => {
-        const loser = fighterName === this.props.fighter1 ? this.props.fighter2 : this.props.fighter1
+    updateWinner = (winner, loser, nodeNum, tournamentNum, roundNumber, division) => {
+        // const loser = fighterName === this.props.fighter1 ? this.props.fighter2 : this.props.fighter1
          const body = {
-             fighterName,
+             winner,
              nodeNum,
              nextRound:roundNumber+1,
              tournamentNum,
@@ -30,7 +30,8 @@ export default class Division extends React.Component {
              },
              body:JSON.stringify(body)
          })
-         .then(this.props.refresh())
+         .then(res => res.json())
+         .then(updatedBrackets => this.props.refresh(updatedBrackets))
      }
 
     render(){
@@ -56,7 +57,7 @@ export default class Division extends React.Component {
         return(
             <div style={{marginTop:'50px'}}>
                 <div style={divisionHeader}>
-                    {this.props.division} Division - Fix: These are IDs and not weights
+                    {this.props.divisionTitle} Division - Fix: These are IDs and not weights
                 </div>
                 <br/>
                 <div className="round">
