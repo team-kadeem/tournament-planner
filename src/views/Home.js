@@ -2,6 +2,7 @@ import React from 'react'
 import Tournament from '../components/Home/Tournament'
 import Gloves from '../images/gloves.svg'
 import Styles from '../themes/Styles'
+import './Styles/Home.css'
 
 export default class Home extends React.Component {
     constructor(props){
@@ -52,7 +53,7 @@ export default class Home extends React.Component {
                     />
                 </div>
                 <div style={Styles.detailContainer}>
-                    Available Tournaments
+                    <h2>Available Tournaments</h2>
                     {availableTournaments}
                 </div>
 

@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom'
 
 
 const Tournament = (props) => {
-    console.log(props)
-    console.log(typeof(props.closeDate))
     const closeDate = new Date(props.closeDate).toDateString()
     return(
         <div className="tournament-flex-container">
