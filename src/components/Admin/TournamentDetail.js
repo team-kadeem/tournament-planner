@@ -1,96 +1,103 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const TournamentDetail = (props) => {
-    console.log(props)
 
-    const generateBracket = () => {
-        props.generateHandler(props.id)
+export default class TournamentDetail extends React.Component{
+    constructor(props){
+        super(props)
+        this.state = {
+            start:0,
+            end:10
+        }
     }
 
-   const participants = Object.keys(props.registrants).map(name => {
-       const listStyling = {
-        listStyleType:'none'
-       }
-
-       const listItemStyling = {
-           fontSize:'14px',
-       }
-            if (name === 'id' || name === 'bracketMade' || name === 'closeDate') {
-               return 
-            }
-            return(
-                <ul style={listStyling} key={props.title + ' participants'}>
-                    <li style={listItemStyling}>
-                        {name}: {props.registrants[name]}
-                    </li>
-                </ul>
-            )
-    })
-
-    const Generate = () => {
-        return(
-            <div>
-                <button onClick={generateBracket}>Generate Brackets</button>
-            </div>
-        )
+    generateBracket = () => {
+        this.props.generateHandler(this.props.id)
     }
 
-    const BracketLink = () => {
-        return(
-            <Link to={'/bracket/' + props.id}>
-                See Bracket
-            </Link>
-        )
+    showMore = () => {
+        let start = this.state.start + 10
+        let end = this.state.end + 10
+
+        if (start > Object.keys(this.props.registrants).length - 3) {
+            start = 0
+            end = 10
+        }
+        this.setState({start, end})
     }
 
-    const hideTournament = () => {
-        const tableId = props.title + " " + props.id
-        props.hideTournament(tableId)
-    }
+    render(){
+        const closeDate = new Date(this.props.closeDate).toDateString()
+        const hideTournament = () => {
+            const tableId = this.props.title + " " + this.props.id
+            this.props.hideTournament(tableId)
+        }
 
-    const closeDate = new Date(props.closeDate).toDateString()
+        const tableStyle = {
+            width:'80%'
+        }
 
-    const tableStyle = {
-        width:'80%'
-    }
-   
+        const listStyling = {
+            listStyleType:'none',
+        }
+        const participants = Object.keys(this.props.registrants)
+                                .slice(this.state.start, this.state.end)
+                                .map(name => {
+                                    const listItemStyling = {
+                                        fontSize:'14px',
+                                        marginBottom:'6px'
+                                    }
+                                            if (name === 'id' || name === 'bracketMade' || name === 'closeDate') {
+                                            return 
+                                            }
+                                            return(
+                                                    <li style={listItemStyling}>
+                                                        {name}: {this.props.registrants[name]}
+                                                    </li>
+                                            )
+                                    })
     return(
         <div style={{margin:'10px 0'}}>
-            <table style={tableStyle}>
-                <button onClick={hideTournament}>
-                    {props.buttonText ? <span>Show This Tournament</span> : <span>Hide This Tournament</span>}
-                </button>
-                <tbody id={props.title + " " + props.id}>
-                    <tr>
-                        <th>
-                            Open Until
-                        </th>
-                        <th>
-                            Participants
-                        </th>
-                        <th>
-                            Action
-                        </th>
-                    </tr>
-                    <tr>
-                        <th>
-                            <span>{closeDate}</span>
-                        </th>
-                        <th>
+        <table style={tableStyle}>
+            <button onClick={hideTournament}>
+                {this.props.buttonText ? <span>Show This Tournament</span> : <span>Hide This Tournament</span>}
+            </button>
+            <tbody id={this.props.title + " " + this.props.id}>
+                <tr>
+                    <th>
+                        Open Until
+                    </th>
+                    <th>
+                        Participants
+                    </th>
+                    <th>
+                        Action
+                    </th>
+                </tr>
+                <tr>
+                    <th>
+                        <span>{closeDate}</span>
+                    </th>
+                    <th>
+                        <ul style={listStyling} key={this.props.title + ' participants'}>
                             {participants}
-                            <button>
-                                See More...
-                            </button>
-                        </th>
-                        <th>
-                            {props.bracketMade ? <BracketLink/> : <Generate />}
-                        </th>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    )
-}
+                        </ul>
 
-export default TournamentDetail;
+                        <button onClick={this.showMore}> 
+                            See More...
+                        </button>
+                    </th>
+                    <th>
+                        {this.props.bracketMade ? 
+                             <Link to={'/bracket/' + this.props.id}>See Bracket</Link>:
+                             <button onClick={this.generateBracket}>Generate Brackets</button>
+                        }
+                    </th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+)
+    }
+ 
+}

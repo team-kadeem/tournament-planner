@@ -338,33 +338,6 @@ app.get('/home', (req, res) => {
     }
 )
 
-app.post('/brackets', (req, res) => {
-    console.log(req.body)
-    const query = `select brackets.fighter1,
-                    brackets.fighter2,
-                    brackets.winner,
-                    brackets.loser,
-                    brackets.node_number,
-                    brackets.description,
-                    brackets.root,
-                    brackets.division,
-                    brackets.tournament_id,
-                    brackets.round_number,
-                    brackets.left_child,
-                    brackets.right_child,
-                    division.title as division_title
-                from public.brackets
-                inner join division on brackets.division = division.id where tournament_id = ${req.body.tournamentId}
-                order by division, round_number, node_number asc`
-    client.query(query, (err, dbRes) => {
-        if (err) {
-            console.log('err getting brackets for tree ' + err )
-        } else {
-            res.send(dbRes.rows)
-        }
-    })
-})
-
 
 app.post('/tournaments', (req, res) => {
 //ADMIN VIEW ALL TOURNAMENTS
@@ -414,8 +387,6 @@ app.post('/tournaments', (req, res) => {
 
 
 app.post('/register', (req, res) => {
-    console.log(req.body)
-    console.log('\n\n')
     checkFighterRegistration()
     const tableColumns = [
         'first_name', 
@@ -548,6 +519,11 @@ app.post('/update_fighter', (req, res) => {
     })
 })
 
+
+/////////////////////////////////////////////////////////////////
+//BRACKETS                                                   ///
+////////////////////////////////////////////////////////////////
+
 app.post('/generate', (req, res) => {
     const query = `Select tournament_id, fighter_usa_boxing_id, division_id, first_name, last_name
                     from public.fights_in inner join public.fighter on
@@ -563,6 +539,33 @@ app.post('/generate', (req, res) => {
             })
         
     })
+
+app.post('/brackets', (req, res) => {
+    console.log(req.body)
+    const query = `select brackets.fighter1,
+                    brackets.fighter2,
+                    brackets.winner,
+                    brackets.loser,
+                    brackets.node_number,
+                    brackets.description,
+                    brackets.root,
+                    brackets.division,
+                    brackets.tournament_id,
+                    brackets.round_number,
+                    brackets.left_child,
+                    brackets.right_child,
+                    division.title as division_title
+                from public.brackets
+                inner join division on brackets.division = division.id where tournament_id = ${req.body.tournamentId}
+                order by division, round_number, node_number asc`
+    client.query(query, (err, dbRes) => {
+        if (err) {
+            console.log('err getting brackets for tree ' + err )
+        } else {
+            res.send(dbRes.rows)
+        }
+    })
+})
 
 
 app.post('/update_bracket', (req, res) => {
@@ -605,7 +608,7 @@ app.post('/update_bracket', (req, res) => {
                             brackets.right_child,
                             division.title as division_title
                         from public.brackets
-                        inner join division on brackets.division = division.id
+                        inner join division on brackets.division = division.id where tournament_id = ${req.body.tournamentNum}
                         order by division, round_number, node_number asc`
 
                     client.query(returnUpdatedBracketsQuery, (err, dbRes) => {

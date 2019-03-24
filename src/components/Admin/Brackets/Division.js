@@ -29,6 +29,10 @@ export default class Division extends React.Component {
              body:JSON.stringify(body)
          })
          .then(res => res.json())
+         .then(data => {
+             console.log(data)
+             return data
+         })
          .then(updatedBrackets => this.props.refresh(updatedBrackets))
      }
 

@@ -129,10 +129,10 @@ export default class Admin extends React.Component {
     render(){
         const allTournaments = this.state.allTournaments.map( (tournament, i) => {
             let title = Object.keys(tournament)[0]
-            console.log(tournament)
             return <TournamentDetail
                         key={tournament[title] + i}
                         id={tournament[title]['id']}
+                        closeDate={tournament[title]['closeDate']}
                         bracketMade={tournament[title]['bracketMade']}
                         title={title}
                         registrants={tournament[title]}
