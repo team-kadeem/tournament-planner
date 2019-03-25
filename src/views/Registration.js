@@ -65,7 +65,6 @@ export default class Registration extends React.Component {
     }
 
     updateUserType = (evt) => {
-        console.log('wtf')
         const userType = evt.target.name
         let state = Object.assign({}, this.state)
         state['userType'] = userType
