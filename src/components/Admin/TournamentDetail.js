@@ -1,5 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { Button } from 'rebass'
+import {Box} from 'rebass'
 
 
 export default class TournamentDetail extends React.Component{
@@ -11,9 +13,8 @@ export default class TournamentDetail extends React.Component{
         }
     }
 
-    generateBracket = () => {
-        this.props.generateHandler(this.props.id)
-    }
+    generateBracket = () => this.props.generateHandler(this.props.id)
+    
 
     showMore = () => {
         let start = this.state.start + 10
@@ -37,6 +38,18 @@ export default class TournamentDetail extends React.Component{
             width:'80%'
         }
 
+        const bracketLink = {
+            textDecoration:'none',
+            color:'rgb(51,51,51)'
+        }
+        const buttonStyle = {
+            backgroundColor:'white',
+            color:'rgb(51,51,51)',
+            outline:'0',
+            cursor:'pointer',
+            
+        }
+
         const listStyling = {
             listStyleType:'none',
         }
@@ -47,21 +60,23 @@ export default class TournamentDetail extends React.Component{
                                         fontSize:'14px',
                                         marginBottom:'6px'
                                     }
-                                            if (name === 'id' || name === 'bracketMade' || name === 'closeDate') {
-                                            return 
-                                            }
-                                            return(
-                                                    <li style={listItemStyling}>
-                                                        {name}: {this.props.registrants[name]}
-                                                    </li>
-                                            )
+                                        if (name === 'id' || name === 'bracketMade' || name === 'closeDate') {
+                                        return 
+                                        }
+                                        return(
+                                                <li style={listItemStyling}>
+                                                    {name}: {this.props.registrants[name]}
+                                                </li>
+                                        )
                                     })
     return(
         <div style={{margin:'10px 0'}}>
         <table style={tableStyle}>
-            <button onClick={hideTournament}>
-                {this.props.buttonText ? <span>Show This Tournament</span> : <span>Hide This Tournament</span>}
-            </button>
+            <Button style={buttonStyle} onClick={hideTournament}>
+                {this.props.buttonText ? 
+                    <span>Show This Tournament</span> : <span>Hide This Tournament</span>
+                }
+            </Button>
             <tbody id={this.props.title + " " + this.props.id}>
                 <tr>
                     <th>
@@ -83,14 +98,23 @@ export default class TournamentDetail extends React.Component{
                             {participants}
                         </ul>
 
-                        <button onClick={this.showMore}> 
+                        <Button style={buttonStyle} onClick={this.showMore}> 
                             See More...
-                        </button>
+                        </Button>
                     </th>
                     <th>
-                        {this.props.bracketMade ? 
-                             <Link to={'/bracket/' + this.props.id}>See Bracket</Link>:
-                             <button onClick={this.generateBracket}>Generate Brackets</button>
+                        {this.props.bracketMade ?
+                            <Button style={buttonStyle}>
+                                <Link style={bracketLink} to={'/bracket/' + this.props.id}>
+                                    See Bracket
+                                </Link>
+                            </Button> 
+                             :
+                             <Button 
+                                onClick={this.generateBracket}
+                                style={buttonStyle}>
+                                    Generate Brackets
+                                </Button>
                         }
                     </th>
                 </tr>

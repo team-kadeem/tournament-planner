@@ -2,7 +2,9 @@ import React from 'react'
 import TournamentDetail from '../components/Admin/TournamentDetail'
 import TournamentForm from '../components/Admin/TournamentForm'
 import Belt from '../images/championbelt.svg'
+import { Button } from 'rebass'
 import Styles from '../themes/Styles'
+
 
 export default class Admin extends React.Component {
     constructor(props){
@@ -152,7 +154,8 @@ export default class Admin extends React.Component {
                 </div>
 
                 <div style={Styles.detailContainer}>
-                    <p>Hello Admin.  What would you like to do?</p>
+                    <h2>Hello Admin.</h2>  
+                    <p>What would you like to do?</p>
                     <br/>
                     {this.state.showTournamentForm ? 
                         <TournamentForm 
@@ -160,31 +163,31 @@ export default class Admin extends React.Component {
                             closeForm={this.createNewTournament}
                             refresh={this.refresh}
                         /> :
-                        <button 
+                        <Button 
                             style={{...Styles.buttonStyle, marginRight:'20px', backgroundColor:'red'}}
                             onClick={this.createNewTournament}
                         >
                             Create New Tournament
-                        </button>
+                        </Button>
                     }
 
                     {
                         this.state.showAllTournaments ? 
                             <div>
                                 { allTournaments }
-                                    <button 
+                                    <Button 
                                         style={{...Styles.buttonStyle, backgroundColor:'blue'}}
                                         onClick={this.viewTournaments}
                                     >
                                         Hide Tournaments
-                                    </button>
+                                    </Button>
                             </div> : 
-                            <button 
+                            <Button 
                                 style={{...Styles.buttonStyle, backgroundColor:'blue', marginRight:'20px'}}
                                 onClick={this.viewTournaments}
                             >
                                 View All Tournaments
-                            </button>
+                            </Button>
                     }
                 </div>
             </div>

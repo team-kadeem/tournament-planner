@@ -1,5 +1,6 @@
 import React from 'react'
 import Styles from '../../themes/Styles'
+import { Button } from 'rebass'
 import validator from 'validator'
 
 export default class TournamentForm extends React.Component {
@@ -158,21 +159,21 @@ export default class TournamentForm extends React.Component {
                         />
                     </label>
 
+                        <input
+                            type="submit"
+                            onSubmit={this.createNewTournament}
+                            style={this.state.errorPresent ? {...submitButton, backgroundColor:'grey'} : {...submitButton}}
+                            value="Create New Tournament"
+                            disabled={this.state.errorPresent}
+                        />
 
-                    <input
-                        type="submit"
-                        onSubmit={this.createNewTournament}
-                        style={this.state.errorPresent ? {...submitButton, backgroundColor:'grey'} : {...submitButton}}
-                        value="Create New Tournament"
-                        disabled={this.state.errorPresent}
-                    />
 
-                    <button
+                    <Button
                         onClick={this.props.closeForm}
                         style={closeButton}
                     >
                         Close Form
-                    </button>
+                    </Button>
                 </form>
 
             </div>

@@ -11,7 +11,6 @@ Styles.buttonStyle = {
 
 Styles.imageContainer = {
     width:'50vw',
-    margin:'0 auto',
     textAlign:'center'
 }
 
@@ -21,8 +20,6 @@ Styles.primaryImageStyle = {
 }
 
 Styles.detailContainer = {
-    width:'80vw',
-    margin:'0 auto',
     textAlign:'center'
 }
 

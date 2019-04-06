@@ -2,6 +2,7 @@ import React from 'react'
 import UserType from '../components/Registration/UserType'
 import SearchUser from '../components/Registration/SearchUser'
 import RegistrationForm from '../components/Registration/RegistrationForm'
+import { Flex } from 'rebass'
 
 
 export default class Registration extends React.Component {
