@@ -14,3 +14,5 @@ const DetailContainer = (props) => {
         </Flex>
     )
 }
+
+export default DetailContainer;

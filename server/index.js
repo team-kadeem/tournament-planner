@@ -1,6 +1,6 @@
 const express = require('express')
 const bodyParser = require('body-parser')
-const { Pool } = require('pg') 
+const { Pool, Client } = require('pg') 
 const { makeBrackets } = require('./makeBrackets')
 const config = require('./configs/local')
 
@@ -10,16 +10,12 @@ app.use(bodyParser.urlencoded({ extended:true }))
 app.use(bodyParser.json())
 app.use(bodyParser.text())
 
-//POSTGRES
-const client = new Pool({
-    user:'local',
-    host:'localhost',
-    database:'boxing_local',
-    password:'local',
-    port:'5432'
-})
-client.connect()
-
+const client = new Pool(config.pgLocal)
+try {
+    client.connect()
+} catch (error) {
+    console.log(`Error connecting to postgres ${error}`)
+}
 
 determineDivision = (gender, agegroup, weightClass, usaBoxingId, tournamentId) => {
     gender = gender[0].toUpperCase() + gender.substring(1,)
@@ -322,9 +318,18 @@ insertBrackets = (brackets, tournamentId) => {
     })
 })}
 
-//////////////////
-//ROUTES       ///
-//////////////////
+/* -------------------------------------------------------------------------------------
+ *
+ *   Routes
+ *
+ * --------------------------------------------------------------------------------------
+*/
+
+app.get('/ping', (req, res) => {
+    return res.send('PONG')
+})
+
+
 app.get('/home', (req, res) => {
     const query = `Select * from public.tournament where registration_close > NOW()`
     client.query(query, (err, dbRes) => {
@@ -520,9 +525,7 @@ app.post('/update_fighter', (req, res) => {
 })
 
 
-/////////////////////////////////////////////////////////////////
-//BRACKETS                                                   ///
-////////////////////////////////////////////////////////////////
+//BRACKETS                                              
 
 app.post('/generate', (req, res) => {
     const query = `Select tournament_id, fighter_usa_boxing_id, division_id, first_name, last_name
@@ -627,12 +630,12 @@ app.post('/update_bracket', (req, res) => {
 
 
 
-
-
-
 if (require.main === module) {
-    app.listen(8000, () => console.log('Tournament running on port 8000'))
+    const client = new Pool(config.pgLocal)
+    app.listen(8000, () => {
+        console.log('Tournament running on port 8000')
+    })
 } else {
     exports.app = app
-    exports.pg = client
+    exports.pgClient = new Client(config.pgLocal)
 }

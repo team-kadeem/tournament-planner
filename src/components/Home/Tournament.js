@@ -9,7 +9,8 @@ const containerStyle = {
 
 const linkStyle = {
     textDecoration:'none',
-    color:'rgb(51, 51, 51)'
+    // color:'rgb(51, 51, 51)'
+    color:'#fff'
 }
 
 const headingStyle = {
@@ -26,7 +27,7 @@ const Tournament = (props) => {
                 <h2 style={headingStyle}>{props.title}</h2>
                 <strong>
                     <Link style={linkStyle} to={'/register/' + props.id}>
-                        Click Here to Register
+                        <strong><i>Click Here to Register</i></strong>
                     </Link>
                 </strong>
                 

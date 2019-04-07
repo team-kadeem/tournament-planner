@@ -1,4 +1,6 @@
 import React from 'react'
+import DetailContainer from './DetailContainer'
+import Detail from './Detail'
 import { Link } from 'react-router-dom'
 import { Button } from 'rebass'
 import {Box} from 'rebass'
@@ -15,7 +17,6 @@ export default class TournamentDetail extends React.Component{
 
     generateBracket = () => this.props.generateHandler(this.props.id)
     
-
     showMore = () => {
         let start = this.state.start + 10
         let end = this.state.end + 10
@@ -26,6 +27,7 @@ export default class TournamentDetail extends React.Component{
         }
         this.setState({start, end})
     }
+
 
     render(){
         const closeDate = new Date(this.props.closeDate).toDateString()
@@ -71,57 +73,84 @@ export default class TournamentDetail extends React.Component{
                                     })
     return(
         <div style={{margin:'10px 0'}}>
-        <table style={tableStyle}>
-            <Button style={buttonStyle} onClick={hideTournament}>
-                {this.props.buttonText ? 
-                    <span>Show This Tournament</span> : <span>Hide This Tournament</span>
-                }
-            </Button>
-            <tbody id={this.props.title + " " + this.props.id}>
-                <tr>
-                    <th>
-                        Open Until
-                    </th>
-                    <th>
-                        Participants
-                    </th>
-                    <th>
-                        Action
-                    </th>
-                </tr>
-                <tr>
-                    <th>
-                        <span>{closeDate}</span>
-                    </th>
-                    <th>
-                        <ul style={listStyling} key={this.props.title + ' participants'}>
-                            {participants}
-                        </ul>
-
-                        <Button style={buttonStyle} onClick={this.showMore}> 
-                            See More...
+            <DetailContainer>
+                <Detail >
+                    Open Until: <span>{closeDate}</span>
+                </Detail>
+                <Detail>
+                    Registrants
+                    <ul style={listStyling} key={this.props.title + ' participants'}>
+                        {participants}
+                    </ul>
+                </Detail>
+                <Detail>
+                    {this.props.bracketMade ?
+                    <Button style={buttonStyle}>
+                        <Link style={bracketLink} to={'/bracket/' + this.props.id}>
+                            See Bracket
+                        </Link>
+                    </Button> 
+                    :
+                    <Button 
+                        onClick={this.generateBracket}
+                        style={buttonStyle}>
+                            Generate Brackets
                         </Button>
-                    </th>
-                    <th>
-                        {this.props.bracketMade ?
-                            <Button style={buttonStyle}>
-                                <Link style={bracketLink} to={'/bracket/' + this.props.id}>
-                                    See Bracket
-                                </Link>
-                            </Button> 
-                             :
-                             <Button 
-                                onClick={this.generateBracket}
-                                style={buttonStyle}>
-                                    Generate Brackets
-                                </Button>
-                        }
-                    </th>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-)
+                    }
+                </Detail>
+            </DetailContainer>
+        </div>
+    )
+        }
+    
     }
- 
-}
+
+{/* <table style={tableStyle}>
+<Button style={buttonStyle} onClick={hideTournament}>
+    {this.props.buttonText ? 
+        <span>Show This Tournament</span> : <span>Hide This Tournament</span>
+    }
+</Button>
+<tbody id={this.props.title + " " + this.props.id}>
+    <tr>
+        <th>
+            Open Until
+        </th>
+        <th>
+            Participants
+        </th>
+        <th>
+            Action
+        </th>
+    </tr>
+    <tr>
+        <th>
+            <span>{closeDate}</span>
+        </th>
+        <th>
+            <ul style={listStyling} key={this.props.title + ' participants'}>
+                {participants}
+            </ul>
+
+            <Button style={buttonStyle} onClick={this.showMore}> 
+                See More...
+            </Button>
+        </th>
+        <th>
+            {this.props.bracketMade ?
+                <Button style={buttonStyle}>
+                    <Link style={bracketLink} to={'/bracket/' + this.props.id}>
+                        See Bracket
+                    </Link>
+                </Button> 
+                 :
+                 <Button 
+                    onClick={this.generateBracket}
+                    style={buttonStyle}>
+                        Generate Brackets
+                    </Button>
+            }
+        </th>
+    </tr>
+</tbody>
+</table> */}

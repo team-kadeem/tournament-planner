@@ -1,11 +1,11 @@
-const pgLocal = {
+const pgTest = {
     user:'local',
     host:'localhost',
-    database:'boxing_local',
+    database:'boxing_test',
     password:'local',
     port:'5432'
 }
 
 module.exports = {
-    pgLocal:pgLocal
+    pgTest
 }

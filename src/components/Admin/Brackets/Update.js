@@ -20,18 +20,20 @@ export default class Update extends React.Component {
     }
     render(){
         const updateBox = {
-            border:'1px solid grey',
+            border:'1px solid black',
             position:'absolute',
             left:'185px',
             bottom:'2px',
             width:'120px',
             height:'25px',
             cursor:'pointer',
+            padding:'1px 10px',
+            fontWeight:'700'
         }
 
         const highlightedUpdateBox = {
             ...updateBox,
-            backgroundColor:'#3345FF',
+            backgroundColor:'#333d54',
             color:'white'
         }
 

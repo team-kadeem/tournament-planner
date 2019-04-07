@@ -47,7 +47,8 @@ export default class Bracket extends React.Component {
             width:'180px',
             height:'30px',
             textAlign:'center',
-            position:'relative'
+            position:'relative',
+            backgroundColor:'#333d54'
         }
         
         const containerStyle = {
@@ -57,13 +58,15 @@ export default class Bracket extends React.Component {
         const fighter1Style = {
             cursor:'pointer',
             fontWeight:'600',
-            color:'red'
+            color:'#e73235',
+            fontWeight:'700'
         }
 
         const fighter2Style = {
             cursor:'pointer',
             fontWeight:'600',
-            color:'blue'
+            color:'#019fd9',
+            fontWeight:'700'
         }
 
         const loser1Style = {
