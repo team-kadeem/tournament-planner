@@ -1,4 +1,5 @@
 import React from 'react'
+import { Button } from 'rebass'
 import './Styles/SearchUser.css'
 
 const SearchUser = (props) => {
@@ -9,19 +10,23 @@ const SearchUser = (props) => {
         fontSize:'14px',
         marginBottom:'10px'
     }
-    
-    const submitButton = {
-        height:'45px',
-        backgroundColor:'#8EA6A9',
-        color:'#FFF',
-        fontSize:'14px',
-        borderRadius:'10px',
-        width:'15%',
-        outline:'0',
-        cursor:'pointer',
-        fontWeight:'700'
 
+    const buttonStyle = {
+        cursor:'pointer',
+        backgroundColor:'#d8d8d8',
+        outline:'0'
     }
+
+    const submitButton = {
+        border:'0',
+        cursor:'pointer',
+        outline:'0',
+        backgroundColor:'rgba(255,255,255,0)',
+        color:'#fff',
+        fontWeight:'bold',
+        fontSize:'16px'
+    }
+
     return(
         <div style={{height:'100vh'}}>
             <form className="search-container" onSubmit={props.submissionHandler}>
@@ -35,8 +40,9 @@ const SearchUser = (props) => {
                     type="text"
                     placeholder="USA Boxing ID:" 
                 />
-                    
-                <input style={submitButton} type="submit" value="Search"/>
+                <Button style={buttonStyle}>
+                    <input style={submitButton} type="submit" value="Search" />
+                </Button>
             </form>
         </div>
     )

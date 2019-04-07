@@ -24,9 +24,6 @@ export default class TournamentForm extends React.Component {
         }
     }
 
-
-
-
     createNewTournament = (evt) => {
         evt.preventDefault()
         const params = {
@@ -50,7 +47,6 @@ export default class TournamentForm extends React.Component {
 
         if (evt.target.name === 'eventDate' || evt.target.name === 'closeDate')
             return validator.isAfter(evt.target.value)
-
     }
 
     updateInput = (evt) => {
@@ -65,26 +61,20 @@ export default class TournamentForm extends React.Component {
             errors[evt.target.name] = true
         
         this.setState({...this.state, fields:fields, errors:errors}, () => this.toggleErrorPresent())
-
-
     }
 
     checkErrorStatus = () => {
         const errors = Object.keys(this.state.errors).filter(objectKey => this.state.errors[objectKey] === true)
-        console.log(errors)
         return errors
     }
 
     toggleErrorPresent = () => {
-        if (this.checkErrorStatus().length > 0){
+        if (this.checkErrorStatus().length > 0)
             return this.setState({...this.state, errorPresent:true})
-        }
+
         else
             return this.setState({...this.state, errorPresent:false })
-        
     }
-
-
 
     render(){
 
@@ -101,16 +91,24 @@ export default class TournamentForm extends React.Component {
         }
 
         const submitButton = {
-            ...Styles.buttonStyle,
-            backgroundColor:'#1659a1',
-            display:'inline-block',
-            marginRight:'5px'
+            marginRight:'5px',
+            backgroundColor:'#333d54',
+            cursor:'pointer'
+        }
+
+        const inputButton = {
+            backgroundColor:'rgba(0,0,0,0)',
+            border:'0'
         }
 
         const closeButton = {
             ...Styles.buttonStyle,
             display:'inline-block',
-            backgroundColor:'red'
+            backgroundColor:'#E73235'
+        }
+
+        const buttonStyle = {
+            backgroundColor:'#d8d8d8'
         }
 
 
@@ -159,13 +157,18 @@ export default class TournamentForm extends React.Component {
                         />
                     </label>
 
-                        <input
-                            type="submit"
-                            onSubmit={this.createNewTournament}
-                            style={this.state.errorPresent ? {...submitButton, backgroundColor:'grey'} : {...submitButton}}
-                            value="Create New Tournament"
-                            disabled={this.state.errorPresent}
-                        />
+                        <Button style={
+                            this.state.errorPresent ? {...submitButton, backgroundColor:'#8c8c8c'} : submitButton
+                        }>
+                            <input
+                                type="submit"
+                                style={inputButton}
+                                onSubmit={this.createNewTournament}
+                                value=""
+                                disabled={this.state.errorPresent}
+                            />
+                            Create New Tournament
+                        </Button>
 
 
                     <Button

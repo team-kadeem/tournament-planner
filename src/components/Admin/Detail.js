@@ -2,13 +2,12 @@ import React from 'react'
 import { Box } from 'rebass'
 
 const detailStyle = {
-    border:'1 px solid black',
     height:'25%',
-    width:'27vw'
+    width:'27vw',
+    marginBottom:'20px'
 }
 
 const insideStyle = {
-    borderTop:'1px solid black'
 }
 
 const Detail = (props) => {

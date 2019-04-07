@@ -2,7 +2,7 @@ import React from 'react'
 import TournamentDetail from '../components/Admin/TournamentDetail'
 import TournamentForm from '../components/Admin/TournamentForm'
 import Belt from '../images/championbelt.svg'
-import { Button } from 'rebass'
+import { Flex, Button } from 'rebass'
 import Styles from '../themes/Styles'
 
 
@@ -16,9 +16,7 @@ export default class Admin extends React.Component {
         }
     }
 
-    componentDidMount(){
-        this.getAllTournaments()
-    }
+    componentDidMount = () => this.getAllTournaments()
 
     getAllTournaments = () => {
         const params = {
@@ -72,10 +70,8 @@ export default class Admin extends React.Component {
     }
 
 
-    modifyTournamentShowData = (tournamentData) => {
-        tournamentData.forEach(tournament => tournament['showDetail'] = false)
-        return tournamentData
-    }
+    modifyTournamentShowData = tournamentData => tournamentData.forEach(tournament => tournament['showDetail'] = false)
+
 
 
     createNewTournament = () => {
@@ -124,9 +120,8 @@ export default class Admin extends React.Component {
             .catch(err => console.log(err))
     }
 
-    refresh = () => {
-        this.getAllTournaments()
-    }
+    refresh = () => this.getAllTournaments()
+    
 
     render(){
         const allTournaments = this.state.allTournaments.map( (tournament, i) => {
@@ -146,12 +141,12 @@ export default class Admin extends React.Component {
 
         return(
             <div>
-                <div style={Styles.imageContainer}>
-                    <img 
-                        src={Belt} 
-                        style={Styles.primaryImageStyle}
-                    />
-                </div>
+                <Flex 
+                    alignItems='center'
+                    justifyContent='center'>
+                    <img height="25%" width="50%" src={Belt} />
+                </Flex>
+
 
                 <div style={Styles.detailContainer}>
                     <h2>Hello Admin.</h2>  
@@ -164,7 +159,7 @@ export default class Admin extends React.Component {
                             refresh={this.refresh}
                         /> :
                         <Button 
-                            style={{...Styles.buttonStyle, marginRight:'20px', backgroundColor:'red'}}
+                            style={{...Styles.buttonStyle, marginRight:'20px', backgroundColor:'#E73235'}}
                             onClick={this.createNewTournament}
                         >
                             Create New Tournament
@@ -176,14 +171,14 @@ export default class Admin extends React.Component {
                             <div>
                                 { allTournaments }
                                     <Button 
-                                        style={{...Styles.buttonStyle, backgroundColor:'blue'}}
+                                        style={{...Styles.buttonStyle, backgroundColor:'#333d54'}}
                                         onClick={this.viewTournaments}
                                     >
                                         Hide Tournaments
                                     </Button>
                             </div> : 
                             <Button 
-                                style={{...Styles.buttonStyle, backgroundColor:'blue', marginRight:'20px'}}
+                                style={{...Styles.buttonStyle, backgroundColor:'#333d54', marginRight:'20px'}}
                                 onClick={this.viewTournaments}
                             >
                                 View All Tournaments

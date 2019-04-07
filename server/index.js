@@ -544,7 +544,6 @@ app.post('/generate', (req, res) => {
     })
 
 app.post('/brackets', (req, res) => {
-    console.log(req.body)
     const query = `select brackets.fighter1,
                     brackets.fighter2,
                     brackets.winner,
@@ -626,6 +625,15 @@ app.post('/update_bracket', (req, res) => {
             })
         }
     })
+})
+
+app.post('/tournament_name', (req, res) => {
+    console.log('tournament name')
+    console.log(req.body.tournamentId)
+    const query = `Select * from public.tournament where id = ${req.body.tournamentId}`
+    client.query(query)
+        .then(dbRes => res.send(dbRes.rows[0].title))
+        .catch(e => console.log(`Error fetching tournament name ${e}`))
 })
 
 

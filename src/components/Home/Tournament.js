@@ -9,13 +9,15 @@ const containerStyle = {
 
 const linkStyle = {
     textDecoration:'none',
-    // color:'rgb(51, 51, 51)'
-    color:'#fff'
+    color:'#fff',
+    fontWeight:'700'
+    // color:'#00aeee'
 }
 
 const headingStyle = {
     margin:'5px 0',
-    fontFamily:'Roboto Condensed'
+    fontFamily:'Roboto Condensed',
+    color:'#00aeee'
 }
 
 

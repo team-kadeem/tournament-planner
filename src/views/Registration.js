@@ -11,7 +11,7 @@ export default class Registration extends React.Component {
         this.state = {
             formStatus:null,
             fighterNotFound:false,
-            userType:undefined,
+            userType:'',
             dataLoaded:null,
             invalidSubmission:false,
             userType:'',
@@ -66,8 +66,10 @@ export default class Registration extends React.Component {
     }
 
     updateUserType = (evt) => {
+        console.log(evt.target)
         const userType = evt.target.name
-        let state = Object.assign({}, this.state)
+        console.log(userType)
+        let state = {...this.state}
         state['userType'] = userType
         this.setState(state)
     }

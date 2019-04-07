@@ -10,13 +10,14 @@ import { Box } from 'rebass'
 const RegistrationForm = (props) => {
     const submitButton = {
         padding:'10px 20px',
-        border:'1px solid #007bff',
+        border:'1px solid #333d54',
         color:'white',
-        backgroundColor:'#007bff',
+        backgroundColor:'#333d54',
         fontSize:'18px',
         borderRadius:'4px',
         marginLeft:'10px',
-        outline:'0'
+        outline:'0',
+        cursor:'pointer'
     }
 
     const radioButtonTextStyle = {

@@ -3,7 +3,6 @@ import DetailContainer from './DetailContainer'
 import Detail from './Detail'
 import { Link } from 'react-router-dom'
 import { Button } from 'rebass'
-import {Box} from 'rebass'
 
 
 export default class TournamentDetail extends React.Component{
@@ -53,36 +52,47 @@ export default class TournamentDetail extends React.Component{
         }
 
         const listStyling = {
+            // listStyleType:'none',
+            textAlign:'center'
+        }
+
+        const listItemStyling = {
             listStyleType:'none',
+            fontSize:'14px',
+            marginBottom:'6px',
+            textAlign:'center'
         }
         const participants = Object.keys(this.props.registrants)
                                 .slice(this.state.start, this.state.end)
                                 .map(name => {
-                                    const listItemStyling = {
-                                        fontSize:'14px',
-                                        marginBottom:'6px'
-                                    }
-                                        if (name === 'id' || name === 'bracketMade' || name === 'closeDate') {
-                                        return 
-                                        }
-                                        return(
-                                                <li style={listItemStyling}>
-                                                    {name}: {this.props.registrants[name]}
-                                                </li>
-                                        )
-                                    })
+                                    if (name === 'id' || name === 'bracketMade' || name === 'closeDate') return 
+                                    
+                                    return(
+                                            <li style={listItemStyling}>
+                                                {name}: {this.props.registrants[name]}
+                                            </li>
+                                    )
+                                })
     return(
-        <div style={{margin:'10px 0'}}>
+        <div style={{margin:'50px 0'}}>
             <DetailContainer>
                 <Detail >
-                    Open Until: <span>{closeDate}</span>
+                    Open Until: <br/>
+                    <span>{closeDate}</span>
                 </Detail>
+
                 <Detail>
                     Registrants
                     <ul style={listStyling} key={this.props.title + ' participants'}>
                         {participants}
                     </ul>
+                    <Button 
+                        style={buttonStyle}
+                        onClick={this.showMore}>
+                        See More
+                    </Button>
                 </Detail>
+                
                 <Detail>
                     {this.props.bracketMade ?
                     <Button style={buttonStyle}>
@@ -104,53 +114,3 @@ export default class TournamentDetail extends React.Component{
         }
     
     }
-
-{/* <table style={tableStyle}>
-<Button style={buttonStyle} onClick={hideTournament}>
-    {this.props.buttonText ? 
-        <span>Show This Tournament</span> : <span>Hide This Tournament</span>
-    }
-</Button>
-<tbody id={this.props.title + " " + this.props.id}>
-    <tr>
-        <th>
-            Open Until
-        </th>
-        <th>
-            Participants
-        </th>
-        <th>
-            Action
-        </th>
-    </tr>
-    <tr>
-        <th>
-            <span>{closeDate}</span>
-        </th>
-        <th>
-            <ul style={listStyling} key={this.props.title + ' participants'}>
-                {participants}
-            </ul>
-
-            <Button style={buttonStyle} onClick={this.showMore}> 
-                See More...
-            </Button>
-        </th>
-        <th>
-            {this.props.bracketMade ?
-                <Button style={buttonStyle}>
-                    <Link style={bracketLink} to={'/bracket/' + this.props.id}>
-                        See Bracket
-                    </Link>
-                </Button> 
-                 :
-                 <Button 
-                    onClick={this.generateBracket}
-                    style={buttonStyle}>
-                        Generate Brackets
-                    </Button>
-            }
-        </th>
-    </tr>
-</tbody>
-</table> */}
