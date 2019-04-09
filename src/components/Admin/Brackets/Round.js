@@ -8,7 +8,8 @@ const Round = (props) => {
     const roundBrackets = props.brackets.map(bracket => {
         if (bracket.round_number === props.roundNum) {
             return (
-                <Bracket 
+                <Bracket
+                    authenticated={props.authenticated} 
                     fighter1={bracket.fighter1}
                     fighter2={bracket.fighter2}
                     bracketNumber={bracket.node_number}

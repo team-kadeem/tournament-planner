@@ -35,7 +35,13 @@ const Tournament = (props) => {
                 
             </div>
             <div>
-                Open Until: {closeDate}
+                Registration Open Until: {closeDate}
+            </div>
+
+            <div>
+                <Link style={linkStyle} to={"/bracket/" + props.id}>
+                    View Bracket
+                </Link>
             </div>
             <div>
 

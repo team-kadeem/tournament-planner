@@ -96,7 +96,12 @@ export default class TournamentDetail extends React.Component{
                 <Detail>
                     {this.props.bracketMade ?
                     <Button style={buttonStyle}>
-                        <Link style={bracketLink} to={'/bracket/' + this.props.id}>
+                        <Link 
+                            style={bracketLink} 
+                            to={{
+                                pathname:'/bracket/' + this.props.id,
+                                state: {authenticated:true}
+                                }}>
                             See Bracket
                         </Link>
                     </Button> 

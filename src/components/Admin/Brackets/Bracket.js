@@ -87,7 +87,7 @@ export default class Bracket extends React.Component {
                       style={this.props.loser === this.props.fighter1 ? loser1Style : fighter1Style}>
                         {this.props.fighter1}
                 </span>
-                {this.state.updateFighter1 ? 
+                {this.state.updateFighter1 && this.props.authenticated ? 
                     <Update highlighted={this.state.highlightUpdate}
                             highlight={this.highlightUpdateBox}
                             declareWinner={this.props.declareWinner}
@@ -104,7 +104,7 @@ export default class Bracket extends React.Component {
                       style={this.props.loser === this.props.fighter2 ? loser2Style : fighter2Style}>
                       {this.props.fighter2}
                 </span>
-                {this.state.updateFighter2 ? 
+                {this.state.updateFighter2 && this.props.authenticated ? 
                     <Update highlighted={this.state.highlightUpdate}
                             highlight={this.highlightUpdateBox}
                             declareWinner={this.props.declareWinner}

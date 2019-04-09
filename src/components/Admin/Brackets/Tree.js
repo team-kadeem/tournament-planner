@@ -65,6 +65,7 @@ export default class Tree extends React.Component {
             const wholeBrackets = divisions.map(division => {
                 return (
                     <Division
+                        authenticated={this.props.authenticated}
                         key={`${division} division`}
                         division={division}
                         divisionTitle={this.state.brackets[division][0]['division_title']} 

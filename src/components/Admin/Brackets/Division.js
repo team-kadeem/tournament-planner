@@ -41,6 +41,7 @@ export default class Division extends React.Component {
         for (let round = 1; round < this.props.numRounds + 1; round++) {
             rounds.push(
                 <Round
+                    authenticated={this.props.authenticated}
                     key={`Round ${round} of Division ${this.props.division}`}
                     division={this.props.division} 
                     roundNum={round}

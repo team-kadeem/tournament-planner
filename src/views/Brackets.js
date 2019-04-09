@@ -10,6 +10,7 @@ export default class Brackets extends React.Component {
     }
 
     componentWillMount = () => {
+        console.log(this.props)
         fetch('/tournament_name', {
             method:'POST',
             body:JSON.stringify({tournamentId:this.props.match.params.tournamentId}),
@@ -34,8 +35,11 @@ export default class Brackets extends React.Component {
 
         return(
             <div style={containerStyle}>
+                {this.props.location.state ? <p>ADMIN VIEW</p> : <p>REGULAR VIEW</p>}
                 <h1 style={headingStyle}>{this.state.tournamentName}</h1>
-                <Tree tournamentId={this.props.match.params.tournamentId} />
+                <Tree
+                    authenticated={this.props.location.state || false}
+                    tournamentId={this.props.match.params.tournamentId} />
             </div>
         )
     }
