@@ -2,15 +2,30 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const { Pool, Client } = require('pg') 
 const { makeBrackets } = require('./makeBrackets')
-const config = require('./configs/local')
+// const config = require('./configs/local')
 
+let config;
+if (process.env.PRODUCTION) {
+    console.log('production settings')
+    config = require('./configs/prod')
+} else {
+    console.log('local settings')
+    config = require('./configs/local')
+}
 
+/*
+    EXPRESS
+*/
 const app = express()
 app.use(bodyParser.urlencoded({ extended:true }))
 app.use(bodyParser.json())
 app.use(bodyParser.text())
 
-const client = new Pool(config.pgLocal)
+
+/*
+    POSTGRES
+*/
+const client = new Pool(config.pg)
 try {
     client.connect()
 } catch (error) {

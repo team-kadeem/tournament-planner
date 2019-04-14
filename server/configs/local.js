@@ -1,4 +1,4 @@
-const pgLocal = {
+const pg = {
     user:'local',
     host:'localhost',
     database:'boxing_local',
@@ -7,5 +7,5 @@ const pgLocal = {
 }
 
 module.exports = {
-    pgLocal:pgLocal
+    pg
 }
