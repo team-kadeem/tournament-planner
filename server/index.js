@@ -651,6 +651,10 @@ app.post('/tournament_name', (req, res) => {
         .catch(e => console.log(`Error fetching tournament name ${e}`))
 })
 
+app.get('*', (req, res) => {
+    return res.sendFile(path.join(__dirname, '../public/index.html'))
+})
+
 
 
 if (require.main === module) {
