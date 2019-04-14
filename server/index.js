@@ -2,6 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const { Pool, Client } = require('pg') 
 const { makeBrackets } = require('./makeBrackets')
+const path = require('path')
 // const config = require('./configs/local')
 
 let config;
