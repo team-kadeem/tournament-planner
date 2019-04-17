@@ -4,7 +4,9 @@
   "proxy": "http://localhost:8000",
   "private": true,
   "dependencies": {
+    "auth0-js": "^9.10.2",
     "body-parser": "^1.18.3",
+    "history": "^4.9.0",
     "node-sql": "^1.1.5",
     "pg": "^7.7.1",
     "react": "^16.6.3",

@@ -1,6 +1,7 @@
 import React from 'react'
 import TournamentDetail from '../components/Admin/TournamentDetail'
 import TournamentForm from '../components/Admin/TournamentForm'
+import Unauthorized from '../components/Admin/Unauthorized'
 import Belt from '../images/championbelt.svg'
 import { Flex, Button } from 'rebass'
 import Styles from '../themes/Styles'
@@ -15,7 +16,7 @@ export default class Admin extends React.Component {
             allTournaments:[],
         }
     }
-
+    componentWillMount = () => console.log(localStorage)
     componentDidMount = () => this.getAllTournaments()
 
     getAllTournaments = () => {
@@ -141,50 +142,54 @@ export default class Admin extends React.Component {
 
         return(
             <div>
-                <Flex 
-                    alignItems='center'
-                    justifyContent='center'>
-                    <img height="25%" width="50%" src={Belt} />
-                </Flex>
-
-
-                <div style={Styles.detailContainer}>
-                    <h2>Hello Admin.</h2>  
-                    <p>What would you like to do?</p>
-                    <br/>
-                    {this.state.showTournamentForm ? 
-                        <TournamentForm 
-                            newId={this.state.allTournaments.length + 1}
-                            closeForm={this.createNewTournament}
-                            refresh={this.refresh}
-                        /> :
-                        <Button 
-                            style={{...Styles.buttonStyle, marginRight:'20px', backgroundColor:'#E73235'}}
-                            onClick={this.createNewTournament}
-                        >
-                            Create New Tournament
-                        </Button>
-                    }
-
-                    {
-                        this.state.showAllTournaments ? 
-                            <div>
-                                { allTournaments }
+                {!localStorage.isLoggedIn ? <Unauthorized/> : 
+                    <div>
+                                <Flex 
+                                alignItems='center'
+                                justifyContent='center'>
+                                <img height="25%" width="50%" src={Belt} />
+                            </Flex>
+            
+            
+                            <div style={Styles.detailContainer}>
+                                <h2>Hello Admin.</h2>  
+                                <p>What would you like to do?</p>
+                                <br/>
+                                {this.state.showTournamentForm ? 
+                                    <TournamentForm 
+                                        newId={this.state.allTournaments.length + 1}
+                                        closeForm={this.createNewTournament}
+                                        refresh={this.refresh}
+                                    /> :
                                     <Button 
-                                        style={{...Styles.buttonStyle, backgroundColor:'#333d54'}}
-                                        onClick={this.viewTournaments}
+                                        style={{...Styles.buttonStyle, marginRight:'20px', backgroundColor:'#E73235'}}
+                                        onClick={this.createNewTournament}
                                     >
-                                        Hide Tournaments
+                                        Create New Tournament
                                     </Button>
-                            </div> : 
-                            <Button 
-                                style={{...Styles.buttonStyle, backgroundColor:'#333d54', marginRight:'20px'}}
-                                onClick={this.viewTournaments}
-                            >
-                                View All Tournaments
-                            </Button>
-                    }
-                </div>
+                                }
+            
+                                {
+                                    this.state.showAllTournaments ? 
+                                        <div>
+                                            { allTournaments }
+                                                <Button 
+                                                    style={{...Styles.buttonStyle, backgroundColor:'#333d54'}}
+                                                    onClick={this.viewTournaments}
+                                                >
+                                                    Hide Tournaments
+                                                </Button>
+                                        </div> : 
+                                        <Button 
+                                            style={{...Styles.buttonStyle, backgroundColor:'#333d54', marginRight:'20px'}}
+                                            onClick={this.viewTournaments}
+                                        >
+                                            View All Tournaments
+                                        </Button>
+                                }
+                            </div>
+                        </div>
+                 }
             </div>
         )
     }
