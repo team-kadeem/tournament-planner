@@ -8,8 +8,8 @@ import Admin from './views/Admin'
 import Brackets from './views/Brackets'
 import Login from './views/Login'
 
-
 class App extends Component {
+
   render() {
     return (
       <div>
