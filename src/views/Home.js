@@ -1,9 +1,7 @@
 import React from 'react'
 import Tournament from '../components/Home/Tournament'
 import Gloves from '../images/gloves.svg'
-import Styles from '../themes/Styles'
 import { Flex } from 'rebass'
-import './Styles/Home.css'
 
 export default class Home extends React.Component {
     constructor(props){
@@ -54,8 +52,8 @@ export default class Home extends React.Component {
                     <img height='100%' width='100%' src={Gloves} />
                 </div>
                 
-                <div style={Styles.detailContainer}>
-                    <h2>Available Tournaments</h2>
+                <div>
+                    <h2 style={{textAlign:'center'}}>Available Tournaments</h2>
                     {availableTournaments}
                 </div>
 

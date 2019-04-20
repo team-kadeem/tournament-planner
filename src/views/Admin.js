@@ -3,7 +3,7 @@ import TournamentDetail from '../components/Admin/TournamentDetail'
 import TournamentForm from '../components/Admin/TournamentForm'
 import Belt from '../images/championbelt.svg'
 import { Flex, Button } from 'rebass'
-import Styles from '../themes/Styles'
+import { RedButton, WhiteButton, BlueButton } from '../components/Shared/Buttons'
 
 
 export default class Admin extends React.Component {
@@ -147,45 +147,36 @@ export default class Admin extends React.Component {
                     <img height="25%" width="50%" src={Belt} />
                 </Flex>
 
-
-                <div style={Styles.detailContainer}>
+                <Flex
+                    flexDirection="column"
+                    alignItems="center"
+                    justifyContent="center">
                     <h2>Hello Admin.</h2>  
                     <p>What would you like to do?</p>
-                    <br/>
                     {this.state.showTournamentForm ? 
                         <TournamentForm 
                             newId={this.state.allTournaments.length + 1}
                             closeForm={this.createNewTournament}
                             refresh={this.refresh}
                         /> :
-                        <Button 
-                            style={{...Styles.buttonStyle, marginRight:'20px', backgroundColor:'#E73235'}}
-                            onClick={this.createNewTournament}
-                        >
+                        <RedButton buttonHandler={this.createNewTournament}>
                             Create New Tournament
-                        </Button>
+                        </RedButton>
+                    }  
+                    <br/>
+                    {this.state.showAllTournaments ? 
+                        <div>
+                            { allTournaments }
+                                <BlueButton buttonHandler={this.viewTournaments}>
+                                    Hide Tournaments
+                                </BlueButton>
+                        </div> : 
+                        <BlueButton buttonHandler={this.viewTournaments} >
+                            View All Tournaments
+                        </BlueButton>
                     }
-
-                    {
-                        this.state.showAllTournaments ? 
-                            <div>
-                                { allTournaments }
-                                    <Button 
-                                        style={{...Styles.buttonStyle, backgroundColor:'#333d54'}}
-                                        onClick={this.viewTournaments}
-                                    >
-                                        Hide Tournaments
-                                    </Button>
-                            </div> : 
-                            <Button 
-                                style={{...Styles.buttonStyle, backgroundColor:'#333d54', marginRight:'20px'}}
-                                onClick={this.viewTournaments}
-                            >
-                                View All Tournaments
-                            </Button>
-                    }
+                </Flex>
                 </div>
-            </div>
         )
     }
 }

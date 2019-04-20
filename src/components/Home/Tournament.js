@@ -4,7 +4,8 @@ import { Flex } from 'rebass'
 
 const containerStyle = {
     fontFamily:`Roboto`,
-    marginBottom:'50px'
+    marginBottom:'50px',
+    textAlign:'center'
 }
 
 const linkStyle = {

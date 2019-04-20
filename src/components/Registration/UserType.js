@@ -1,4 +1,5 @@
 import React from 'react'
+import {RedButton, BlueButton} from '../Shared/Buttons'
 import { Flex, Button } from 'rebass'
 
 
@@ -29,6 +30,11 @@ const buttonHeading = {
     fontSize:'18px'
 }
 
+const buttonStyle = {
+    height:'165px',
+    width:'390px'
+}
+
 const buttonSubheading = {
     fontSize:'14px'
 }
@@ -43,21 +49,23 @@ const UserType = (props) => {
             <Flex
                 flexWrap='wrap'
                 justifyContent='space-around'>
-                <Button 
-                    name="new" 
-                    style={firstTimeButton}
-                    onClick={props.updateButtonHandler}>
-                        First Time Registrant:<br/>
-                        You have never registered for a tournament via this platform
-                </Button>
+                    <RedButton
+                        name="new"
+                        custom={buttonStyle}
+                        buttonHandler={props.updateButtonHandler}>
+                            First Time Registrant: <br/>
+                            You have never registered for a tournament<br/>
+                             via this platform
+                    </RedButton>
 
-                <Button 
-                    name="old"
-                    style={returningButton}
-                    onClick={props.updateButtonHandler}>
-                        Returning User:<br/>
-                        You have registered for a tournament via this platform
-                </Button>
+                    <BlueButton
+                        name="old"
+                        custom={buttonStyle}
+                        buttonHandler={props.updateButtonHandler}>
+                            Returning User: <br/>
+                            You have registered for a tournament<br/>
+                            via this platform
+                    </BlueButton>
             </Flex>
 
         </Flex>

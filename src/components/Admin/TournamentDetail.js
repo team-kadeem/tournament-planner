@@ -2,7 +2,8 @@ import React from 'react'
 import DetailContainer from './DetailContainer'
 import Detail from './Detail'
 import { Link } from 'react-router-dom'
-import { Button } from 'rebass'
+import { WhiteButton } from '../Shared/Buttons'
+
 
 
 export default class TournamentDetail extends React.Component{
@@ -35,25 +36,14 @@ export default class TournamentDetail extends React.Component{
             this.props.hideTournament(tableId)
         }
 
-        const tableStyle = {
-            width:'80%'
-        }
-
         const bracketLink = {
             textDecoration:'none',
             color:'rgb(51,51,51)'
         }
-        const buttonStyle = {
-            backgroundColor:'white',
-            color:'rgb(51,51,51)',
-            outline:'0',
-            cursor:'pointer',
-            
-        }
 
         const listStyling = {
-            // listStyleType:'none',
-            textAlign:'center'
+            textAlign:'center',
+            height:'220px'
         }
 
         const listItemStyling = {
@@ -66,7 +56,6 @@ export default class TournamentDetail extends React.Component{
                                 .slice(this.state.start, this.state.end)
                                 .map(name => {
                                     if (name === 'id' || name === 'bracketMade' || name === 'closeDate') return 
-                                    
                                     return(
                                             <li style={listItemStyling}>
                                                 {name}: {this.props.registrants[name]}
@@ -76,7 +65,7 @@ export default class TournamentDetail extends React.Component{
     return(
         <div style={{margin:'50px 0'}}>
             <DetailContainer>
-                <Detail >
+                <Detail>
                     Open Until: <br/>
                     <span>{closeDate}</span>
                 </Detail>
@@ -86,16 +75,14 @@ export default class TournamentDetail extends React.Component{
                     <ul style={listStyling} key={this.props.title + ' participants'}>
                         {participants}
                     </ul>
-                    <Button 
-                        style={buttonStyle}
-                        onClick={this.showMore}>
-                        See More
-                    </Button>
+                    <WhiteButton buttonHandler={this.showMore}> 
+                        Show More 
+                    </WhiteButton>
                 </Detail>
                 
                 <Detail>
                     {this.props.bracketMade ?
-                    <Button style={buttonStyle}>
+                    <WhiteButton>
                         <Link 
                             style={bracketLink} 
                             to={{
@@ -104,13 +91,11 @@ export default class TournamentDetail extends React.Component{
                                 }}>
                             See Bracket
                         </Link>
-                    </Button> 
+                    </WhiteButton> 
                     :
-                    <Button 
-                        onClick={this.generateBracket}
-                        style={buttonStyle}>
+                    <WhiteButton buttonHandler={this.generateBracket}>
                             Generate Brackets
-                        </Button>
+                    </WhiteButton>
                     }
                 </Detail>
             </DetailContainer>

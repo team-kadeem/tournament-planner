@@ -1,6 +1,5 @@
 import React from 'react'
-import Styles from '../../themes/Styles'
-import { Button } from 'rebass'
+import { WhiteButton, RedButton } from '../Shared/Buttons'
 import validator from 'validator'
 
 export default class TournamentForm extends React.Component {
@@ -56,7 +55,6 @@ export default class TournamentForm extends React.Component {
 
         if (this.validInput(evt))
             errors[evt.target.name] = false
-        
         else 
             errors[evt.target.name] = true
         
@@ -64,20 +62,19 @@ export default class TournamentForm extends React.Component {
     }
 
     checkErrorStatus = () => {
-        const errors = Object.keys(this.state.errors).filter(objectKey => this.state.errors[objectKey] === true)
+        const errors = Object.keys(this.state.errors)
+                        .filter(objectKey => this.state.errors[objectKey] === true)
         return errors
     }
 
     toggleErrorPresent = () => {
         if (this.checkErrorStatus().length > 0)
             return this.setState({...this.state, errorPresent:true})
-
         else
             return this.setState({...this.state, errorPresent:false })
     }
 
     render(){
-
         const inputStyle = {
             display:'block',
             marginBottom:'15px',
@@ -90,27 +87,9 @@ export default class TournamentForm extends React.Component {
             margin:'15px auto'
         }
 
-        const submitButton = {
-            marginRight:'5px',
-            backgroundColor:'#333d54',
-            cursor:'pointer'
-        }
-
         const inputButton = {
-            backgroundColor:'rgba(0,0,0,0)',
-            border:'0'
+            display:'none'
         }
-
-        const closeButton = {
-            ...Styles.buttonStyle,
-            display:'inline-block',
-            backgroundColor:'#E73235'
-        }
-
-        const buttonStyle = {
-            backgroundColor:'#d8d8d8'
-        }
-
 
         return(
             <div style={{marginBottom:'40px'}}>
@@ -157,9 +136,7 @@ export default class TournamentForm extends React.Component {
                         />
                     </label>
 
-                        <Button style={
-                            this.state.errorPresent ? {...submitButton, backgroundColor:'#8c8c8c'} : submitButton
-                        }>
+                        <WhiteButton custom={{marginRight:'10px'}}>
                             <input
                                 type="submit"
                                 style={inputButton}
@@ -168,15 +145,12 @@ export default class TournamentForm extends React.Component {
                                 disabled={this.state.errorPresent}
                             />
                             Create New Tournament
-                        </Button>
+                        </WhiteButton>
 
 
-                    <Button
-                        onClick={this.props.closeForm}
-                        style={closeButton}
-                    >
+                    <RedButton buttonHandler={this.props.closeForm}>
                         Close Form
-                    </Button>
+                    </RedButton>
                 </form>
 
             </div>

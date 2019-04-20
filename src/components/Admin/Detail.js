@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box } from 'rebass'
+import { Box, Flex } from 'rebass'
 
 const detailStyle = {
     height:'25%',
@@ -8,15 +8,19 @@ const detailStyle = {
 }
 
 const insideStyle = {
+    textAlign:'center'
 }
 
 const Detail = (props) => {
     return(
-        <Box style={detailStyle}>
+        <Flex
+            style={detailStyle}
+            justifyContent="center"
+            alignItems="center">
             <Box style={insideStyle}>
                 {props.children}
             </Box>
-        </Box>
+        </Flex>
     )
 }
 

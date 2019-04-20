@@ -2,7 +2,6 @@ import React from 'react'
 import UserType from '../components/Registration/UserType'
 import SearchUser from '../components/Registration/SearchUser'
 import RegistrationForm from '../components/Registration/RegistrationForm'
-import { Flex } from 'rebass'
 
 
 export default class Registration extends React.Component {
@@ -66,9 +65,7 @@ export default class Registration extends React.Component {
     }
 
     updateUserType = (evt) => {
-        console.log(evt.target)
         const userType = evt.target.name
-        console.log(userType)
         let state = {...this.state}
         state['userType'] = userType
         this.setState(state)
@@ -119,8 +116,6 @@ export default class Registration extends React.Component {
     } 
     
     populateExistingUserForm = (dbResponse) => {
-        console.log(dbResponse)
-
         if (dbResponse == undefined) {
             let stateObject = Object.assign({}, this.state)
             stateObject['fighterNotFound'] = true
