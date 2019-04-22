@@ -3,7 +3,10 @@ const bodyParser = require('body-parser')
 const { Pool, Client } = require('pg') 
 const { makeBrackets } = require('./makeBrackets')
 const path = require('path')
-// const config = require('./configs/local')
+const bcrypt = require('bcrypt')
+const uuid = require('uuidv4')
+const cookieParser = require('cookie-parser')
+const cookieEncrypter = require('cookie-encrypter')
 
 let config;
 if (process.env.PRODUCTION) {
@@ -14,6 +17,13 @@ if (process.env.PRODUCTION) {
     config = require('./configs/local')
 }
 
+const sessionCookieKey = 'FloatLikeAButterfly&StingLikeBee'
+const cookieParams = {
+    httpOnly:true,
+    signed:true,
+    maxAge:(1000 * 60 * 60 * 24 * 7)
+}
+
 /*
     EXPRESS
 */
@@ -22,6 +32,8 @@ app.use(bodyParser.urlencoded({ extended:true }))
 app.use(bodyParser.json())
 app.use(bodyParser.text())
 app.use(express.static(path.join(__dirname, "../build")))
+app.use(cookieParser(sessionCookieKey))
+app.use(cookieEncrypter(sessionCookieKey))
 
 
 /*
@@ -33,6 +45,7 @@ try {
 } catch (error) {
     console.log(`Error connecting to postgres ${error}`)
 }
+
 
 determineDivision = (gender, agegroup, weightClass, usaBoxingId, tournamentId) => {
     gender = gender[0].toUpperCase() + gender.substring(1,)
@@ -408,6 +421,8 @@ app.post('/tournaments', (req, res) => {
 
 
 
+
+
 app.post('/register', (req, res) => {
     checkFighterRegistration()
     const tableColumns = [
@@ -479,14 +494,34 @@ app.post('/search_user', (req, res) => {
     console.log('searching for user')
     let searchID = req.body.slice(1, req.body.length - 1)
     const searchQuery = `Select * from public.fighter where usa_boxing_id = '${searchID}'`
-    console.log(searchQuery)
-    client.query(searchQuery, (err, dbRes) => {
-        if (err) console.log(err)
-        else{
-            console.log(dbRes.rows)
-            return res.send(dbRes.rows)
-        }
+    client.query(searchQuery)
+        .then(dbRes => res.send(dbRes.rows))
+        .catch(e => console.log(`error searching user ${e}`))
     })
+
+app.post('/admin', (req, res) => {
+    console.log('inside admin route')
+    console.log(req.signedCookies['session'])
+    console.log(process.env.sessionCookie)
+    if (req.signedCookies['session'] === process.env.sessionCookie)
+        return res.send('Valid')
+    else 
+        return res.send('Invalid')
+})
+
+app.post('/login', (req, res) => {
+    const query = `Select * from front_end.credentials`
+    client.query(query)
+        .then(dbRes => bcrypt.compare(req.body.input, dbRes.rows[0]['password']))
+        .then(result => {
+            if (result) {
+                res.cookie('session', process.env.sessionCookie, cookieParams )
+                res.send('Good')
+            } else {
+                res.send('Bad')
+            }
+        })
+        .catch(e => console.log(`error authenticating admin ${e}`))
 })
 
 app.post('/update_fighter', (req, res) => {
