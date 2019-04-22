@@ -1,8 +1,5 @@
 import React from 'react'
-import {
-    Box,
-    Flex
-} from 'rebass'
+import { Flex } from 'rebass'
 
 const containerStyle = {
     border:'1px solid #333d54',
@@ -15,7 +12,7 @@ const DetailContainer = (props) => {
             alignItems='center'
             justifyContent='center'
             flexDirection='row'>
-            {props.children}
+                {props.children}
         </Flex>
     )
 }

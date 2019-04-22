@@ -2,20 +2,31 @@ import React from 'react'
 import TournamentDetail from '../components/Admin/TournamentDetail'
 import TournamentForm from '../components/Admin/TournamentForm'
 import Belt from '../images/championbelt.svg'
-import { Flex, Button } from 'rebass'
-import { RedButton, WhiteButton, BlueButton } from '../components/Shared/Buttons'
-
+import { Flex } from 'rebass'
+import { RedButton, BlueButton } from '../components/Shared/Buttons'
+import { Redirect } from 'react-router-dom'
 
 export default class Admin extends React.Component {
     constructor(props){
         super(props)
         this.state = {
+            authenticated:'',
             showTournamentForm:false,
             showAllTournaments:false,
             allTournaments:[],
         }
     }
-    componentWillMount = () => console.log(localStorage)
+    componentWillMount = () => {
+        fetch('/admin', {
+            method:'POST',
+            headers:{
+                "content-type":"application/json"
+            }
+        })
+            .then(res => res.text())
+            .then(authenticated => this.setState({...this.state, authenticated}))
+    }
+
     componentDidMount = () => this.getAllTournaments()
 
     getAllTournaments = () => {
@@ -138,45 +149,60 @@ export default class Admin extends React.Component {
                         hideTournament={this.hideTournament}
                     />
         })
-
-        return(
-            <div>
-                <Flex 
-                    alignItems='center'
-                    justifyContent='center'>
-                    <img height="25%" width="50%" src={Belt} />
-                </Flex>
-
-                <Flex
-                    flexDirection="column"
-                    alignItems="center"
-                    justifyContent="center">
-                    <h2>Hello Admin.</h2>  
-                    <p>What would you like to do?</p>
-                    {this.state.showTournamentForm ? 
-                        <TournamentForm 
-                            newId={this.state.allTournaments.length + 1}
-                            closeForm={this.createNewTournament}
-                            refresh={this.refresh}
-                        /> :
-                        <RedButton buttonHandler={this.createNewTournament}>
-                            Create New Tournament
-                        </RedButton>
-                    }  
-                    <br/>
-                    {this.state.showAllTournaments ? 
-                        <div>
-                            { allTournaments }
-                                <BlueButton buttonHandler={this.viewTournaments}>
-                                    Hide Tournaments
-                                </BlueButton>
-                        </div> : 
-                        <BlueButton buttonHandler={this.viewTournaments} >
-                            View All Tournaments
-                        </BlueButton>
-                    }
-                </Flex>
+        if (this.state.authenticated === '') {
+            return(
+                <div>
+                    Loading...
                 </div>
-        )
+            )
+        } else {
+            if (this.state.authenticated === 'Invalid') {
+                return(
+                    <Redirect to="/login" />
+                )
+            } else {
+                return(
+                    <div>
+                        <Flex 
+                            alignItems='center'
+                            justifyContent='center'>
+                            <img height="25%" width="50%" src={Belt} />
+                        </Flex>
+        
+                        <Flex
+                            flexDirection="column"
+                            alignItems="center"
+                            justifyContent="center">
+                            <h2>Hello Admin.</h2>  
+                            <p>What would you like to do?</p>
+                            {this.state.showTournamentForm ? 
+                                <TournamentForm 
+                                    newId={this.state.allTournaments.length + 1}
+                                    closeForm={this.createNewTournament}
+                                    refresh={this.refresh}
+                                /> :
+                                <RedButton buttonHandler={this.createNewTournament}>
+                                    Create New Tournament
+                                </RedButton>
+                            }  
+                            <br/>
+                            {this.state.showAllTournaments ? 
+                                <div>
+                                    { allTournaments }
+                                        <BlueButton buttonHandler={this.viewTournaments}>
+                                            Hide Tournaments
+                                        </BlueButton>
+                                </div> : 
+                                <BlueButton buttonHandler={this.viewTournaments} >
+                                    View All Tournaments
+                                </BlueButton>
+                            }
+                        </Flex>
+                     </div>
+                )      
+            }
+                 
+        }
+
     }
 }

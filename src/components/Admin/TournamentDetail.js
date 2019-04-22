@@ -53,15 +53,15 @@ export default class TournamentDetail extends React.Component{
             textAlign:'center'
         }
         const participants = Object.keys(this.props.registrants)
+                                .filter(item => item !== 'id' && item !== 'bracketMade' && item !== 'closeDate')
                                 .slice(this.state.start, this.state.end)
                                 .map(name => {
-                                    if (name === 'id' || name === 'bracketMade' || name === 'closeDate') return 
-                                    return(
+                                        return(
                                             <li style={listItemStyling}>
                                                 {name}: {this.props.registrants[name]}
                                             </li>
-                                    )
-                                })
+                                        )
+                                        })
     return(
         <div style={{margin:'50px 0'}}>
             <DetailContainer>

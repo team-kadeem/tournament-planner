@@ -1,9 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Box, Flex } from 'rebass'
-import {
-    BlueButton
-} from '../components/Shared/Buttons'
+import { Flex } from 'rebass'
+import { WhiteButton } from '../components/Shared/Buttons'
+import { Redirect } from 'react-router-dom'
 
 const Container = styled(Flex)({
     width:'100vw',
@@ -16,40 +15,80 @@ Container.defaultProps = {
     flexDirection:'column'
 }
 
+const inputStyle = {
+    width:'25%',
+    height:'40px',
+    fontSize:'14px',
+    marginBottom:'10px'
+}
+
 
 export default class Login extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-            input:''
+            input:'',
+            validation:'',
+            feedback: ''
         }
     }
 
+    handleValidation = validationStatus => {
+        if (validationStatus === 'Good')
+            this.setState({...this.state, validation:'Good'})
+        else 
+            this.setState({...this.state, feedback: 'Invalid'})
+    }
+    
     submitPassword = e => {
-
+        e.preventDefault()
+        fetch('/login', {
+            method:'POST',
+            headers:{
+                "content-type":"application/json"
+            },
+            body: JSON.stringify(this.state)
+        })
+            .then(res => res.text())
+            // .then(data => console.log(data))
+            .then(validation => this.handleValidation(validation))
+            .catch(err => `Err with submission ${err}`)
     }
 
     updatePassword = e => {
-
+        const state = {...this.state}
+        state['input'] = e.target.value
+        this.setState(state)
     }
 
     render(){
-
-        return(
-            <form onSubmit={this.submitPassword}>
-                <Container
-                    justifyContent="center"
-                    alignItems="center">
-                        <input
-                            type="password"
-                            onChange={this.updatePassword}/>
-                        
-                        <input
-                            type="submit"
-                            value="Go"/>                
-                </Container>
-
-            </form>
-        )
+        if (this.state.validation === 'Good') {
+            return(
+                <Redirect to="/admin" />
+            )
+        } else {
+            return(
+                <div>
+                    {this.state.feedback}
+                    <form onSubmit={this.submitPassword}>
+                        <Container
+                            justifyContent="center"
+                            alignItems="center">
+                                <input
+                                    style={inputStyle}
+                                    type="password"
+                                    onChange={this.updatePassword}/>
+                                <WhiteButton>
+                                    Go
+                                    <input
+                                        style={{display:'none'}}
+                                        type="submit"
+                                        value="Go"/>    
+                                </WhiteButton>
+                        </Container>
+                    </form>
+                </div>
+            )
+        }
     }
 }

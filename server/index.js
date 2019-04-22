@@ -4,7 +4,6 @@ const { Pool, Client } = require('pg')
 const { makeBrackets } = require('./makeBrackets')
 const path = require('path')
 const bcrypt = require('bcrypt')
-const uuid = require('uuidv4')
 const cookieParser = require('cookie-parser')
 const cookieEncrypter = require('cookie-encrypter')
 
