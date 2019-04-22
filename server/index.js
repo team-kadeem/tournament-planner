@@ -16,7 +16,6 @@ if (process.env.PRODUCTION) {
     config = require('./configs/local')
 }
 
-const sessionCookieKey = 'FloatLikeAButterfly&StingLikeBee'
 const cookieParams = {
     httpOnly:true,
     signed:true,
@@ -31,8 +30,8 @@ app.use(bodyParser.urlencoded({ extended:true }))
 app.use(bodyParser.json())
 app.use(bodyParser.text())
 app.use(express.static(path.join(__dirname, "../build")))
-app.use(cookieParser(sessionCookieKey))
-app.use(cookieEncrypter(sessionCookieKey))
+app.use(cookieParser(process.env.sessionCookieKey))
+app.use(cookieEncrypter(process.env.sessionCookieKey))
 
 
 /*
@@ -50,14 +49,9 @@ determineDivision = (gender, agegroup, weightClass, usaBoxingId, tournamentId) =
     gender = gender[0].toUpperCase() + gender.substring(1,)
     const divisionTitle = `${gender} ${agegroup}  ${weightClass} Group`
     const query = `SELECT * FROM public.division where title = '${divisionTitle}'`
-    client.query(query, (err, dbRes) => {
-        if (err) {
-            console.log('Err getting divisions for new registrant ' + err)
-        } else {
-            addFighterToTournament(usaBoxingId, tournamentId, dbRes.rows[0].id)
-        }
-    })
-
+    client.query(query)
+        .then(dbRes => addFighterToTournament(usaBoxingId, tournamentId, dbRes.rows[0].id))
+        .catch(e => `Err getting division for new registrant ${e}`)
 }
 
 getWeightClass = (gender, agegroup, weight, usaBoxingId, tournamentId) => {
@@ -499,9 +493,6 @@ app.post('/search_user', (req, res) => {
     })
 
 app.post('/admin', (req, res) => {
-    console.log('inside admin route')
-    console.log(req.signedCookies['session'])
-    console.log(process.env.sessionCookie)
     if (req.signedCookies['session'] === process.env.sessionCookie)
         return res.send('Valid')
     else 
@@ -516,9 +507,8 @@ app.post('/login', (req, res) => {
             if (result) {
                 res.cookie('session', process.env.sessionCookie, cookieParams )
                 res.send('Good')
-            } else {
+            } else
                 res.send('Bad')
-            }
         })
         .catch(e => console.log(`error authenticating admin ${e}`))
 })
@@ -576,22 +566,17 @@ app.post('/update_fighter', (req, res) => {
 })
 
 
-//BRACKETS                                              
-
 app.post('/generate', (req, res) => {
     const query = `Select tournament_id, fighter_usa_boxing_id, division_id, first_name, last_name
                     from public.fights_in inner join public.fighter on
                     public.fights_in.fighter_usa_boxing_id = public.fighter.usa_boxing_id
                     where tournament_id = ${req.body.tournamentId} order by division_id`
-    client.query(query, (err, dbRes) => {
-        if (err) {
-            console.log('ERR GENERATING BRACKETS ' + err)
-        } else {
-                    const organizedByDvisions = organizeByDivisions(dbRes.rows)
-                    makeBracketsWrapper(organizedByDvisions, req.body.tournamentId)
-        }
-            })
-        
+    client.query(query)
+        .then(dbRes => {
+            const organizedByDvisions = organizeByDivisions(dbRes.rows)
+            makeBracketsWrapper(organizedByDvisions, req.body.tournamentId)  
+        })
+        .catch(e => console.log(`Error generating brackets ${e}`))
     })
 
 app.post('/brackets', (req, res) => {
@@ -611,13 +596,9 @@ app.post('/brackets', (req, res) => {
                 from public.brackets
                 inner join division on brackets.division = division.id where tournament_id = ${req.body.tournamentId}
                 order by division, round_number, node_number asc`
-    client.query(query, (err, dbRes) => {
-        if (err) {
-            console.log('err getting brackets for tree ' + err )
-        } else {
-            res.send(dbRes.rows)
-        }
-    })
+    client.query(query)
+        .then(dbRes => res.send(dbRes.rows))
+        .catch(e => console.log(`Error getting brackets for tree ${e}`)) 
 })
 
 
