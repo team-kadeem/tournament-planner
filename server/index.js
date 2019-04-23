@@ -368,10 +368,7 @@ app.get('/home', (req, res) => {
 
 
 app.post('/tournaments', (req, res) => {
-//ADMIN VIEW ALL TOURNAMENTS
-    console.log('getting tournaments')
     if (req.body.key === 'admin') {
-      console.log('ADMIN GETTING TOURNAMENTS')
       const rowQuery = `SELECT tournament.title,
                                 tournament.id,
                                 tournament.event_datetime,
@@ -386,22 +383,14 @@ app.post('/tournaments', (req, res) => {
                                 public.tournament
                         inner join fights_in on tournament.id = fights_in.tournament_id
                         inner join fighter on fights_in.fighter_usa_boxing_id = fighter.usa_boxing_id`
-        client.query(rowQuery, (err, dbRes) => {
-            if (err) {
-                console.log(`error retrieving all rows ${err}`)
-                return res.send('')
-            } else {
-                return res.send(dbRes.rows)
-            }
-        })
+        client.query(rowQuery)
+            .then(dbRes => res.send(dbRes.rows))
+            .catch(e => console.log(`Error getting all tournaments ${e}`))
     }
     //ADMIN CREATE NEW TOURNAMENT
     else {
         const values = [req.body.title, req.body.eventDate, req.body.closeDate, req.body.address]
         const insertQuery = 'INSERT INTO public.tournament(title, event_datetime, registration_close, location) VALUES($1, $2, $3, $4) returning *'
-
-
-
         client.query(insertQuery, values, (err, dbRes) => {
             if (err) {
                 console.log(`Error inserting new tournament as admin ${err}`)
@@ -411,9 +400,6 @@ app.post('/tournaments', (req, res) => {
         })
     }
 })
-
-
-
 
 
 app.post('/register', (req, res) => {
@@ -477,10 +463,8 @@ app.post('/register', (req, res) => {
             console.log('successful insert query ' + dbRes)
             getWeightClass(req.body.gender, values[17], parseInt(req.body.weight), req.body.usaBoxingId, req.body.tournamentId)
             return res.send('Registered successfully!')
-
         }
     })
-
 })
 
 app.post('/search_user', (req, res) => {
@@ -669,7 +653,7 @@ app.post('/tournament_name', (req, res) => {
 })
 
 app.get('*', (req, res) => {
-    return res.sendFile(path.join(__dirname, '../public/index.html'))
+    return res.sendFile(path.join(__dirname, '../build/index.html'))
 })
 
 
