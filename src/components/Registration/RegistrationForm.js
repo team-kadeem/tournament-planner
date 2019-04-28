@@ -42,93 +42,93 @@ const RegistrationForm = (props) => {
                     <Field
                         name="firstName"
                         type="text"
-                        value={props.firstNameVal}
+                        value={props.values.firstName}
                         label="First Name"
                         onChange={props.textInputHandler}
                         required={true}
-                        errorPresent={props.firstNameErr && props.errorPresent}
+                        errorPresent={props.errors.firstName && props.errorPresent}
                         validation={ val => val.length !== 0}/>
 
                     <Field
                         name="lastName"
                         type="text"
-                        value={props.lastNameVal}
+                        value={props.values.lastName}
                         label="Last Name"
                         onChange={props.textInputHandler}
                         required={true}
-                        errorPresent={props.lastNameErr && props.errorPresent}
+                        errorPresent={props.errors.lastName && props.errorPresent}
                         validation={val => val.length !== 0}/>
 
                     <Field
                         name='boxerEmail'
                         type="text"
-                        value={props.boxerEmailVal}
+                        value={props.values.boxerEmail}
                         label="Boxer's Email Address"
                         onChange={props.textInputHandler}
                         required={true}
-                        errorPresent={props.boxerEmailVal && props.errorPresent}
+                        errorPresent={props.errors.boxerEmail && props.errorPresent}
                         validation={data => isEmail(data)}/>
 
                     <Field
                         name="zipCode"
                         type="text"
-                        value={props.zipCodeVal}
+                        value={props.values.zipCode}
                         label="Residence - Zip Code"
                         onChange={props.textInputHandler}
                         required={true}
-                        errorPresent={props.zipCodeErr && props.errorPresent}
+                        errorPresent={props.errors.zipCode && props.errorPresent}
                         validation={data => isPostalCode(data, 'US')}/>
 
                     <Field
                         name="phoneNumber"
                         type="text"
-                        value={props.phoneNumberVal}
+                        value={props.values.phoneNumber}
                         onChange={props.textInputHandler}
                         label="Cell/Phone Number"
                         required={true}
-                        errorPresent={props.phoneNumberErr && props.errorPresent}
+                        errorPresent={props.errors.phoneNumber && props.errorPresent}
                         validation={data => isMobilePhone(data, 'en-US')}/>
 
                     <Field
                         disabled={props.disableBirthday}
                         name="dateOfBirth"
                         type="text"
-                        value={props.dateOfBirthVal}
+                        value={props.values.dateOfBirth}
                         onChange={props.textInputHandler}
                         label="Boxer's Date of Birth (MM/DD/YYYY)"
                         required={true}
-                        errorPresent={props.dateOfBirthErr && props.errorPresent}
+                        errorPresent={props.errors.dateOfBirth && props.errorPresent}
                         validation={val => isBefore(val)}/>
 
                     <Field
                         disabled={props.disableId}
                         name="usaBoxingId"
                         type="text"
-                        value={props.usaBoxingVal}
+                        value={props.values.usaBoxingId}
                         onChange={props.textInputHandler}
                         label="USA Boxing Member ID Number"
                         required={true}
-                        errorPresent={props.usaBoxingErr && props.errorPresent}
+                        errorPresent={props.errors.usaBoxingId && props.errorPresent}
                         validation={val => val.length !== 0}/>
 
                     <Field
                         name="wins"
                         type="text"
-                        value={props.winsVal}
+                        value={props.values.wins}
                         onChange={props.textInputHandler}
                         label="Wins"
                         required={true}
-                        errorPresent={props.winsErr && props.errorPresent}
+                        errorPresent={props.errors.wins && props.errorPresent}
                         validation={val => isInt(val)}/>
 
                     <Field
                         name="losses"
                         type="text"
-                        value={props.lossVal}
+                        value={props.values.loss}
                         onChange={props.textInputHandler}
                         label="Losses"
                         required={true}
-                        errorPresent={props.lossErr && props.errorPresent}
+                        errorPresent={props.errors.loss && props.errorPresent}
                         validation={val => isInt(val)}/>
                     
                     {  
@@ -158,82 +158,82 @@ const RegistrationForm = (props) => {
                     <Field
                         name="boxingClubAffiliation"
                         type="text"
-                        value={props.clubVal}
+                        value={props.values.boxingClubAffiliation}
                         onChange={props.textInputHandler}
                         label="Boxing Club Affiliation"
                         required={true}
-                        errorPresent={props.clubErr && props.errorPresent}
+                        errorPresent={props.errors.boxingClubAffiliation && props.errorPresent}
                         validation={ val => val.length !== 0}/>
 
                     <Field
                         name="coachFirstName"
                         type="text"
-                        value={props.coachFirstVal}
+                        value={props.values.coachFirstName}
                         onChange={props.textInputHandler}
                         label="Coach's First Name"
                         required={true}
-                        errorPresent={props.coachFirstVal && props.errorPresent}
+                        errorPresent={props.errors.coachFirstName && props.errorPresent}
                         validation={val => val.length !== 0}/>
 
                     <Field
                         name="coachLastName"
                         type="text"
-                        value={props.coachLastVal}
+                        value={props.values.coachLastName}
                         onChange={props.textInputHandler}
                         label="Coach's Last Name"
                         required={true}
-                        errorPresent={props.coachLastErr && props.errorPresent}
+                        errorPresent={props.errors.coachLastName && props.errorPresent}
                         validation={val => val.length !== 0}/>
 
                     <Field
                         name="coachUSABoxingId"
                         type="text"
-                        value={props.coachUSABoxingVal}
+                        value={props.coachUSABoxingId}
                         onChange={props.textInputHandler}
                         label="Coach USA Boxing Memberr ID #"
                         required={true}
-                        errorPresent={props.coachUSABoxingErr && props.errorPresent}
+                        errorPresent={props.errors.coachUSABoxingId && props.errorPresent}
                         validation={val => val.length !== 0}/>
 
                     <Field
                         name="coachPhoneNumber"
                         type="text"
-                        value={props.coachPhoneVal}
+                        value={props.values.coachPhoneNumber}
                         onChange={props.textInputHandler}
                         label="Coach's Phone Number"
                         required={true}
-                        errorPresent={props.coachPhoneErr && props.errorPresent}
+                        errorPresent={props.errors.coachPhoneNumber && props.errorPresent}
                         validation={val => isMobilePhone(val)}/>
 
                     <Field
                         name="coachEmail"
                         type="text"
                         onChange={props.textInputHandler}
-                        value={props.coachEmailVal}
+                        value={props.values.coachEmail}
                         label="Coach's Email Address"
                         required={true}
-                        errorPresent={props.coachEmailErr && props.errorPresent}
+                        errorPresent={props.errors.coachEmail && props.errorPresent}
                         validation={val => isEmail(val)}/>
 
                     <Field
                         name="weight"
                         type="text"
                         onChange={props.textInputHandler}
-                        value={props.weightVal}
+                        value={props.values.weight}
                         label="Weight(lbs)"
                         required={true}
-                        errorPresent={props.weightErr && props.errorPresent}
+                        errorPresent={props.errors.weight && props.errorPresent}
                         validation={val => isInt(val)}/>
 
 
                     <label style={{marginLeft:'10px'}}>
                         GENDER
-                        {props.genderVal === '' ? <span style={radioWarnings}>Must Pick One To Continue</span> : null}
+                        {props.values.gender === '' ? <span style={radioWarnings}>Must Pick One To Continue</span> : null}
                         <Field
                             name="gender"
                             type="checkbox"
                             label="Male"
-                            checked={props.genderVal === 'male'}
+                            checked={props.values.gender === 'male'}
                             onChange={props.checkboxHandler}
                             value='male'
                             disabled={props.disableGender}/>
@@ -242,7 +242,7 @@ const RegistrationForm = (props) => {
                             name="gender"
                             type="checkbox"
                             label="Female"
-                            checked={props.genderVal === 'female'}
+                            checked={props.values.gender === 'female'}
                             onChange={props.checkboxHandler}
                             value='female'
                             disabled={props.disableGender}/>
@@ -254,7 +254,7 @@ const RegistrationForm = (props) => {
                             I (We) agree to abide by the rules of USA Boxing, Inc. and will comply with the 
                             INT'L PARADE OF CHAMPIONS TOURNAMENT as detailed in the Fact Sheet 
                             (found on USABoxingMetro.com), and the Code of Conduct for Athlete/Non-Athlete.
-                            {props.rulesVal === 'false' ? <span style={radioWarnings}>Must Agree To Continue</span> : null}
+                            {props.values.rules === 'false' ? <span style={radioWarnings}>Must Agree To Continue</span> : null}
                             <Field
                                 name="rules"
                                 type="radio"
@@ -277,7 +277,7 @@ const RegistrationForm = (props) => {
                             in this boxing event(s). I (We) understand and agree that medical or other services rendered to Entrant 
                             by or at the instance of any of the named parties is not an admission of liability to provide or 
                             continue to provide any such services and is not a waiver by any of said parties of any right or rights hereunder.
-                            {props.injuryVal === 'false' ? <span style={radioWarnings}>Must Agree To Continue</span> : null}
+                            {props.values.injury === 'false' ? <span style={radioWarnings}>Must Agree To Continue</span> : null}
                             <Field
                                 name="injury"
                                 type="radio"
@@ -303,7 +303,7 @@ const RegistrationForm = (props) => {
                             reoccur in this boxing event. Furthermore, I (we) understand and appreciate that participation in sports carries 
                             a risk to the participant of serious injury, including permanent paralysis or death. I (we) voluntarily 
                             and knowingly recognize, accept, and assume this risk.
-                            {props.injuryWarningVal === 'false' ? <span style={radioWarnings}>Must Agree To Continue</span> : null}
+                            {props.values.injuryWarning === 'false' ? <span style={radioWarnings}>Must Agree To Continue</span> : null}
                             <Field
                                 name="injuryWarning"
                                 type="radio"
@@ -336,7 +336,7 @@ const RegistrationForm = (props) => {
                             within three(3) months preceding the date of this consent form, that the entrant has been seen by 
                             his/her physician and deemed to be in good health, and I (we) know of no other injuries that has 
                             been sustained which may reoccur in this boxing event.
-                            {props.waiverVal === 'false' ? <span style={radioWarnings}>Must Agree To Continue</span> : null}
+                            {props.values.waiver === 'false' ? <span style={radioWarnings}>Must Agree To Continue</span> : null}
                             <Field
                                 name="waiver"
                                 type="radio"
