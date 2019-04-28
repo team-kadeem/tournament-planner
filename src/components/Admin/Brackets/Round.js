@@ -23,6 +23,9 @@ const Round = (props) => {
                 />
             )
         }
+        return(
+            <div/>
+        )
     })
     return(
         <div className="round-brackets">

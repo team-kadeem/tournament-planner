@@ -49,7 +49,7 @@ export default class Home extends React.Component {
                 alignItems='center'
                 flexDirection='column'>
                 <div style={{height:'25%', width:'50%'}}>
-                    <img height='100%' width='100%' src={Gloves} />
+                    <img alt="logo" height='100%' width='100%' src={Gloves} />
                 </div>
                 
                 <div>

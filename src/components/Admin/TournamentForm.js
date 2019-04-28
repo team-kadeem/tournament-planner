@@ -82,7 +82,6 @@ export default class TournamentForm extends React.Component {
             width:'280px',
             fontSize:'16px',
             marginLeft:'10px',
-            display:'block',
             textAlign:'center',
             margin:'15px auto'
         }

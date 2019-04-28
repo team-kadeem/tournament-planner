@@ -1,6 +1,5 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Flex } from 'rebass'
 
 const containerStyle = {
     fontFamily:`Roboto`,
@@ -12,7 +11,6 @@ const linkStyle = {
     textDecoration:'none',
     color:'#fff',
     fontWeight:'700'
-    // color:'#00aeee'
 }
 
 const headingStyle = {

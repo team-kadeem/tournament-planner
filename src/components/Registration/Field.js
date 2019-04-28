@@ -24,7 +24,6 @@ const Field = (props) => {
             display:'block',
             fontSize:'16px',
             paddingLeft:'10px',
-            paddingLeft:'10px',
             marginLeft:'10px',
             ...props.customStyle
         }

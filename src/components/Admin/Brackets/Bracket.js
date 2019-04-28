@@ -57,14 +57,12 @@ export default class Bracket extends React.Component {
 
         const fighter1Style = {
             cursor:'pointer',
-            fontWeight:'600',
             color:'#e73235',
             fontWeight:'700'
         }
 
         const fighter2Style = {
             cursor:'pointer',
-            fontWeight:'600',
             color:'#019fd9',
             fontWeight:'700'
         }

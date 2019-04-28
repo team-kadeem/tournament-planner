@@ -1,6 +1,6 @@
 import React from 'react'
 import {RedButton, BlueButton} from '../Shared/Buttons'
-import { Flex, Button } from 'rebass'
+import { Flex } from 'rebass'
 
 
 const heading = {
@@ -9,34 +9,9 @@ const heading = {
     marginBottom:'50px'
 }
 
-const firstTimeButton = {
-    height:'175px',
-    width:'400px',
-    backgroundColor:'#E73235',
-    color:'#fff',
-    cursor:'pointer',
-    outline:'0',
-    borderRadius:'20px',
-    marginBottom:'30px'
-}
-
-const returningButton = {
-    ...firstTimeButton,
-    backgroundColor: '#333d54'
-}
-
-const buttonHeading = {
-    fontWeight:'700',
-    fontSize:'18px'
-}
-
 const buttonStyle = {
     height:'165px',
     width:'390px'
-}
-
-const buttonSubheading = {
-    fontSize:'14px'
 }
 
 

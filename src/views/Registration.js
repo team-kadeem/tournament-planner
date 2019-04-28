@@ -10,7 +10,6 @@ export default class Registration extends React.Component {
         this.state = {
             formStatus:null,
             fighterNotFound:false,
-            userType:'',
             dataLoaded:null,
             invalidSubmission:false,
             userType:'',
@@ -116,7 +115,7 @@ export default class Registration extends React.Component {
     } 
     
     populateExistingUserForm = (dbResponse) => {
-        if (dbResponse == undefined) {
+        if (dbResponse === undefined) {
             let stateObject = Object.assign({}, this.state)
             stateObject['fighterNotFound'] = true
             stateObject['userType'] = 'new'

@@ -96,7 +96,7 @@ export default class Admin extends React.Component {
     toggleTournamentDetail = (targetName) => {
         let allTournaments = [...this.state.allTournaments]
         allTournaments.forEach(tournament => {
-            if (tournament.title == targetName) tournament.showDetail = !tournament.showDetail
+            if (tournament.title === targetName) tournament.showDetail = !tournament.showDetail
         })
 
         this.setState({...this.state, allTournaments:allTournaments})
@@ -166,7 +166,7 @@ export default class Admin extends React.Component {
                         <Flex 
                             alignItems='center'
                             justifyContent='center'>
-                            <img height="25%" width="50%" src={Belt} />
+                            <img alt="logo" height="25%" width="50%" src={Belt} />
                         </Flex>
         
                         <Flex
