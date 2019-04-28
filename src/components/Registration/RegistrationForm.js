@@ -48,8 +48,8 @@ const RegistrationForm = (props) => {
                         onChange={props.textInputHandler}
                         required={true}
                         errorPresent={props.firstNameErr && props.errorPresent}
-                        validation={ val => val.length !== 0}
-                    />
+                        validation={ val => val.length !== 0}/>
+
                     <Field
                         name="lastName"
                         type="text"
@@ -58,8 +58,8 @@ const RegistrationForm = (props) => {
                         onChange={props.textInputHandler}
                         required={true}
                         errorPresent={props.lastNameErr && props.errorPresent}
-                        validation={val => val.length !== 0}
-                    />
+                        validation={val => val.length !== 0}/>
+
                     <Field
                         name='boxerEmail'
                         type="text"
@@ -68,8 +68,8 @@ const RegistrationForm = (props) => {
                         onChange={props.textInputHandler}
                         required={true}
                         errorPresent={props.boxerEmailVal && props.errorPresent}
-                        validation={data => isEmail(data)}
-                    />
+                        validation={data => isEmail(data)}/>
+
                     <Field
                         name="zipCode"
                         type="text"
@@ -78,9 +78,8 @@ const RegistrationForm = (props) => {
                         onChange={props.textInputHandler}
                         required={true}
                         errorPresent={props.zipCodeErr && props.errorPresent}
-                        validation={data => isPostalCode(data, 'US')}
+                        validation={data => isPostalCode(data, 'US')}/>
 
-                    />
                     <Field
                         name="phoneNumber"
                         type="text"
@@ -89,9 +88,7 @@ const RegistrationForm = (props) => {
                         label="Cell/Phone Number"
                         required={true}
                         errorPresent={props.phoneNumberErr && props.errorPresent}
-                        validation={data => isMobilePhone(data, 'en-US')}
-
-                    />
+                        validation={data => isMobilePhone(data, 'en-US')}/>
 
                     <Field
                         disabled={props.disableBirthday}
@@ -102,9 +99,7 @@ const RegistrationForm = (props) => {
                         label="Boxer's Date of Birth (MM/DD/YYYY)"
                         required={true}
                         errorPresent={props.dateOfBirthErr && props.errorPresent}
-                        validation={val => isBefore(val)}
-
-                    />
+                        validation={val => isBefore(val)}/>
 
                     <Field
                         disabled={props.disableId}
@@ -115,8 +110,7 @@ const RegistrationForm = (props) => {
                         label="USA Boxing Member ID Number"
                         required={true}
                         errorPresent={props.usaBoxingErr && props.errorPresent}
-                        validation={val => val.length !== 0}
-                    />
+                        validation={val => val.length !== 0}/>
 
                     <Field
                         name="wins"
@@ -126,9 +120,7 @@ const RegistrationForm = (props) => {
                         label="Wins"
                         required={true}
                         errorPresent={props.winsErr && props.errorPresent}
-                        validation={val => isInt(val)}
-
-                    />
+                        validation={val => isInt(val)}/>
 
                     <Field
                         name="losses"
@@ -138,8 +130,7 @@ const RegistrationForm = (props) => {
                         label="Losses"
                         required={true}
                         errorPresent={props.lossErr && props.errorPresent}
-                        validation={val => isInt(val)}
-                    />
+                        validation={val => isInt(val)}/>
 
                     <Field
                         name="boxingClubAffiliation"
@@ -149,8 +140,7 @@ const RegistrationForm = (props) => {
                         label="Boxing Club Affiliation"
                         required={true}
                         errorPresent={props.clubErr && props.errorPresent}
-                        validation={ val => val.length !== 0}
-                    />
+                        validation={ val => val.length !== 0}/>
 
                     <Field
                         name="coachFirstName"
@@ -160,8 +150,8 @@ const RegistrationForm = (props) => {
                         label="Coach's First Name"
                         required={true}
                         errorPresent={props.coachFirstVal && props.errorPresent}
-                        validation={val => val.length !== 0}
-                    />
+                        validation={val => val.length !== 0}/>
+
                     <Field
                         name="coachLastName"
                         type="text"
@@ -170,8 +160,8 @@ const RegistrationForm = (props) => {
                         label="Coach's Last Name"
                         required={true}
                         errorPresent={props.coachLastErr && props.errorPresent}
-                        validation={val => val.length !== 0}
-                    />
+                        validation={val => val.length !== 0}/>
+
                     <Field
                         name="coachUSABoxingId"
                         type="text"
@@ -180,8 +170,8 @@ const RegistrationForm = (props) => {
                         label="Coach USA Boxing Memberr ID #"
                         required={true}
                         errorPresent={props.coachUSABoxingErr && props.errorPresent}
-                        validation={val => val.length !== 0}
-                    />
+                        validation={val => val.length !== 0}/>
+
                     <Field
                         name="coachPhoneNumber"
                         type="text"
@@ -190,8 +180,8 @@ const RegistrationForm = (props) => {
                         label="Coach's Phone Number"
                         required={true}
                         errorPresent={props.coachPhoneErr && props.errorPresent}
-                        validation={val => isMobilePhone(val)}
-                    />
+                        validation={val => isMobilePhone(val)}/>
+
                     <Field
                         name="coachEmail"
                         type="text"
@@ -200,8 +190,8 @@ const RegistrationForm = (props) => {
                         label="Coach's Email Address"
                         required={true}
                         errorPresent={props.coachEmailErr && props.errorPresent}
-                        validation={val => isEmail(val)}
-                    />
+                        validation={val => isEmail(val)}/>
+
                     <Field
                         name="weight"
                         type="text"
@@ -210,8 +200,8 @@ const RegistrationForm = (props) => {
                         label="Weight(lbs)"
                         required={true}
                         errorPresent={props.weightErr && props.errorPresent}
-                        validation={val => isInt(val)}
-                    />
+                        validation={val => isInt(val)}/>
+
 
                     <label style={{marginLeft:'10px'}}>
                         GENDER
@@ -223,8 +213,7 @@ const RegistrationForm = (props) => {
                             checked={props.genderVal === 'male'}
                             onChange={props.checkboxHandler}
                             value='male'
-                            disabled={props.disableGender}
-                        />
+                            disabled={props.disableGender}/>
                         
                         <Field
                             name="gender"
@@ -233,8 +222,7 @@ const RegistrationForm = (props) => {
                             checked={props.genderVal === 'female'}
                             onChange={props.checkboxHandler}
                             value='female'
-                            disabled={props.disableGender}
-                        />
+                            disabled={props.disableGender}/>
                     </label>
                     <br/>
                         
@@ -249,16 +237,14 @@ const RegistrationForm = (props) => {
                                 type="radio"
                                 label="AGREE"
                                 value={true}
-                                onChange={props.radioHandler}
-                            />
+                                onChange={props.radioHandler}/>
                             
                             <Field
                                 name="rules"
                                 type="radio"
                                 label="DISAGREE"
                                 value={false}
-                                onChange={props.radioHandler}
-                            />
+                                onChange={props.radioHandler}/>
                         </label>
                     </div>
 
@@ -274,16 +260,14 @@ const RegistrationForm = (props) => {
                                 type="radio"
                                 label="AGREE"
                                 value={true}
-                                onChange={props.radioHandler}
-                            />
+                                onChange={props.radioHandler}/>
 
                             <Field
                                 name="injury"
                                 type="radio"
                                 label="DISAGREE"
                                 value={false}
-                                onChange={props.radioHandler}
-                            />
+                                onChange={props.radioHandler}/>
                         </label>                    
                     </div>
 
@@ -302,16 +286,14 @@ const RegistrationForm = (props) => {
                                 type="radio"
                                 label="AGREE"
                                 value={true}
-                                onChange={props.radioHandler}
-                            />
+                                onChange={props.radioHandler}/>
 
                             <Field
                                 name="injuryWarning"
                                 type="radio"
                                 label="DISAGREE"
                                 value={false}
-                                onChange={props.radioHandler}
-                            />
+                                onChange={props.radioHandler}/>
                         </label>                    
                     </div>
 
@@ -337,20 +319,16 @@ const RegistrationForm = (props) => {
                                 type="radio"
                                 label="AGREE"
                                 value={true}
-                                onChange={props.radioHandler}
-                            />
+                                onChange={props.radioHandler}/>
 
                             <Field
                                 name="waiver"
                                 type="radio"
                                 label="DISAGREE"
                                 value={false}
-                                onChange={props.radioHandler}
-                            /> 
+                                onChange={props.radioHandler}/> 
                         </label>                    
                     </div>
-
-
 
                     <input
                         style={submitButton}
