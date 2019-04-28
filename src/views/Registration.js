@@ -23,6 +23,7 @@ export default class Registration extends React.Component {
                 usaBoxingId:'',
                 wins:'',
                 losses:'',
+                experience:'',
                 boxingClubAffiliation:'',
                 coachFirstName:'',
                 coachLastName:'',
@@ -169,7 +170,7 @@ export default class Registration extends React.Component {
             return
         } 
         else {
-            this.setState({...this.state, invalidSubmission:false})
+            this.setState({...this.state, invalidSubmission:false,})
             const params = {
                 method:'POST',
                 headers:{

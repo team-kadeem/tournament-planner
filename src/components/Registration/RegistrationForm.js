@@ -34,7 +34,6 @@ const RegistrationForm = (props) => {
         marginLeft:'10px'
     }
 
-
     return(
         <div>
             <Box
@@ -131,6 +130,29 @@ const RegistrationForm = (props) => {
                         required={true}
                         errorPresent={props.lossErr && props.errorPresent}
                         validation={val => isInt(val)}/>
+                    
+                    {  (parseInt(props.winsVal) + parseInt(props.lossVal)) >=5 &&
+                        (parseInt(props.winsVal) + parseInt(props.lossVal)) <= 9 && 
+                        !props.winsErr && 
+                        !props.lossErr ? 
+                            <label style={radioButtonTextStyle}>
+                                You have the option to compete as Open or Novice
+                                <Field
+                                    name="experience"
+                                    type="radio"
+                                    label="OPEN"
+                                    value="OPEN"
+                                    onChange={props.radioHandler}/>
+                                
+                                <Field
+                                    name="experience"
+                                    type="radio"
+                                    label="NOVICE"
+                                    value="NOVICE"
+                                    onChange={props.radioHandler}/>
+                            </label> : null
+                    }
+                    <br/>
 
                     <Field
                         name="boxingClubAffiliation"
