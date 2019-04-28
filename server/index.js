@@ -423,9 +423,21 @@ app.post('/register', (req, res) => {
         'gender', 
         'weight',
         'age_group',
+        'experience'
     ]
+    let experience
 
-    const insert = `INSERT INTO public.fighter(${tableColumns}) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)`
+    if (!req.body.experience) {
+        if (req.body.wins >= 10) 
+            experience = 'OPEN'
+        else
+            experience = 'NOVICE'
+    } else {
+        experience = req.body.experience
+    }
+
+
+    const insert = `INSERT INTO public.fighter(${tableColumns}) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)`
     const dateOfBirth = new Date(req.body.dateOfBirth)
     const jrOlympicDate = new Date('01/01/2002')
     const values = [
@@ -446,7 +458,8 @@ app.post('/register', (req, res) => {
         req.body.coachEmail,
         req.body.gender,
         parseInt(req.body.weight),
-        //AGE GROUP HERE
+        //Age group here
+        experience
     ]
     if (dateOfBirth.getFullYear() >= jrOlympicDate.getFullYear()) {
         console.log(`fighter date of birth is ${dateOfBirth} Younger than 01/01/2002`)
@@ -456,16 +469,15 @@ app.post('/register', (req, res) => {
         values.splice(17, 0, 'Youth + Senior')
     }
 
-    client.query(insert, values, (err, dbRes) => {
-        if (err) {
-            console.log(`Error: ${err}`)
-        } else {
-            console.log('successful insert query ' + dbRes)
+    client.query(insert, values)
+        .then(dbRes => {
+            console.log(`Successful registration for ${req.body.firstName} ${req.body.lastName}: ${req.body.usaBoxingId}`)
             getWeightClass(req.body.gender, values[17], parseInt(req.body.weight), req.body.usaBoxingId, req.body.tournamentId)
             return res.send('Registered successfully!')
-        }
-    })
+        })
+        .catch(e => console.log(`Error registering ${e}`))
 })
+
 
 app.post('/search_user', (req, res) => {
     console.log('searching for user')
@@ -644,8 +656,6 @@ app.post('/update_bracket', (req, res) => {
 })
 
 app.post('/tournament_name', (req, res) => {
-    console.log('tournament name')
-    console.log(req.body.tournamentId)
     const query = `Select * from public.tournament where id = ${req.body.tournamentId}`
     client.query(query)
         .then(dbRes => res.send(dbRes.rows[0].title))

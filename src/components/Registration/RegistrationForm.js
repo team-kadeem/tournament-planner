@@ -131,7 +131,8 @@ const RegistrationForm = (props) => {
                         errorPresent={props.lossErr && props.errorPresent}
                         validation={val => isInt(val)}/>
                     
-                    {  (parseInt(props.winsVal) + parseInt(props.lossVal)) >=5 &&
+                    {  
+                        (parseInt(props.winsVal) + parseInt(props.lossVal)) >=5 &&
                         (parseInt(props.winsVal) + parseInt(props.lossVal)) <= 9 && 
                         !props.winsErr && 
                         !props.lossErr ? 
@@ -142,14 +143,14 @@ const RegistrationForm = (props) => {
                                     type="radio"
                                     label="OPEN"
                                     value="OPEN"
-                                    onChange={props.radioHandler}/>
+                                    onChange={props.experienceHandler}/>
                                 
                                 <Field
                                     name="experience"
                                     type="radio"
                                     label="NOVICE"
                                     value="NOVICE"
-                                    onChange={props.radioHandler}/>
+                                    onChange={props.experienceHandler}/>
                             </label> : null
                     }
                     <br/>

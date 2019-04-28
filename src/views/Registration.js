@@ -48,6 +48,7 @@ export default class Registration extends React.Component {
                 usaBoxingId:true,
                 wins:true,
                 losses:true,
+                experience:false,
                 boxingClubAffiliation:true,
                 coachFirstName:true,
                 coachLastName:true,
@@ -72,24 +73,24 @@ export default class Registration extends React.Component {
     }
     
     updateTextInputField = (evt, errorPresent) => {
-        let fields = Object.assign({}, this.state.fields)
-        let errors = Object.assign({}, this.state.errors)
+        const fields = Object.assign({}, this.state.fields)
+        const errors = Object.assign({}, this.state.errors)
         fields[evt.target.name] = evt.target.value
         errors[evt.target.name] = errorPresent
         this.setState({...this.state, fields:fields, errors:errors})
     }
 
     updateCheckboxField = (evt) => {
-        let fields = Object.assign({}, this.state.fields)
-        let errors = Object.assign({}, this.state.errors)
+        const fields = Object.assign({}, this.state.fields)
+        const errors = Object.assign({}, this.state.errors)
         fields[evt.target.name] = evt.target.value
         errors[evt.target.name] = false
         this.setState({...this.state, fields:fields, errors:errors})
     }
 
     updateRadioButtons = (evt, errorPresent) => {
-        let fields = Object.assign({}, this.state.fields)
-        let errors = Object.assign({}, this.state.errors)
+        const fields = Object.assign({}, this.state.fields)
+        const errors = Object.assign({}, this.state.errors)
         fields[evt.target.name] = evt.target.value
         if (evt.target.value === 'true') {
             errors[evt.target.name] = false
@@ -99,6 +100,12 @@ export default class Registration extends React.Component {
             this.setState({...this.state, fields:fields, errors:errors})
         }
     }
+
+    updateExperience = evt => {
+        const fields = {...this.state.fields}
+        fields[evt.target.name] = evt.target.value
+        this.setState({...this.state, fields})
+    } 
 
     searchUser = (evt) => {
         evt.preventDefault()
@@ -227,7 +234,10 @@ export default class Registration extends React.Component {
                         textInputHandler={this.updateTextInputField}
                         checkboxHandler={this.updateCheckboxField}
                         radioHandler={this.updateRadioButtons}
+                        experienceHandler={this.updateExperience}
                         errorPresent={this.state.invalidSubmission}
+                        values={this.state.fields}
+                        errors={this.state.errors}
                         firstNameVal={this.state.fields.firstName}
                         firstNameErr={this.state.errors.firstName}
                         lastNameVal={this.state.fields.lastName}
@@ -280,7 +290,10 @@ export default class Registration extends React.Component {
                         textInputHandler={this.updateTextInputField}
                         checkboxHandler={this.updateCheckboxField}
                         radioHandler={this.updateRadioButtons}
+                        experienceHandler={this.updateExperience}
                         errorPresent={this.state.invalidSubmission}
+                        values={this.state.fields}
+                        errors={this.state.errors}
                         firstNameVal={this.state.fields.firstName}
                         firstNameErr={this.state.errors.firstName}
                         lastNameVal={this.state.fields.lastName}
