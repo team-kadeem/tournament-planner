@@ -3,9 +3,11 @@ const bodyParser = require('body-parser')
 const { Pool, Client } = require('pg') 
 const { makeBrackets } = require('./makeBrackets')
 const path = require('path')
+const SquareConnect = require('square-connect')
 const bcrypt = require('bcrypt')
 const cookieParser = require('cookie-parser')
 const cookieEncrypter = require('cookie-encrypter')
+const uuid = require('uuidv4')
 
 let config;
 if (process.env.PRODUCTION) {
@@ -43,6 +45,48 @@ try {
 } catch (error) {
     console.log(`Error connecting to postgres ${error}`)
 }
+
+/*
+    SQUARE
+*/
+
+const defaultClient = SquareConnect.ApiClient.instance
+const oauth2 = defaultClient.authentications['oauth2']
+oauth2.accessToken = process.env.squareAccessToken
+const api = new SquareConnect.CheckoutApi()
+const price = new SquareConnect.Money()
+
+price.amount = 100
+price.currency = 'USD'
+
+const spot = new SquareConnect.Order()
+spot.name = 'Tournament Spot'
+spot.base_price_money = price
+
+const lineItems = []
+lineItems.push(spot)
+const order = new SquareConnect.CreateOrderRequest()
+order.idempotency_key = uuid()
+order.order = lineItems
+
+const checkout = new SquareConnect.CreateCheckoutRequest()
+checkout.idempotency_key = uuid()
+checkout.order = order
+
+try {
+    const result = api.createCheckout(process.env.squareLocationId, checkout)
+        .then(data => console.log('API call returned ' + JSON.stringify(data)))
+        .catch(e => console.log('api error ' + e))
+
+    // const checkoutId = result.checkout.id
+} catch (error) {
+    
+}
+
+// price.setCurrency('USD')
+// api.setAmount(100)
+// api.setCurrency('USD')
+
 
 
 determineDivision = (gender, agegroup, weightClass, usaBoxingId, tournamentId) => {
