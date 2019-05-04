@@ -53,39 +53,39 @@ try {
 const defaultClient = SquareConnect.ApiClient.instance
 const oauth2 = defaultClient.authentications['oauth2']
 oauth2.accessToken = process.env.squareAccessToken
-const api = new SquareConnect.CheckoutApi()
-const price = new SquareConnect.Money()
-
-price.amount = 100
-price.currency = 'USD'
-
-const spot = new SquareConnect.Order()
-spot.name = 'Tournament Spot'
-spot.base_price_money = price
 
 const lineItems = []
-lineItems.push(spot)
-const order = new SquareConnect.CreateOrderRequest()
-order.idempotency_key = uuid()
-order.order = lineItems
 
-const checkout = new SquareConnect.CreateCheckoutRequest()
-checkout.idempotency_key = uuid()
-checkout.order = order
+const cost = new SquareConnect.Money()
+cost.amount = 100
+cost.currency = 'USD'
+const item = new SquareConnect.OrderLineItem()
+item.quantity = '1'
+item.base_price_money = cost
+item.name = 'Tournament Spot'
+lineItems.push(item)
 
-try {
-    const result = api.createCheckout(process.env.squareLocationId, checkout)
-        .then(data => console.log('API call returned ' + JSON.stringify(data)))
-        .catch(e => console.log('api error ' + e))
 
-    // const checkoutId = result.checkout.id
-} catch (error) {
-    
-}
+const tournamentSpot = new SquareConnect.Order()
+tournamentSpot.location_id = process.env.squareLocationId
+tournamentSpot.line_items = lineItems
 
-// price.setCurrency('USD')
-// api.setAmount(100)
-// api.setCurrency('USD')
+const orderRequest = new SquareConnect.CreateOrderRequest()
+orderRequest.order = tournamentSpot
+
+const checkoutRequest = new SquareConnect.CreateCheckoutRequest()
+checkoutRequest.idempotency_key = uuid()
+checkoutRequest.order = orderRequest
+
+
+const api = new SquareConnect.CheckoutApi() //CHECKOUT
+
+//        text: '{"errors":[{"category":"INVALID_REQUEST_ERROR","code":"ARRAY_LENGTH_TOO_SHORT","detail":"The order must have at least one line item.","field":"order.line_items"}]}',
+
+api.createCheckout(process.env.squareLocationId, checkoutRequest)
+    .then(data => console.log(`API called successfully returned  ${JSON.stringify(data)}`))
+    .catch(e => console.log(e))
+
 
 
 

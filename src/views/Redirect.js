@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default class Redirect extends React.Component {
+ class Redirect extends React.Component {
     constructor(props){
         super(props)
         this.state = {
