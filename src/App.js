@@ -6,6 +6,8 @@ import Home from './views/Home'
 import Admin from './views/Admin'
 import Brackets from './views/Brackets'
 import Login from './views/Login'
+import Payment from './views/Payment'
+import SuccessfulRegistration from './views/SuccessfulRegistration'
 
 class App extends Component {
 
@@ -18,6 +20,8 @@ class App extends Component {
             <Route path="/admin" component={Admin} />
             <Route path="/register/:tournamentId" component={Registration} />
             <Route path="/bracket/:tournamentId" component={Brackets} />
+            <Route path="/payment" component={Payment} />
+            <Route path="/success" component={SuccessfulRegistration} />
             <Route path="/login" component={Login} />
           </div>
         </Router>

@@ -1,16 +1,17 @@
 import React from 'react'
 
- class Redirect extends React.Component {
+export default class SuccessfulRegistration extends React.Component{
     constructor(props){
         super(props)
         this.state = {
 
         }
     }
+
     render(){
-        return(
+        return (
             <div>
-               Loading 
+                Successful Registration!
             </div>
         )
     }

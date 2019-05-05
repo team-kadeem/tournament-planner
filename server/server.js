@@ -76,17 +76,10 @@ orderRequest.order = tournamentSpot
 const checkoutRequest = new SquareConnect.CreateCheckoutRequest()
 checkoutRequest.idempotency_key = uuid()
 checkoutRequest.order = orderRequest
+checkoutRequest.redirect_url = 'http://localhost:3000/success' //Handle in Production
 
 
-const api = new SquareConnect.CheckoutApi() //CHECKOUT
-
-//        text: '{"errors":[{"category":"INVALID_REQUEST_ERROR","code":"ARRAY_LENGTH_TOO_SHORT","detail":"The order must have at least one line item.","field":"order.line_items"}]}',
-
-api.createCheckout(process.env.squareLocationId, checkoutRequest)
-    .then(data => console.log(`API called successfully returned  ${JSON.stringify(data)}`))
-    .catch(e => console.log(e))
-
-
+const squareApi = new SquareConnect.CheckoutApi() //CHECKOUT
 
 
 determineDivision = (gender, agegroup, weightClass, usaBoxingId, tournamentId) => {
@@ -520,6 +513,12 @@ app.post('/register', (req, res) => {
             return res.send('Registered successfully!')
         })
         .catch(e => console.log(`Error registering ${e}`))
+})
+
+app.post('/payment', (req, res) => {
+    squareApi.createCheckout(process.env.squareLocationId, checkoutRequest)
+        .then(data => res.send(data['checkout']['checkout_page_url']))
+        .catch(e => console.log(e))
 })
 
 
