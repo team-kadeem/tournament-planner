@@ -2,7 +2,7 @@ import React from 'react'
 import UserType from '../components/Registration/UserType'
 import SearchUser from '../components/Registration/SearchUser'
 import RegistrationForm from '../components/Registration/RegistrationForm'
-
+import { createBrowserHistory } from 'history'
 
 export default class Registration extends React.Component {
     constructor(props){
@@ -188,6 +188,13 @@ export default class Registration extends React.Component {
             fetch('/register', params)
                 .then(res => res.text())
                 .then(data => this.setState({...this.state, formStatus:data}))
+                .then(() => {
+                    console.log('pushing history')
+                    const history = createBrowserHistory()
+                    history.push('/payment', {formSubmitted:true})
+                    history.go()
+
+                })
         }
     }
 

@@ -6,6 +6,7 @@ import isMobilePhone from 'validator/lib/isMobilePhone';
 import isBefore from 'validator/lib/isBefore'
 import isInt from 'validator/lib/isInt'
 import { Box } from 'rebass'
+import { Link } from 'react-router-dom'
 
 const RegistrationForm = (props) => {
     const submitButton = {
@@ -352,12 +353,13 @@ const RegistrationForm = (props) => {
                                 onChange={props.radioHandler}/> 
                         </label>                    
                     </div>
-
+                    
                     <input
                         style={submitButton}
                         type="submit"
                         value="Submit"
-                    /> 
+                    />                     
+
                     <span style={{color:'green'}}>{props.formStatus}</span>
                     {props.errorPresent ? <span style={{color:'red'}}>Invalid Submission</span> : null}
                 </form> 
