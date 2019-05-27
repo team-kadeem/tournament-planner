@@ -6,7 +6,6 @@ import isMobilePhone from 'validator/lib/isMobilePhone';
 import isBefore from 'validator/lib/isBefore'
 import isInt from 'validator/lib/isInt'
 import { Box } from 'rebass'
-import { Link } from 'react-router-dom'
 
 const RegistrationForm = (props) => {
     const submitButton = {
@@ -34,6 +33,7 @@ const RegistrationForm = (props) => {
         color:'red',
         marginLeft:'10px'
     }
+
 
     return(
         <div>
@@ -132,11 +132,11 @@ const RegistrationForm = (props) => {
                         errorPresent={props.errors.loss && props.errorPresent}
                         validation={val => isInt(val)}/>
                     
-                    {  
-                        (parseInt(props.winsVal) + parseInt(props.lossVal)) >=5 &&
-                        (parseInt(props.winsVal) + parseInt(props.lossVal)) <= 9 && 
-                        !props.winsErr && 
-                        !props.lossErr ? 
+                    { 
+                        (parseInt(props.values.wins) + parseInt(props.values.losses)) >=5 &&
+                        (parseInt(props.values.wins) + parseInt(props.values.losses)) <= 9 && 
+                        !props.errors.wins && 
+                        !props.errors.losses ? 
                             <label style={radioButtonTextStyle}>
                                 You have the option to compete as Open or Novice
                                 <Field

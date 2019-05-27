@@ -3,11 +3,13 @@ import UserType from '../components/Registration/UserType'
 import SearchUser from '../components/Registration/SearchUser'
 import RegistrationForm from '../components/Registration/RegistrationForm'
 import { createBrowserHistory } from 'history'
+import CannotRegister from '../components/Home/CannotRegister';
 
 export default class Registration extends React.Component {
     constructor(props){
         super(props)
         this.state = {
+            bracketMade:false,
             formStatus:null,
             fighterNotFound:false,
             dataLoaded:null,
@@ -68,14 +70,15 @@ export default class Registration extends React.Component {
     componentWillMount = () => {
         fetch('/validate', {
             method:'POST',
-            body:JSON.stringify({
-                tournamentId:this.props.match.params.tournamentId
-            }),
+            body:JSON.stringify({tournamentId:this.props.match.params.tournamentId}),
             headers:{
-                'content-type':'application/json'
+                "content-type":"application/json"
             }
         })
+            .then(res => res.json())
+            .then(data => this.setState({...this.state, bracketMade:data['bracket_made']}))
     }
+
 
     updateUserType = (evt) => {
         const userType = evt.target.name
@@ -245,45 +248,48 @@ export default class Registration extends React.Component {
 
         return(
             <div>
-                {this.state.fighterNotFound === true ? 
-                <p style={{color:'red'}}>
-                    Could not find user with USA Boxing ID: {this.state.fields.usaBoxingId}
-                </p> : null
-                }
-                {
-                    this.state.userType === '' ? 
-                    <UserType updateButtonHandler={this.updateUserType}/> :
-                    this.state.userType === 'new' ? 
-                    <RegistrationForm
-                        submitHandler={this.submitForm}
-                        formStatus={this.state.formStatus}
-                        textInputHandler={this.updateTextInputField}
-                        checkboxHandler={this.updateCheckboxField}
-                        radioHandler={this.updateRadioButtons}
-                        experienceHandler={this.updateExperience}
-                        errorPresent={this.state.invalidSubmission}
-                        values={this.state.fields}
-                        errors={this.state.errors}/> : 
-                    this.state.dataLoaded ? 
-                    <RegistrationForm
-                        disableGender={true}
-                        disableId={true}
-                        disableBirthday={true}
-                        formStatus={this.state.formStatus}
-                        submitHandler={this.updateFighter}
-                        textInputHandler={this.updateTextInputField}
-                        checkboxHandler={this.updateCheckboxField}
-                        radioHandler={this.updateRadioButtons}
-                        experienceHandler={this.updateExperience}
-                        errorPresent={this.state.invalidSubmission}
-                        values={this.state.fields}
-                        errors={this.state.errors}/> :
-                    <SearchUser
-                        updateHandler={this.updateTextInputField} 
-                        submissionHandler={this.searchUser}
-                        dataLoaded={this.state.dataLoaded}
-                    />
-                }
+                {this.state.bracketMade ? <CannotRegister/>:
+                            <div>
+                            {this.state.fighterNotFound === true ? 
+                            <p style={{color:'red'}}>
+                                Could not find user with USA Boxing ID: {this.state.fields.usaBoxingId}
+                            </p> : null
+                            }
+                            {
+                                this.state.userType === '' ? 
+                                <UserType updateButtonHandler={this.updateUserType}/> :
+                                this.state.userType === 'new' ? 
+                                <RegistrationForm
+                                    submitHandler={this.submitForm}
+                                    formStatus={this.state.formStatus}
+                                    textInputHandler={this.updateTextInputField}
+                                    checkboxHandler={this.updateCheckboxField}
+                                    radioHandler={this.updateRadioButtons}
+                                    experienceHandler={this.updateExperience}
+                                    errorPresent={this.state.invalidSubmission}
+                                    values={this.state.fields}
+                                    errors={this.state.errors}/> : 
+                                this.state.dataLoaded ? 
+                                <RegistrationForm
+                                    disableGender={true}
+                                    disableId={true}
+                                    disableBirthday={true}
+                                    formStatus={this.state.formStatus}
+                                    submitHandler={this.updateFighter}
+                                    textInputHandler={this.updateTextInputField}
+                                    checkboxHandler={this.updateCheckboxField}
+                                    radioHandler={this.updateRadioButtons}
+                                    experienceHandler={this.updateExperience}
+                                    errorPresent={this.state.invalidSubmission}
+                                    values={this.state.fields}
+                                    errors={this.state.errors}/> :
+                                <SearchUser
+                                    updateHandler={this.updateTextInputField} 
+                                    submissionHandler={this.searchUser}
+                                    dataLoaded={this.state.dataLoaded}
+                                />
+                            }
+                        </div>}
             </div>
         )
     }

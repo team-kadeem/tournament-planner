@@ -92,7 +92,9 @@ export default class TournamentForm extends React.Component {
 
         return(
             <div style={{marginBottom:'40px'}}>
-                <form onSubmit={this.createNewTournament}>
+                <form
+                    style={{textAlign:'center'}}
+                    onSubmit={this.createNewTournament}>
                     <input
                         type="text"
                         name="title"

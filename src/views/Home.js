@@ -2,6 +2,7 @@ import React from 'react'
 import Tournament from '../components/Home/Tournament'
 import Gloves from '../images/gloves.svg'
 import { Flex } from 'rebass'
+import ImageDisplay from '../components/Shared/ImageDisplay'
 
 export default class Home extends React.Component {
     constructor(props){
@@ -45,20 +46,17 @@ export default class Home extends React.Component {
         })
 
         return(
-            <Flex
-                justifyContent='center'
-                alignItems='center'
-                flexDirection='column'>
-                <div style={{height:'25%', width:'50%'}}>
-                    <img alt="logo" height='100%' width='100%' src={Gloves} />
-                </div>
-                
-                <div>
-                    <h2 style={{textAlign:'center'}}>Available Tournaments</h2>
-                    {availableTournaments}
-                </div>
+            <div>
+                <ImageDisplay backgroundImage={Gloves}/>
+                <Flex
+                    flexDirection="column"
+                    alignItems="center"
+                    justifyContent="center">
+                        <h2 style={{textAlign:'center'}}>Available Tournaments</h2>
+                        {availableTournaments}
+                </Flex>
 
-            </Flex>
+            </div>
+
         )
-    }
-}
+    }}

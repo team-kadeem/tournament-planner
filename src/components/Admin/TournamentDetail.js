@@ -43,14 +43,16 @@ export default class TournamentDetail extends React.Component{
 
         const listStyling = {
             textAlign:'center',
-            height:'220px'
+            height:'220px',
+            padding:'0'
+
         }
 
         const listItemStyling = {
             listStyleType:'none',
             fontSize:'14px',
             marginBottom:'6px',
-            textAlign:'center'
+            textAlign:'center',
         }
         const participants = Object.keys(this.props.registrants)
                                 .filter(item => item !== 'id' && item !== 'bracketMade' && item !== 'closeDate')

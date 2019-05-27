@@ -22,12 +22,8 @@ const now = new Date()
 
 
 const Tournament = (props) => {
-    console.log('Tournament props')
-    console.log(props)
-    console.log(now)
-    // const closeDate = new Date(props.closeDate).toDateString()
+
     const closeDate = new Date(props.closeDate)
-    console.log(closeDate > now)
     return(
         <div style={containerStyle}>
             <div>
@@ -42,19 +38,19 @@ const Tournament = (props) => {
                 
             </div>
 
-            {closeDate > now ? 
-                <div>Registration Open Until: {closeDate.toDateString()}</div> : <div>Registration Closed</div>
+            {props.bracketMade ? 
+                <div>Registration Closed</div>: <div>Registration Open Until: {closeDate.toDateString()}</div>
             }
 
 
-            <div>
-                <Link style={linkStyle} to={"/bracket/" + props.id}>
-                    View Bracket
-                </Link>
-            </div>
-            <div>
+            {props.bracketMade ?
+                <div>
+                    <Link style={linkStyle} to={"/bracket/" + props.id}>
+                        View Bracket
+                    </Link>
+                </div> : null
+            }
 
-            </div>
         </div>
     )
 }

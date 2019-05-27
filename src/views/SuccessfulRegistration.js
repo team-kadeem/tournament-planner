@@ -56,17 +56,13 @@ export default class SuccessfulRegistration extends React.Component{
         return (
             <div>
                 <Container>
-                    <p style={textStyle}>
+                    <h3 style={textStyle}>
                         Successful Registration!
-                    </p>
+                    </h3>
 
-                    <p style={textStyle}>
-                        Check your email for confirmation
-                    </p>
-
-                    <p style={textStyle}>
+                    <h3 style={textStyle}>
                         Click <Link style={linkStyle} to="/">here</Link> to go back
-                    </p>
+                    </h3>
                 </Container>
 
             </div>
