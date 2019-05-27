@@ -9,27 +9,9 @@ export default class Payment extends React.Component{
     constructor(props){
         super(props)
         this.state = {
-            url:null
+            url:this.props.location.state.checkoutUrl
 
         }
-    }
-
-    componentWillMount = () => {
-        const history = createBrowserHistory()
-        if (this.props.location.state) {
-            fetch('/payment', {
-                method:'POST',
-                headers:{
-                    'content-type':'application/json'
-                }
-            })
-                .then(res => res.text())
-                .then(url => this.setState({...this.state, url}))
-        } else {
-            history.push('/')
-            history.go()
-        }
-
     }
 
     render(){

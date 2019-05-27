@@ -357,7 +357,7 @@ const RegistrationForm = (props) => {
                     <input
                         style={submitButton}
                         type="submit"
-                        value="Submit"
+                        value="Continue to Checkout"
                     />                     
 
                     <span style={{color:'green'}}>{props.formStatus}</span>

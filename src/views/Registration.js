@@ -65,6 +65,18 @@ export default class Registration extends React.Component {
         }
     }
 
+    componentWillMount = () => {
+        fetch('/validate', {
+            method:'POST',
+            body:JSON.stringify({
+                tournamentId:this.props.match.params.tournamentId
+            }),
+            headers:{
+                'content-type':'application/json'
+            }
+        })
+    }
+
     updateUserType = (evt) => {
         const userType = evt.target.name
         let state = {...this.state}
@@ -186,12 +198,19 @@ export default class Registration extends React.Component {
                 body:JSON.stringify(this.state.fields) 
             }
             fetch('/register', params)
-                .then(res => res.text())
-                .then(data => this.setState({...this.state, formStatus:data}))
-                .then(() => {
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data)
+                    this.setState({...this.state, formStatus:data['status']})
+                    return data['checkoutUrl']
+                })
+                .then(checkoutUrl => {
                     console.log('pushing history')
                     const history = createBrowserHistory()
-                    history.push('/payment', {formSubmitted:true})
+                    history.push('/payment', {
+                        formSubmitted:true,
+                        checkoutUrl
+                    })
                     history.go()
 
                 })

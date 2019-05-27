@@ -74,7 +74,7 @@ const orderRequest = new SquareConnect.CreateOrderRequest()
 orderRequest.order = tournamentSpot
 
 const checkoutRequest = new SquareConnect.CreateCheckoutRequest()
-checkoutRequest.idempotency_key = uuid()
+//checkoutRequest.idempotency_key = uuid()
 checkoutRequest.order = orderRequest
 checkoutRequest.redirect_url = 'http://localhost:3000/success' //Handle in Production
 
@@ -82,16 +82,8 @@ checkoutRequest.redirect_url = 'http://localhost:3000/success' //Handle in Produ
 const squareApi = new SquareConnect.CheckoutApi() //CHECKOUT
 
 
-determineDivision = (gender, agegroup, weightClass, usaBoxingId, tournamentId) => {
-    gender = gender[0].toUpperCase() + gender.substring(1,)
-    const divisionTitle = `${gender} ${agegroup}  ${weightClass} Group`
-    const query = `SELECT * FROM public.division where title = '${divisionTitle}'`
-    client.query(query)
-        .then(dbRes => addFighterToTournament(usaBoxingId, tournamentId, dbRes.rows[0].id))
-        .catch(e => `Err getting division for new registrant ${e}`)
-}
 
-getWeightClass = (gender, agegroup, weight, usaBoxingId, tournamentId) => {
+getWeightClass = (gender, agegroup, weight, usaBoxingId, tournamentId, checkoutId, transactionId) => {
     console.log(`get weight input ${gender} ${agegroup} ${weight}`)
     let weightClass
     if (agegroup === 'Jr. Olympic') {
@@ -230,19 +222,27 @@ getWeightClass = (gender, agegroup, weight, usaBoxingId, tournamentId) => {
         }
 
     }
-    determineDivision(gender, agegroup, weightClass, usaBoxingId, tournamentId)
+    determineDivision(gender, agegroup, weightClass, usaBoxingId, tournamentId, checkoutId, transactionId)
     return weightClass
 }
 
-addFighterToTournament = (usaBoxingId, tournamentId, divisionId) => {
-    const values = [usaBoxingId, tournamentId, divisionId]
-    const query = `INSERT INTO public.fights_in(fighter_usa_boxing_id, tournament_id, division_id) VALUES($1, $2, $3)`
+determineDivision = (gender, agegroup, weightClass, usaBoxingId, tournamentId, checkoutId, transactionId) => {
+    gender = gender[0].toUpperCase() + gender.substring(1,)
+    const divisionTitle = `${gender} ${agegroup}  ${weightClass} Group`
+    const query = `SELECT * FROM public.division where title = '${divisionTitle}'`
+    client.query(query)
+        .then(dbRes => registerFighter(usaBoxingId, tournamentId, dbRes.rows[0].id, checkoutId, transactionId))
+        .catch(e => `Err getting division for new registrant ${e}`)
+}
+
+registerFighter = (usaBoxingId, tournamentId, divisionId, checkoutId, transactionId) => {
+    const values = [usaBoxingId, tournamentId, divisionId, checkoutId, transactionId]
+    const query = `INSERT INTO public.fights_in(fighter_usa_boxing_id, tournament_id, division_id, checkout_id, transaction_id) VALUES($1, $2, $3, $4, $5)`
 
     client.query(query, values, (err, dbRes) => {
         if (err) console.log(err)
-        else {
+        else 
             console.log(`Added ${usaBoxingId} to tournament number ${tournamentId}`)
-        }
     })
 }
 
@@ -391,7 +391,7 @@ app.get('/ping', (req, res) => {
 
 
 app.get('/home', (req, res) => {
-    const query = `Select * from public.tournament where registration_close > NOW()`
+    const query = `Select * from public.tournament where completed = false`
     client.query(query, (err, dbRes) => {
         if (err) {
             console.log('error getting open tournaments ' + err)
@@ -402,6 +402,10 @@ app.get('/home', (req, res) => {
     })
     }
 )
+
+app.get('validate', (req, res) => {
+    console.log(req.body)
+})
 
 
 app.post('/tournaments', (req, res) => {
@@ -460,9 +464,12 @@ app.post('/register', (req, res) => {
         'gender', 
         'weight',
         'age_group',
-        'experience'
+        'experience',
+        'checkout_id',
+        'transaction_id'
     ]
     let experience
+    const dateOfBirth = new Date(req.body.dateOfBirth)
 
     if (!req.body.experience) {
         if (req.body.wins >= 10) 
@@ -473,52 +480,88 @@ app.post('/register', (req, res) => {
         experience = req.body.experience
     }
 
+    checkoutRequest.idempotency_key = uuid()
 
-    const insert = `INSERT INTO public.fighter(${tableColumns}) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)`
-    const dateOfBirth = new Date(req.body.dateOfBirth)
-    const jrOlympicDate = new Date('01/01/2002')
-    const values = [
-        req.body.firstName,
-        req.body.lastName,
-        req.body.boxerEmail,
-        req.body.zipCode,
-        req.body.phoneNumber,
-        dateOfBirth,
-        req.body.usaBoxingId,
-        parseInt(req.body.wins),
-        parseInt(req.body.losses),
-        req.body.boxingClubAffiliation,
-        req.body.coachFirstName,
-        req.body.coachLastName,
-        req.body.coachUSABoxingId,
-        req.body.coachPhoneNumber,
-        req.body.coachEmail,
-        req.body.gender,
-        parseInt(req.body.weight),
-        //Age group here
-        experience
-    ]
-    if (dateOfBirth.getFullYear() >= jrOlympicDate.getFullYear()) {
-        console.log(`fighter date of birth is ${dateOfBirth} Younger than 01/01/2002`)
-        values.splice(17, 0, 'Jr. Olympic')
-    } else {
-        console.log(`fighter date of birth is ${dateOfBirth} Older than 01/01/2002`)
-        values.splice(17, 0, 'Youth + Senior')
-    }
+    squareApi.createCheckout(process.env.squareLocationId, checkoutRequest)
+    .then(data => {
+        console.log(data)
+        
+        const values = [
+            req.body.firstName,
+            req.body.lastName,
+            req.body.boxerEmail,
+            req.body.zipCode,
+            req.body.phoneNumber,
+            dateOfBirth,
+            req.body.usaBoxingId,
+            parseInt(req.body.wins),
+            parseInt(req.body.losses),
+            req.body.boxingClubAffiliation,
+            req.body.coachFirstName,
+            req.body.coachLastName,
+            req.body.coachUSABoxingId,
+            req.body.coachPhoneNumber,
+            req.body.coachEmail,
+            req.body.gender,
+            parseInt(req.body.weight),
+            //Age group here
+            experience,
+            data['checkout']['id'],
+            data['checkout']['order']['id'],
+        ]
+        const insert = `INSERT INTO public.fighter(${tableColumns}) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21)`
 
-    client.query(insert, values)
-        .then(dbRes => {
-            console.log(`Successful registration for ${req.body.firstName} ${req.body.lastName}: ${req.body.usaBoxingId}`)
-            getWeightClass(req.body.gender, values[17], parseInt(req.body.weight), req.body.usaBoxingId, req.body.tournamentId)
-            return res.send('Registered successfully!')
-        })
-        .catch(e => console.log(`Error registering ${e}`))
+        const jrOlympicDate = new Date('01/01/2002')
+        if (dateOfBirth.getFullYear() >= jrOlympicDate.getFullYear())
+            values.splice(17, 0, 'Jr. Olympic')
+        else
+            values.splice(17, 0, 'Youth + Senior')
+        
+        client.query(insert, values)
+            .then(dbRes => {
+                console.log(`Successful registration for ${req.body.firstName} ${req.body.lastName}: ${req.body.usaBoxingId}`)
+                getWeightClass(
+                    req.body.gender, 
+                    values[17], 
+                    parseInt(req.body.weight), 
+                    req.body.usaBoxingId, 
+                    req.body.tournamentId,
+                    data['checkout']['id'],
+                    data['checkout']['order']['id']
+                )
+                return res.send({
+                    status:'Registered Successfully',
+                    checkoutUrl:data['checkout']['checkout_page_url']
+                })
+            })
+            .catch(e => console.log(`Error registering ${e}`))
+    })
+    .catch(e => console.log(e))
+
 })
 
 app.post('/payment', (req, res) => {
-    squareApi.createCheckout(process.env.squareLocationId, checkoutRequest)
-        .then(data => res.send(data['checkout']['checkout_page_url']))
-        .catch(e => console.log(e))
+    //INSERT THE REGISTRANT INTO THE FIGHTER TABLE WITH A CHECKOUT ID & TRANSACTION ID
+    //INSERT THE REGISTRANT INTO THE FIGHTSIN TABLE WITH THEIR CHECKOUT ID AND A COLUMN PAID = FALSE
+    //WHEN USER IS REDIRECTED TO THE SUCCESS PAGE, PARSE THE CHECKOUT ID & TRANSACTION ID OUT OF URL, QUERY FOR IT AND UPDATE PAID TO TRUE
+    //TRANSACTION ID IS HIDDEN SO THE ENDPOINT CAN'T BE REVERSE ENGINEERED
+    // squareApi.createCheckout(process.env.squareLocationId, checkoutRequest)
+    //     .then(data => {
+    //         console.log(data)
+    //         res.send(data['checkout']['checkout_page_url'])
+    //     })
+    //     .catch(e => console.log(e))
+    console.log(req.body)
+    console.log('payment route')
+    const values = [true]
+    if (req.body.checkoutId && req.body.transactionId) {
+        const query = `update public.fights_in set paid = ($1) where checkout_id = '${req.body.checkoutId}' and transaction_id = '${req.body.transactionId}'`
+        client.query(query, values)
+            .then(dbRes => console.log(dbRes))
+            .then(() => res.send ('Redirect'))
+            .catch(e => console.log(e))
+    }
+
 })
 
 

@@ -18,24 +18,34 @@ const headingStyle = {
     fontFamily:'Roboto Condensed',
     color:'#00aeee'
 }
+const now = new Date()
 
 
 const Tournament = (props) => {
-    const closeDate = new Date(props.closeDate).toDateString()
+    console.log('Tournament props')
+    console.log(props)
+    console.log(now)
+    // const closeDate = new Date(props.closeDate).toDateString()
+    const closeDate = new Date(props.closeDate)
+    console.log(closeDate > now)
     return(
         <div style={containerStyle}>
             <div>
                 <h2 style={headingStyle}>{props.title}</h2>
+                {!props.bracketMade ?
                 <strong>
                     <Link style={linkStyle} to={'/register/' + props.id}>
                         <strong><i>Click Here to Register</i></strong>
                     </Link>
-                </strong>
+                </strong> : null
+                }
                 
             </div>
-            <div>
-                Registration Open Until: {closeDate}
-            </div>
+
+            {closeDate > now ? 
+                <div>Registration Open Until: {closeDate.toDateString()}</div> : <div>Registration Closed</div>
+            }
+
 
             <div>
                 <Link style={linkStyle} to={"/bracket/" + props.id}>

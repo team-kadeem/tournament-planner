@@ -39,6 +39,7 @@ export default class Home extends React.Component {
                     title={tournament.title}
                     closeDate={tournament.registration_close}
                     id={tournament.id}
+                    bracketMade={tournament.bracket_made}
                 />
             )
         })
