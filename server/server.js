@@ -8,6 +8,7 @@ const bcrypt = require('bcrypt')
 const cookieParser = require('cookie-parser')
 const cookieEncrypter = require('cookie-encrypter')
 const uuid = require('uuidv4')
+const nodemailer = require('nodemailer')
 
 let config;
 if (process.env.PRODUCTION) {
@@ -80,6 +81,12 @@ checkoutRequest.redirect_url = 'http://localhost:3000/success' //Handle in Produ
 
 
 const squareApi = new SquareConnect.CheckoutApi() //CHECKOUT
+
+/*
+    NODEMAILER
+*/
+
+
 
 
 
@@ -403,8 +410,12 @@ app.get('/home', (req, res) => {
     }
 )
 
-app.get('validate', (req, res) => {
-    console.log(req.body)
+app.post('/validate', (req, res) => {
+
+    const query = `Select bracket_made from public.tournament where id = ${req.body.tournamentId}`
+    client.query(query)
+        .then(dbRes => res.send(dbRes.rows[0]))
+        .catch(e => console.log(`error validating tournament: ${e}`))
 })
 
 

@@ -16,6 +16,7 @@
     "cookie-parser": "^1.4.4",
     "express": "^4.16.4",
     "mocha": "6.0.2",
+    "nodemailer": "^6.2.1",
     "nodemon": "^1.18.9",
     "request": "^2.88.0",
     "square-connect": "^2.20190410.1",
